@@ -1,0 +1,28 @@
+{
+    "name": "ar2labs/wiring",
+    "description": "Wiring is a PHP micro framework core with Interoperability (PSRs).",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Anderson Costa",
+            "email": "ar2labs@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "psr/cache": "^1.0",
+        "psr/container": "^1.0",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^1.0",
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "psr/log": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wiring\\": "src/"
+        }
+    }
+}
