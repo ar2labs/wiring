@@ -18,6 +18,6 @@ Requirements
 
 PHP 7.1 or above.
 
-##Copyright and license
+## Copyright and license
 
 Code and documentation copyright (c) 2019, Code released under the BSD-3-Clause license.
