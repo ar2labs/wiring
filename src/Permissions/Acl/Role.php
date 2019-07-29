@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Permissions\Acl;
 
 class Role
@@ -19,25 +21,29 @@ class Role
      *
      * @param string|null $name
      */
-    public function __construct($name = null)
+    public function __construct(?string $name = null)
     {
         $this->name = $name;
     }
 
     /**
-     * @return string
+     * Get a role.
+     *
+     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
+     * Set a role.
+     *
      * @param string $name
      *
      * @return self
      */
-    public function setName($name)
+    public function setName(string $name): Role
     {
         $this->name = $name;
 
@@ -45,19 +51,23 @@ class Role
     }
 
     /**
+     * Get a permission.
+     *
      * @return array
      */
-    public function getPermissions()
+    public function getPermissions(): array
     {
         return $this->permissions;
     }
 
     /**
+     * Set a permission.
+     *
      * @param Permission $permission
      *
      * @return self
      */
-    public function addPermission(Permission $permission)
+    public function addPermission(Permission $permission): Role
     {
         $this->permissions[] = $permission;
 

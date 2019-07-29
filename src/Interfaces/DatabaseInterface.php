@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
 
 interface DatabaseInterface
@@ -11,7 +13,7 @@ interface DatabaseInterface
      *
      * @return StatementInterface
      */
-    public function prepare($prepareString);
+    public function prepare($prepareString): StatementInterface;
 
     /**
      * Executes an SQL statement, returning a result set as a Statement object.
@@ -58,21 +60,20 @@ interface DatabaseInterface
     /**
      * Commits a transaction.
      *
-     * @return boolean TRUE on success or FALSE on failure.
+     * @return bool TRUE on success or FALSE on failure.
      */
     public function commit();
 
     /**
-     * Rolls back the current transaction,
-     * as initiated by beginTransaction().
+     * Rolls back the current transaction, as initiated by beginTransaction().
      *
-     * @return boolean TRUE on success or FALSE on failure.
+     * @return bool TRUE on success or FALSE on failure.
      */
     public function rollBack();
 
     /**
-     * Returns the error code associated with the last
-     * operation on the database handle.
+     * Returns the error code associated with the last operation on the
+     * database handle.
      *
      * @return string|null The error code, or null if no
      * operation has been run on the database handle.
@@ -80,8 +81,8 @@ interface DatabaseInterface
     public function errorCode();
 
     /**
-     * Returns extended error information associated with
-     * the last operation on the database handle.
+     * Returns extended error information associated with the last operation on
+     * the database handle.
      *
      * @return array
      */

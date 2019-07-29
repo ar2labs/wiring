@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
 
 interface AuthInterface
@@ -9,12 +11,12 @@ interface AuthInterface
      *
      * @return bool
      */
-    public function check();
+    public function check(): bool;
 
     /**
      * Get user authentication.
      *
-     * @return User|null
+     * @return object|null
      */
     public function user();
 }

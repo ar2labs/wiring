@@ -8,78 +8,99 @@ class Console
 {
     /**
      * Write output to console browser.
+     *
+     * @var object|string $obj
      */
-    public function log($obj = "")
+    public function log($obj)
     {
-        $this->method($obj, 'log');
+        $this->method('log', $obj);
     }
 
     /**
      * Write output to console browser.
+     *
+     * @var object|string $obj
      */
     public function debug($obj)
     {
-        $this->method($obj, 'log');
+        $this->method('log', $obj);
     }
 
     /**
      * Write output to console browser in table format.
+     *
+     * @var object|string $obj
      */
     public function table($obj)
     {
-        $this->method($obj, 'table');
+        $this->method('table', $obj);
     }
 
     /**
      * Write output to console browser in info logging method.
+     *
+     * @var object|string $obj
      */
     public function info($obj)
     {
-        $this->method($obj, 'info');
+        $this->method('info', $obj);
     }
 
     /**
      * Write output to console browser in warning logging method.
+     *
+     * @var object|string $obj
      */
     public function warn($obj)
     {
-        $this->method($obj, 'warn');
+        $this->method('warn', $obj);
     }
 
     /**
      * Write output to console browser in error logging method.
+     *
+     * @var object|string $obj
      */
     public function error($obj)
     {
-        $this->method($obj, 'error');
+        $this->method('error', $obj);
     }
 
     /**
      * Write output to console browser in stack trace.
+     *
+     * @var object|string $obj
      */
     public function trace($obj)
     {
-        $this->method($obj, 'trace');
+        $this->method('trace', $obj);
     }
 
     /**
      * Write output to console browser in a nice formatted way.
+     *
+     * @var object|string $obj
      */
     public function dir($obj)
     {
-        $this->method($obj, 'dir');
+        $this->method('dir', $obj);
     }
 
     /**
      * Write output to console browser in a DOM element’s markup.
+     *
+     * @var object|string $obj
      */
     public function dirxml($obj)
     {
-        $this->method($obj, 'dirxml');
+        $this->method('dirxml', $obj);
     }
 
     /**
-     * Write output to console browser in an easy way to run simple assertion tests.
+     * Write output to console browser in an easy way to
+     * run simple assertion tests.
+     *
+     * @var object[array]|string[array] $args
      */
     public function assert(...$args)
     {
@@ -127,50 +148,64 @@ class Console
     /**
      * This method is used to count the number of times it has been invoked
      * with the same provided label.
+     *
+     * @var string|null $obj
      */
-    public function count($obj = 'even')
+    public function count(?string $name = 'even')
     {
-        $this->method($obj, 'count');
+        $this->method('count', $name);
     }
 
     /**
      * Start a timer with this method.
      * Optionally the time can have a label.
+     *
+     * @var object|string $obj
      */
     public function time($obj)
     {
-        $this->method($obj, 'time');
+        $this->method('time', $obj);
     }
 
     /**
      * Finish a timer with this method.
      * Optionally the time can have a label.
+     *
+     * @var object|string $obj
      */
     public function timeend($obj)
     {
-        $this->method($obj, 'timeEnd');
+        $this->method('timeEnd', $obj);
     }
 
     /**
-     * Use this method to group console messages together with an optional label.
+     * Use this method to group console messages together
+     * with an optional label.
+     *
+     * @var object|string $obj
      */
     public function group($obj)
     {
-        $this->method($obj, 'group');
+        $this->method('group', $obj);
     }
 
     /**
      * Use this method to end an group of the console messages.
+     *
+     * @var object|string $obj
      */
     public function groupend($obj = null)
     {
-        $this->method($obj, 'groupEnd');
+        $this->method('groupEnd', $obj);
     }
 
     /**
      * Write output to console browser.
+     *
+     * @var string        $method
+     * @var object|string $obj
      */
-    private function method($obj, $method = 'log')
+    private function method(string $method = 'log', $obj)
     {
         // Start buffering
         ob_start();

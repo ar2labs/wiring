@@ -3,9 +3,25 @@
 namespace Wiring\Http\Controller;
 
 use Exception;
-use Psr\Http\Message\{ResponseInterface};
-use Wiring\Interfaces\{ContainerAwareInterface, ControllerInterface, ResponseAwareInterface};
+use Psr\Http\Message\ResponseInterface;
+use Wiring\Interfaces\{
+    ConsoleInterface,
+    ContainerAwareInterface,
+    ControllerInterface,
+    ResponseAwareInterface,
+    ApplicationInterface,
+    AuthInterface,
+    CookieInterface,
+    ConfigInterface,
+    CsrfInterface,
+    DatabaseInterface,
+    FlashInterface,
+    HashInterface
+};
 use Wiring\Strategy\{AbstractStrategy, ContainerAwareTrait, ResponseAwareTrait};
+use Psr\Log\LoggerInterface;
+use Wiring\Interfaces\RouterInterface;
+use Wiring\Interfaces\SessionInterface;
 
 abstract class AbstractController extends AbstractStrategy implements
     ContainerAwareInterface,
@@ -54,9 +70,10 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @param string $name  Entry name or a class name.
      * @param array $params Optional parameters to use to build the entry.
-     *                      Use this to force specific parameters to specific values.
-     *                      Parameters not set in this array will be automatically
-     *                      resolved.
+     *                      Use this to force specific parameters to
+     *                      specific values.
+     *                      Parameters not set in this array will be
+     *                      automatically resolved.
      *
      * @throws \Exception   Error while resolving the entry.
      *
@@ -82,7 +99,8 @@ abstract class AbstractController extends AbstractStrategy implements
      * @param array $parameters  Parameters to use.
      *                           Can be indexed by the parameter names
      *                           or not indexed (same order as the parameters).
-     *                           The array can also contain DI definitions, e.g. DI\get().
+     *                           The array can also contain DI definitions,
+     *                           e.g. DI\get().
      *
      * @throws \Exception
      *
@@ -295,8 +313,8 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * Note: This method is not part of the PSR-7 standard.
      *
-     * This method prepares the response object to return an HTTP Redirect
-     * response to the client.
+     * This method prepares the response object to return an
+     * HTTP Redirect response to the client.
      *
      * @param ResponseInterface
      * @param string $url
@@ -304,8 +322,11 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @return ResponseInterface $request
      */
-    public function redirect(ResponseInterface $response, string $url, int $status = 307)
-    {
+    public function redirect(
+        ResponseInterface $response,
+        string $url,
+        int $status = 307
+    ) {
         return $this->withRedirect($response, $url, $status);
     }
 
@@ -350,8 +371,11 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @return ResponseInterface
      */
-    protected function withRedirect(ResponseInterface $response, string $url, $status = 307)
-    {
+    protected function withRedirect(
+        ResponseInterface $response,
+        string $url,
+        $status = 307
+    ) {
         $responseWithRedirect = $response->withHeader('Location', $url);
 
         if (is_null($status) && $response->getStatusCode() === 200) {

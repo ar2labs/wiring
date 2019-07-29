@@ -1,26 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
+
+use Psr\Http\Message\ServerRequestInterface;
 
 interface CsrfInterface
 {
     /**
      * Retrieve token name key
      *
-     * @return string
+     * @return string|null
      */
-    public function getTokenNameKey();
+    public function getTokenNameKey(): ?string;
 
     /**
      * Retrieve token value key
      *
-     * @return string
+     * @return string|null
      */
-    public function getTokenValueKey();
+    public function getTokenValueKey(): ?string;
 
     /**
      * @param $prefix
      * @param $storage
+     *
      * @return mixed
      */
     public function validateStorage();
@@ -30,16 +35,18 @@ interface CsrfInterface
      *
      * @return array
      */
-    public function generateToken();
+    public function generateToken(): array;
 
     /**
      * Generates a new CSRF token and attaches it to the Request Object
      *
      * @param  ServerRequestInterface $request PSR7 response object.
      *
-     * @return ServerRequestInterface PSR7 response object.
+     * @return ServerRequestInterface          PSR7 response object.
      */
-    public function generateNewToken(ServerRequestInterface $request);
+    public function generateNewToken(
+        ServerRequestInterface $request
+    ): ServerRequestInterface;
 
     /**
      * Validate CSRF token from current request
@@ -50,5 +57,5 @@ interface CsrfInterface
      *
      * @return bool
      */
-    public function validateToken($name, $value);
+    public function validateToken($name, $value): bool;
 }

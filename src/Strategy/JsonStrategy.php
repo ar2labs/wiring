@@ -26,13 +26,15 @@ class JsonStrategy implements JsonStrategyInterface
     /**
      * Write data with JSON encode.
      *
-     * @param array $data The data
-     * @param int $encodingOptions JSON encoding options
+     * @param mixed $data            The data array or object
+     * @param int   $encodingOptions JSON encoding options
      *
      * @return self
      */
-    public function render($data, $encodingOptions = 0): JsonStrategyInterface
-    {
+    public function render(
+        $data,
+        int $encodingOptions = 0
+    ): JsonStrategyInterface {
         $this->data = $data;
         $this->encodingOptions = $encodingOptions;
         $this->isRender = true;
@@ -58,33 +60,42 @@ class JsonStrategy implements JsonStrategyInterface
     /**
      * Return response with JSON header and status.
      *
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param int $status
+     * @param ResponseInterface $response
+     * @param int               $status
      *
      * @return ResponseInterface
      */
-    public function to(ResponseInterface $response, $status = 200): ResponseInterface
-    {
+    public function to(
+        ResponseInterface $response,
+        int $status = 200
+    ): ResponseInterface {
+        // Check if it is to use json encode
         if ($this->isRender) {
-            $response->getBody()->write($this->jsonEncode($this->data, $this->encodingOptions));
+            $response
+                ->getBody()
+                ->write($this->jsonEncode($this->data, $this->encodingOptions));
         } else {
-            $response->getBody()->write($this->data);
+            $response
+                ->getBody()
+                ->write($this->data);
         }
 
-        return $response->withStatus($status)->withHeader('Content-Type', 'application/json;charset=utf-8');
+        return $response
+            ->withStatus($status)
+            ->withHeader('Content-Type', 'application/json;charset=utf-8');
     }
 
     /**
      * Encode the provided data to JSON.
      *
      * @param array $data The data
-     * @param int $encodingOptions JSON encoding options
+     * @param int   $encodingOptions JSON encoding options
      *
      * @return string JSON
      *
      * @throws InvalidArgumentException if unable to encode the $data to JSON
      */
-    private function jsonEncode($data, $encodingOptions)
+    private function jsonEncode($data, int $encodingOptions)
     {
         if (is_resource($data)) {
             throw new InvalidArgumentException('Cannot JSON encode resources');

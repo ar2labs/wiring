@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Permissions\Acl;
 
 class Resource
@@ -20,26 +22,32 @@ class Resource
      * @param string|null $name
      * @param string|null $ownerField
      */
-    public function __construct($name = null, $ownerField = null)
-    {
+    public function __construct(
+        ?string $name = null,
+        ?string $ownerField = null
+    ) {
         $this->name = $name;
         $this->ownerField = $ownerField;
     }
 
     /**
-     * @return string
+     * Get a resource.
+     *
+     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
+     * Set a resource.
+     *
      * @param string $name
      *
      * @return self
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
 
@@ -47,19 +55,23 @@ class Resource
     }
 
     /**
+     * Get a owner field.
+     *
      * @return string
      */
-    public function getOwnerField()
+    public function getOwnerField(): ?string
     {
         return $this->ownerField;
     }
 
     /**
+     * Set a owner field.
+     *
      * @param string $ownerField
      *
      * @return self
      */
-    public function setOwnerField($ownerField)
+    public function setOwnerField(string $ownerField): Resource
     {
         $this->ownerField = $ownerField;
 

@@ -22,5 +22,7 @@ interface ResponseAwareInterface
      *
      * @return ResponseAwareInterface
      */
-    public function setResponse(ResponseInterface $response): ResponseAwareInterface;
+    public function setResponse(
+        ResponseInterface $response
+    ): ResponseAwareInterface;
 }

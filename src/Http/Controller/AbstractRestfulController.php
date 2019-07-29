@@ -9,8 +9,9 @@ use Wiring\Http\Controller\AbstractJsonController;
 use Zend\Diactoros\Response;
 use Wiring\Interfaces\RestfulControllerInterface;
 
-abstract class AbstractRestfulController extends AbstractJsonController implements
-    RestfulControllerInterface
+abstract class AbstractRestfulController
+extends AbstractJsonController
+implements RestfulControllerInterface
 {
     /**
      * List an existing resource.
@@ -50,8 +51,10 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      *
      * @return ResponseInterface $response
      */
-    public function read(ServerRequestInterface $request, array $args): ResponseInterface
-    {
+    public function read(
+        ServerRequestInterface $request,
+        array $args
+    ): ResponseInterface {
         $response = new Response();
         $data = $this->methodNotImplemented();
 
@@ -66,8 +69,10 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      *
      * @return ResponseInterface $response
      */
-    public function update(ServerRequestInterface $request, array $args): ResponseInterface
-    {
+    public function update(
+        ServerRequestInterface $request,
+        array $args
+    ): ResponseInterface {
         $response = new Response();
         $data = $this->methodNotImplemented();
 
@@ -82,8 +87,10 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      *
      * @return ResponseInterface $response
      */
-    public function delete(ServerRequestInterface $request, array $args): ResponseInterface
-    {
+    public function delete(
+        ServerRequestInterface $request,
+        array $args
+    ): ResponseInterface {
         $response = new Response();
         $data = $this->methodNotImplemented();
 
@@ -99,8 +106,11 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      *
      * @return mixed|array
      */
-    public function info(string $message = 'Continue', int $status = 100, $data = [])
-    {
+    public function info(
+        string $message = 'Continue',
+        int $status = 100,
+        $data = []
+    ) {
         $data = $this->data('info', $message, $data, $status);
 
         return $data;
@@ -115,8 +125,11 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      *
      * @return mixed|array
      */
-    public function success(string $message = 'OK', $data = [], int $status = 200)
-    {
+    public function success(
+        string $message = 'OK',
+        $data = [],
+        int $status = 200
+    ) {
         $data = $this->data('success', $message, $data, $status);
 
         return $data;
@@ -131,8 +144,11 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      *
      * @return mixed|array
      */
-    public function redirect(string $message = 'Temporary Redirect', int $status = 307, $data = [])
-    {
+    public function redirect(
+        string $message = 'Temporary Redirect',
+        int $status = 307,
+        $data = []
+    ) {
         $data = $this->data('info', $message, $data, $status);
 
         return $data;
@@ -147,8 +163,11 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      *
      * @return mixed|array
      */
-    public function error(string $message = 'Bad Request', int $status = 400, $data = [])
-    {
+    public function error(
+        string $message = 'Bad Request',
+        int $status = 400,
+        $data = []
+    ) {
         $data = $this->data('error', $message, $data, $status);
 
         return $data;
@@ -163,8 +182,11 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      *
      * @return mixed|array
      */
-    public function fail(string $message = 'Internal Server Error', int $status = 500, $data = [])
-    {
+    public function fail(
+        string $message = 'Internal Server Error',
+        int $status = 500,
+        $data = []
+    ) {
         $data = $this->data('fail', $message, $data, $status);
 
         return $data;
@@ -180,8 +202,12 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      *
      * @return mixed|array
      */
-    public function data(string $status, string $message = 'OK', $data = [], int $code = 200)
-    {
+    public function data(
+        string $status,
+        string $message = 'OK',
+        $data = [],
+        int $code = 200
+    ) {
         $result = [
             'code' => $code,
             'status' => $status,

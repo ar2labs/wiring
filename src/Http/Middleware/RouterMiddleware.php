@@ -34,8 +34,10 @@ class RouterMiddleware implements MiddlewareInterface
      * @param Router $router
      * @param ResponseFactoryInterface $responseFactory
      */
-    public function __construct($router, ResponseFactoryInterface $responseFactory = null)
-    {
+    public function __construct(
+        $router,
+        ResponseFactoryInterface $responseFactory = null
+    ) {
         $this->router = $router;
         $this->responseFactory = $responseFactory;
     }
@@ -43,16 +45,19 @@ class RouterMiddleware implements MiddlewareInterface
     /**
      * Process a server request and return a response.
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-    {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
         return $this->router->dispatch($request);
     }
 
     /**
      * Set the response factory used.
      */
-    public function responseFactory(ResponseFactoryInterface $responseFactory): self
-    {
+    public function responseFactory(
+        ResponseFactoryInterface $responseFactory
+    ): self {
         $this->responseFactory = $responseFactory;
 
         return $this;
@@ -83,8 +88,10 @@ class RouterMiddleware implements MiddlewareInterface
      *
      * @param mixed $handler
      */
-    protected function setHandler(ServerRequestInterface $request, $handler): ServerRequestInterface
-    {
+    protected function setHandler(
+        ServerRequestInterface $request,
+        $handler
+    ): ServerRequestInterface {
         return $request->withAttribute($this->attribute, $handler);
     }
 }

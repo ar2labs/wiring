@@ -7,9 +7,13 @@ namespace Wiring\Http\Controller;
 use League\Route\Route;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Message\{ResponseFactoryInterface, ResponseInterface, ServerRequestInterface};
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Wiring\Interfaces\JsonStrategyInterface;
-use Wiring\Http\Exception\{HttpException, MethodNotAllowedException, NotFoundException};
+use Wiring\Http\Exception\HttpException;
+use Wiring\Http\Exception\MethodNotAllowedException;
+use Wiring\Http\Exception\NotFoundException;
 
 abstract class AbstractJsonController extends AbstractController
 {
@@ -19,8 +23,10 @@ abstract class AbstractJsonController extends AbstractController
      * @param ContainerInterface $container
      * @param ResponseFactoryInterface $response
      */
-    public function __construct(ContainerInterface $container, ResponseInterface $response)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        ResponseInterface $response
+    ) {
         $this->setContainer($container);
         $this->setResponse($response);
         $this->addDefaultResponseHeader('content-type', 'application/json');
@@ -34,8 +40,10 @@ abstract class AbstractJsonController extends AbstractController
      *
      * @return ResponseInterface
      */
-    public function invokeRouteCallable(Route $route, ServerRequestInterface $request): ResponseInterface
-    {
+    public function invokeRouteCallable(
+        Route $route,
+        ServerRequestInterface $request
+    ): ResponseInterface {
         $controller = $route->getCallable($this->getContainer());
         $response = $controller($request, $route->getVars());
 
@@ -86,8 +94,9 @@ abstract class AbstractJsonController extends AbstractController
      *
      * @return MiddlewareInterface
      */
-    public function getNotFoundDecorator(NotFoundException $exception): MiddlewareInterface
-    {
+    public function getNotFoundDecorator(
+        NotFoundException $exception
+    ): MiddlewareInterface {
         return $this->buildJsonResponseMiddleware($exception);
     }
 
@@ -98,8 +107,9 @@ abstract class AbstractJsonController extends AbstractController
      *
      * @return MiddlewareInterface
      */
-    public function getMethodNotAllowedDecorator(MethodNotAllowedException $exception): MiddlewareInterface
-    {
+    public function getMethodNotAllowedDecorator(
+        MethodNotAllowedException $exception
+    ): MiddlewareInterface {
         return $this->buildJsonResponseMiddleware($exception);
     }
 
@@ -110,15 +120,20 @@ abstract class AbstractJsonController extends AbstractController
      *
      * @return MiddlewareInterface
      */
-    protected function buildJsonResponseMiddleware(HttpException $exception): MiddlewareInterface
-    {
-        return new class($this->responseFactory->createResponse(), $exception) implements MiddlewareInterface
+    protected function buildJsonResponseMiddleware(
+        HttpException $exception
+    ): MiddlewareInterface {
+        return new class ($this
+            ->responseFactory
+            ->createResponse(), $exception) implements MiddlewareInterface
         {
             protected $response;
             protected $exception;
 
-            public function __construct(ResponseInterface $response, HttpException $exception)
-            {
+            public function __construct(
+                ResponseInterface $response,
+                HttpException $exception
+            ) {
                 $this->response  = $response;
                 $this->exception = $exception;
             }
@@ -154,7 +169,8 @@ abstract class AbstractJsonController extends AbstractController
      */
     public function getThrowableHandler(): MiddlewareInterface
     {
-        return new class($this->responseFactory->createResponse()) implements MiddlewareInterface
+        return new class ($this->responseFactory->createResponse())
+        implements MiddlewareInterface
         {
             protected $response;
 
@@ -183,8 +199,13 @@ abstract class AbstractJsonController extends AbstractController
                         'data' => []
                     ]));
 
-                    $response = $response->withAddedHeader('content-type', 'application/json');
-                    return $response->withStatus(500, strtok($exception->getMessage(), "\n"));
+                    $response = $response
+                        ->withAddedHeader('content-type', 'application/json');
+
+                    $reason = strtok($exception->getMessage(), "\n");
+
+                    return $response
+                        ->withStatus(500, $reason);
                 }
             }
         };
