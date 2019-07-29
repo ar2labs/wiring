@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace Wiring\Interfaces;
 
+use Psr\Http\Message\ResponseInterface;
+
 interface ApplicationInterface
 {
     /**
-     * Starting application.
+     * Start then application.
+     *
+     * @return ResponseInterface
      */
-    public function run();
+    public function run(): ResponseInterface;
 
     /**
-     * Stopping application.
+     * Stop the application.
+     *
+     * @return ResponseInterface
      */
-    public function stop();
+    public function stop(): ResponseInterface;
 }

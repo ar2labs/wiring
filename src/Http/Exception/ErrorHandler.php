@@ -26,9 +26,14 @@ class ErrorHandler extends \Exception
     protected $exception;
 
     /**
-     * @var \Psr\Log\LoggerInterface;
+     * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @var array
+     */
+    protected $loggerContext = [];
 
     /**
      * @var bool
@@ -44,18 +49,24 @@ class ErrorHandler extends \Exception
      * Create error handler.
      *
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param LoggerInterface $logger
-     * @param \Exception|\Throwable $exception
-     * @param bool $debug
+     * @param ResponseInterface      $response
+     * @param LoggerInterface        $logger
+     * @param \Exception|\Throwable  $exception
+     * @param bool                   $debug
      */
-    public function __construct(ServerRequestInterface $request, ResponseInterface $response,
-                                $exception, LoggerInterface $logger = null, $debug = false)
-    {
+    public function __construct(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $exception,
+        LoggerInterface $logger = null,
+        $loggerContext = [],
+        $debug = false
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->exception = $exception;
         $this->logger = $logger;
+        $this->loggerContext = $loggerContext;
         $this->debug = $debug;
 
         $msg  = $this->exception->getMessage() ?? 'An error has occurred.';
@@ -84,9 +95,11 @@ class ErrorHandler extends \Exception
     public function error(?string $title = null): array
     {
         if ($title == null) {
-            $title = $this->debug ?
-                'The application could not run because of the following error:' :
-                'A website error has occurred. Sorry for the temporary inconvenience.';
+            $mesg1 = 'The application could not run ' .
+                'because of the following error:';
+            $mesg2 = 'A website error has occurred.' .
+                'Sorry for the temporary inconvenience.';
+            $title = $this->debug ? $mesg1 : $mesg2;
         }
 
         $type = $this->request->getHeader('Content-Type');
@@ -96,10 +109,11 @@ class ErrorHandler extends \Exception
 
         // Debug mode header
         if ((isset($mode[0])) && ($mode[0] == '0' || $mode[0] == '1')) {
-            $this->debug = (bool)$mode[0];
+            $this->debug = (bool) $mode[0];
         }
 
-        $statusCode = method_exists($this->exception, 'getStatusCode') ? $this->exception->getStatusCode() : null;
+        $statusCode = method_exists($this->exception, 'getStatusCode') ?
+            $this->exception->getStatusCode() : null;
 
         // Check status code is null
         if ($statusCode == null) {
@@ -111,7 +125,9 @@ class ErrorHandler extends \Exception
         // Check logger exist
         if ($this->logger !== null) {
             // Send error to log
-            $this->logger->error($this->exception->getMessage());
+            $this
+                ->logger
+                ->error($this->exception->getMessage(), $this->loggerContext);
         }
 
         $this->isJson = isset($type[0]) && $type[0] == 'application/json';

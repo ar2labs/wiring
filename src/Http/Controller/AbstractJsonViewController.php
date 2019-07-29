@@ -20,8 +20,10 @@ abstract class AbstractJsonViewController extends AbstractController
      * @param ContainerInterface $container
      * @param ResponseFactoryInterface $response
      */
-    public function __construct(ContainerInterface $container, ResponseInterface $response)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        ResponseInterface $response
+    ) {
         $this->setContainer($container);
         $this->setResponse($response);
     }
@@ -54,8 +56,10 @@ abstract class AbstractJsonViewController extends AbstractController
      *
      * @return ResponseInterface
      */
-    public function invokeRouteCallable(Route $route, ServerRequestInterface$request): ResponseInterface
-    {
+    public function invokeRouteCallable(
+        Route $route,
+        ServerRequestInterface $request
+    ): ResponseInterface {
         $controller = $route->getCallable($this->getContainer());
 
         $response = $controller($request, $route->getVars());
@@ -71,8 +75,9 @@ abstract class AbstractJsonViewController extends AbstractController
      *
      * @return MiddlewareInterface
      */
-    public function getNotFoundDecorator(NotFoundException $exception): MiddlewareInterface
-    {
+    public function getNotFoundDecorator(
+        NotFoundException $exception
+    ): MiddlewareInterface {
         return $this->throwThrowableMiddleware($exception);
     }
 
@@ -83,8 +88,9 @@ abstract class AbstractJsonViewController extends AbstractController
      *
      * @return MiddlewareInterface
      */
-    public function getMethodNotAllowedDecorator(MethodNotAllowedException $exception): MiddlewareInterface
-    {
+    public function getMethodNotAllowedDecorator(
+        MethodNotAllowedException $exception
+    ): MiddlewareInterface {
         return $this->throwThrowableMiddleware($exception);
     }
 
@@ -95,9 +101,10 @@ abstract class AbstractJsonViewController extends AbstractController
      *
      * @return \Psr\Http\Server\MiddlewareInterface
      */
-    protected function throwThrowableMiddleware(Throwable $error): MiddlewareInterface
+    protected function throwThrowableMiddleware(
+        Throwable $error): MiddlewareInterface
     {
-        return new class($error) implements MiddlewareInterface
+        return new class ($error) implements MiddlewareInterface
         {
             protected $error;
 
@@ -118,8 +125,8 @@ abstract class AbstractJsonViewController extends AbstractController
     /**
      * Get a middleware that will act as an exception handler.
      *
-     * The middleware must wrap the rest of the middleware stack and catch any
-     * thrown exceptions.
+     * The middleware must wrap the rest of the middleware stack
+     * and catch any thrown exceptions.
      *
      * @return MiddlewareInterface
      */
@@ -129,8 +136,8 @@ abstract class AbstractJsonViewController extends AbstractController
     }
 
     /**
-     * Get a middleware that acts as a throwable handler, it should wrap the rest of the
-     * middleware stack and catch any throwables.
+     * Get a middleware that acts as a throwable handler, it should wrap the
+     * rest of the middleware stack and catch any throwables.
      *
      * @return MiddlewareInterface
      */

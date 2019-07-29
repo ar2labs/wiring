@@ -6,24 +6,26 @@ namespace Wiring;
 
 use Wiring\Interfaces\ApplicationInterface;
 use Wiring\Http\RequestHandler;
+use Psr\Http\Message\ResponseInterface;
 
-/**
- * Start a wiring application.
- */
 class Application extends RequestHandler implements ApplicationInterface
 {
     /**
-     * Start then application.
+     * Start the application.
+     *
+     * @return ResponseInterface
      */
-    public function run()
+    public function run(): ResponseInterface
     {
         return $this->handle($this->request);
     }
 
     /**
      * Stop the application.
+     *
+     * @return ResponseInterface
      */
-    public function stop()
+    public function stop(): ResponseInterface
     {
         $this->setIsAfterMiddleware(true);
 

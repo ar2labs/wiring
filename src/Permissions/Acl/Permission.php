@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Permissions\Acl;
 
 class Permission
@@ -14,25 +16,29 @@ class Permission
      *
      * @param string|null $name
      */
-    public function __construct($name = null)
+    public function __construct(?string $name = '')
     {
         $this->name = $name;
     }
 
     /**
-     * @return string
+     * Get a permission.
+     *
+     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @param string $name
+     * Set a permission.
+     *
+     * @param  string $name
      *
      * @return Permission
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
 

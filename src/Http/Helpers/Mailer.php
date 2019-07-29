@@ -4,13 +4,14 @@ namespace Wiring\Http\Helpers;
 
 use Wiring\Strategy\Mailtrap\Message;
 use Wiring\Interfaces\ViewRendererInterface;
+use Psr\Container\ContainerInterface;
 
 class Mailer
 {
     /** @var mixed */
     protected $mailer;
 
-    /** @var \Psr\Container\ContainerInterface $container */
+    /** @var ContainerInterface $container */
     protected $container;
 
     /**
@@ -19,7 +20,7 @@ class Mailer
      * @param $mailer
      * @param $container
      */
-    public function __construct($mailer, $container)
+    public function __construct($mailer, ContainerInterface $container)
     {
         $this->mailer = $mailer;
         $this->container = $container;
@@ -36,9 +37,10 @@ class Mailer
     {
         $message = new Message($this->mailer);
 
-        $message->body($this->container->get(ViewRendererInterface::class)->render($template, [
-            'data' => $data
-        ]));
+        $message->body($this->container->get(ViewRendererInterface::class)
+            ->render($template, [
+                'data' => $data
+            ]));
 
         call_user_func($callback, $message);
 

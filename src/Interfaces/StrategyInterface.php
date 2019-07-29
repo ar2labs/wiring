@@ -12,36 +12,42 @@ use Wiring\Http\Exception\{MethodNotAllowedException, NotFoundException};
 interface StrategyInterface
 {
     /**
-     * Invoke the route callable based on the strategy
+     * Invoke the route callable based on the strategy.
      *
      * @param Route                  $route
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
      */
-    public function invokeRouteCallable(Route $route, ServerRequestInterface $request): ResponseInterface;
+    public function invokeRouteCallable(
+        Route $route,
+        ServerRequestInterface $request
+    ): ResponseInterface;
 
     /**
-     * Get a middleware that will decorate a NotFoundException
+     * Get a middleware that will decorate a NotFoundException.
      *
      * @param NotFoundException $exception
      *
      * @return MiddlewareInterface
      */
-    public function getNotFoundDecorator(NotFoundException $exception): MiddlewareInterface;
+    public function getNotFoundDecorator(
+        NotFoundException $exception
+    ): MiddlewareInterface;
 
     /**
-     * Get a middleware that will decorate a NotAllowedException
+     * Get a middleware that will decorate a NotAllowedException.
      *
      * @param MethodNotAllowedException $exception
      *
      * @return MiddlewareInterface
      */
-    public function getMethodNotAllowedDecorator(MethodNotAllowedException $exception): MiddlewareInterface;
+    public function getMethodNotAllowedDecorator(
+        MethodNotAllowedException $exception
+    ): MiddlewareInterface;
 
     /**
-     * Get a middleware that will act as an exception handler
-     *
+     * Get a middleware that will act as an exception handler.
      * The middleware must wrap the rest of the middleware
      * stack and catch any thrown exceptions.
      *

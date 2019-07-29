@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Permissions\Acl;
 
 use Wiring\Interfaces\UserAclInterface;
@@ -17,7 +19,7 @@ class Acl
     protected $resources = [];
 
     /**
-     * @var \Wiring\Interfaces\UserAclInterface
+     * @var UserAclInterface
      */
     protected $user;
 
@@ -49,11 +51,13 @@ class Acl
     }
 
     /**
+     * Define a user.
+     *
      * @param UserAclInterface $user
      *
      * @return self
      */
-    public function setUser(UserAclInterface $user)
+    public function setUser(UserAclInterface $user): Acl
     {
         $this->user = $user;
 
@@ -61,11 +65,13 @@ class Acl
     }
 
     /**
-     * @param $name
+     * Return has role.
      *
-     * @return \Wiring\Permissions\Acl\Role|bool
+     * @param string $name
+     *
+     * @return Role|bool
      */
-    public function hasRole($name)
+    public function hasRole(string $name)
     {
         /** @var \Wiring\Permissions\Acl\Role $role */
         foreach ($this->roles as $role) {
@@ -81,12 +87,14 @@ class Acl
     }
 
     /**
+     * Return has permission.
+     *
      * @param string $role
      * @param string $permission
      *
      * @return bool
      */
-    public function hasPermission($role, $permission)
+    public function hasPermission(string $role, string $permission): bool
     {
         // Check role
         if ($itemRole = $this->hasRole($role)) {
@@ -105,21 +113,25 @@ class Acl
     }
 
     /**
-     * @param $permission
-     * @param \Wiring\Interfaces\UserAclInterface|null $user
+     * Can permission.
+     *
+     * @param                       $permission
+     * @param UserAclInterface|null $user
      *
      * @return bool
      */
-    public function can($permission, UserAclInterface $user = null)
+    public function can($permission, UserAclInterface $user = null): bool
     {
         if ($user) {
+            $role = $user->getRole()->getName();
             // Check role permission
-            return $this->hasPermission($user->getRole()->getName(), $permission);
+            return $this->hasPermission($role, $permission);
         }
 
         if ($this->user) {
+            $role = $this->user->getRole()->getName();
             // Check role permission
-            return $this->hasPermission($this->user->getRole()->getName(), $permission);
+            return $this->hasPermission($role, $permission);
         }
 
         // Whoops!
@@ -127,12 +139,14 @@ class Acl
     }
 
     /**
-     * @param $permission
+     * Cannot permission.
+     *
+     * @param                       $permission
      * @param UserAclInterface|null $user
      *
      * @return bool
      */
-    public function cannot($permission, UserAclInterface $user = null)
+    public function cannot($permission, UserAclInterface $user = null): bool
     {
         return !$this->can($permission, $user);
     }

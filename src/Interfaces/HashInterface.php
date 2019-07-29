@@ -1,49 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
 
 interface HashInterface
 {
     /**
-     * Set password.
+     * Set a password.
      *
-     * @param $password
-     * @return bool|string
-     */
-    public function password($password);
-
-    /**
-     * Check password.
+     * @param string $password
      *
-     * @param $givenPassword
-     * @param $knownPassword
      * @return bool
      */
-    public function verifyPassword($givenPassword, $knownPassword);
+    public function password(string $password): bool;
 
     /**
-     * Generate random string.
+     * Check a password.
+     *
+     * @param string $givenPassword
+     * @param string $knownPassword
+     *
+     * @return bool
+     */
+    public function verifyPassword(
+        string $givenPassword,
+        string $knownPassword
+    ): bool;
+
+    /**
+     * Generate a random string.
      *
      * @param int $length
      * @param string $characters
+     *
      * @return string
      */
-    public function generate($length = 64, $characters);
+    public function generate(int $length = 64, string $characters): string;
 
     /**
-     * Get SHA256 hash.
+     * Get a SHA256 hash.
      *
-     * @param $input
+     * @param string $input
+     *
      * @return string
      */
-    public function hash($input);
+    public function hash(string $input): string;
 
     /**
-     * Check hash.
+     * Check a hash.
      *
-     * @param $knownHash
-     * @param $givenHash
+     * @param string $knownHash
+     * @param string $givenHash
+     *
      * @return bool
      */
-    public function verifyHash($knownHash, $givenHash);
+    public function verifyHash($knownHash, $givenHash): bool;
 }

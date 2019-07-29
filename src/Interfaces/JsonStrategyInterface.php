@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
 
 use Psr\Http\Message\ResponseInterface;
@@ -9,12 +11,12 @@ interface JsonStrategyInterface
     /**
      * Write data with JSON encode.
      *
-     * @param array $data The data
-     * @param int $encodingOptions JSON encoding options
+     * @param mixed $data            The data array or object
+     * @param int   $encodingOptions JSON encoding options
      *
      * @return self
      */
-    public function render($data, $encodingOptions = 0);
+    public function render($data, int $encodingOptions = 0);
 
     /**
      * Write JSON to data response.
@@ -28,10 +30,13 @@ interface JsonStrategyInterface
     /**
      * Return response with JSON header and status.
      *
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param int $status
+     * @param ResponseInterface $response
+     * @param int               $status
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface
      */
-    public function to(ResponseInterface $response, $status = 200): ResponseInterface;
+    public function to(
+        ResponseInterface $response,
+        int $status = 200
+    ): ResponseInterface;
 }

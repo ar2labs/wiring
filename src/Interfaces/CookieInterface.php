@@ -1,40 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
 
 interface CookieInterface
 {
     /**
-     * Get cookie.
+     * Get a cookie.
      *
-     * @param $name
-     * @return mixed
+     * @param string $name
+     *
+     * @return string|array|object
      */
-    public static function get($name);
+    public static function get(string $name);
 
     /**
-     * Set cookie.
+     * Set a cookie.
      *
-     * @param $name
-     * @param $value
-     * @param $expiry
-     * @param bool $secure
+     * @param string $name
+     * @param string $value
+     * @param int    $expiry
+     * @param bool   $secure
+     *
      * @return bool
      */
-    public static function set($name, $value, $expiry, $secure = false);
+    public static function set(
+        string $name,
+        string $value = "",
+        int $expiry = 0,
+        bool $secure = false
+    ): bool;
 
     /**
-     * Check cookie exists.
+     * Checks if a cookie exists.
      *
      * @param $name
+     *
      * @return bool
      */
-    public static function has($name);
+    public static function has($name): bool;
 
     /**
-     * Remove cookie.
+     * Remove a cookie.
      *
-     * @param $name
+     * @param string $name
      */
-    public static function forget($name);
+    public static function forget(string $name);
 }

@@ -26,12 +26,13 @@ interface ControllerInterface
      * Resolves an entry by its name.
      * If given a class name, it will return a new instance of that class.
      *
-     * @param string $name Entry name or a class name.
-     * @param array $parameters Optional parameters to use to build the entry. Use this to force specific
-     *                           parameters to specific values. Parameters not defined in this array will
-     *                           be automatically resolved.
+     * @param string $name       Entry name or a class name.
+     * @param array  $parameters Optional parameters to use to build the entry.
+     *                           Use this to force specific parameters to
+     *                           specific values. Parameters not defined in
+     *                           this array will be automatically resolved.
      *
-     * @throws \Exception       Error while resolving the entry.
+     * @throws \Exception        Error while resolving the entry.
      *
      * @return mixed
      */
@@ -42,10 +43,10 @@ interface ControllerInterface
      *
      * Missing parameters will be resolved from the container.
      *
-     * @param callable $callable Function to call.
-     * @param array $parameters Parameters to use. Can be indexed by the parameter names
-     *                             or not indexed (same order as the parameters).
-     *                             The array can also contain DI definitions, e.g. DI\get().
+     * @param callable $callable   Function to call.
+     * @param array    $parameters Parameters to use.
+     *                             Can be indexed by the parameter names
+     *                             or not indexed (same order as the parameters)
      *
      * @throws \Exception
      *
@@ -56,8 +57,8 @@ interface ControllerInterface
     /**
      * Define an object or a value in the container.
      *
-     * @param string $name Entry name
-     * @param mixed $value Value, use definition helpers to define objects
+     * @param string $name  Entry name
+     * @param mixed  $value Value, use definition helpers to define objects
      *
      * @throws \Exception
      */
@@ -68,7 +69,7 @@ interface ControllerInterface
      *
      * @throws \Exception
      *
-     * @return \Wiring\Provider\DatabaseInterface
+     * @return DatabaseInterface
      */
     public function database();
 }

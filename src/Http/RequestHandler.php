@@ -68,8 +68,11 @@ class RequestHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $response
      * @param ResponseInterface $response
      */
-    public function __construct(ContainerInterface $container, ServerRequestInterface $request, ResponseInterface $response)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ) {
         $this->container = $container;
         $this->request = $request;
         $this->response = $response;
@@ -112,14 +115,18 @@ class RequestHandler implements RequestHandlerInterface
                 return $this->response;
             }
 
+            // Get the next middleware
+            $currentMiddleware = $this->middleware[$this->currentMiddleware];
+
             // Execute the next middleware
-            $this->executeMiddleware($this->middleware[$this->currentMiddleware]);
+            $this->executeMiddleware($currentMiddleware);
+
         } catch (Exception $e) {
             // Call error handler
-            $this->errorHandler($e, $this->request, $this->response);
+            return $this->errorHandler($e, $this->request, $this->response);
         } catch (Throwable $e) {
             // Call error handler
-            $this->errorHandler($e, $this->request, $this->response);
+            return $this->errorHandler($e, $this->request, $this->response);
         }
 
         return $this->response;
@@ -150,8 +157,10 @@ class RequestHandler implements RequestHandlerInterface
      *
      * @return null|MiddlewareInterface
      */
-    public function addMiddleware(MiddlewareInterface $middleware, ?string $key = null): RequestHandler
-    {
+    public function addMiddleware(
+        MiddlewareInterface $middleware,
+        ?string $key = null
+    ): RequestHandler {
         $this->middleware[] = [
             "key" => $key,
             "middleware" => $middleware,
@@ -201,8 +210,9 @@ class RequestHandler implements RequestHandlerInterface
      *
      * @return self
      */
-    public function addRouterMiddleware(MiddlewareInterface $router): RequestHandler
-    {
+    public function addRouterMiddleware(
+        MiddlewareInterface $router
+    ): RequestHandler {
         $this->addMiddleware($router, 'router');
 
         return $this;
@@ -215,8 +225,9 @@ class RequestHandler implements RequestHandlerInterface
      *
      * @return self
      */
-    public function addRequestHandler(MiddlewareInterface $RequestHandler): RequestHandler
-    {
+    public function addRequestHandler(
+        MiddlewareInterface $RequestHandler
+    ): RequestHandler {
         $this->addMiddleware($RequestHandler, 'RequestHandler');
 
         return $this;
@@ -229,8 +240,9 @@ class RequestHandler implements RequestHandlerInterface
      *
      * @return self
      */
-    public function addEmitterMiddleware(MiddlewareInterface $emitter): RequestHandler
-    {
+    public function addEmitterMiddleware(
+        MiddlewareInterface $emitter
+    ): RequestHandler {
         $this->addAfterMiddleware($emitter, 'emitter');
 
         return $this;
@@ -244,8 +256,10 @@ class RequestHandler implements RequestHandlerInterface
      *
      * @return self
      */
-    public function addAfterMiddleware(MiddlewareInterface $middleware, ?string $key): RequestHandler
-    {
+    public function addAfterMiddleware(
+        MiddlewareInterface $middleware,
+        ?string $key
+    ): RequestHandler {
         $this->middleware[] = [
             "key" => $key,
             "middleware" => $middleware,
@@ -312,10 +326,13 @@ class RequestHandler implements RequestHandlerInterface
      *
      * @return mixed
      */
-    protected function errorHandler($error, ServerRequestInterface $request, ResponseInterface $response)
-    {
+    protected function errorHandler(
+        $error,
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ) {
         // Check has handler
-        if (! $this->container->has(ErrorHandlerInterface::class)) {
+        if (!$this->container->has(ErrorHandlerInterface::class)) {
             // Create new error handler
             $errorHandler = new ErrorHandler($request, $response, $error);
             $error = $errorHandler->error();

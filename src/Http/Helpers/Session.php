@@ -11,11 +11,12 @@ class Session implements SessionInterface
     /**
      * Get a session key or a default value.
      *
-     * @param string $key
+     * @param string      $key
      * @param string|null $default
-     * @return null
+     *
+     * @return string|array|object
      */
-    public static function get($key, $default = null)
+    public static function get(string $key, ?string $default = '')
     {
         if (self::has($key)) {
             return $_SESSION[$key];
@@ -27,22 +28,24 @@ class Session implements SessionInterface
     /**
      * Defines a session key.
      *
-     * @param $name
-     * @param $value
-     * @return mixed
+     * @param string      $key
+     * @param string|null $value
+     *
+     * @return string|array|object
      */
-    public static function set($name, $value)
+    public static function set(string $key, ?string $value)
     {
-        return $_SESSION[$name] = $value;
+        return $_SESSION[$key] = $value;
     }
 
     /**
      * Checks if a session key exists.
      *
-     * @param $key
+     * @param string $key
+     *
      * @return bool
      */
-    public static function has($key)
+    public static function has(string $key): bool
     {
         return (isset($_SESSION[$key])) ? true : false;
     }
@@ -50,9 +53,9 @@ class Session implements SessionInterface
     /**
      * Remove a session key.
      *
-     * @param $key
+     * @param string $key
      */
-    public static function forget($key)
+    public static function forget(string $key)
     {
         if (self::has($key)) {
             unset($_SESSION[$key]);

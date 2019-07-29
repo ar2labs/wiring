@@ -25,8 +25,8 @@ interface ViewStrategyInterface
     /**
      * Render a new template view.
      *
-     * @param string $view Template view name
-     * @param array $params View params
+     * @param string $view   Template view name
+     * @param array  $params View params
      *
      * @return self
      */
@@ -49,5 +49,8 @@ interface ViewStrategyInterface
      *
      * @return ResponseInterface
      */
-    public function to(ResponseInterface $response, $status = 200): ResponseInterface;
+    public function to(
+        ResponseInterface $response,
+        $status = 200
+    ): ResponseInterface;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
 
 interface RouterInterface
@@ -10,7 +12,6 @@ interface RouterInterface
 
     /**
      * Dispatches against the provided HTTP method verb and URI.
-     *
      * Returns array with one of the following formats:
      *
      *     [self::NOT_FOUND]
@@ -22,5 +23,5 @@ interface RouterInterface
      *
      * @return array
      */
-    public function dispatch($httpMethod, $uri);
+    public function dispatch(string $httpMethod, string $uri): array;
 }

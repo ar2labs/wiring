@@ -95,8 +95,9 @@ class HttpException extends \Exception implements HttpExceptionInterface
      *
      * @return ResponseInterface
      */
-    public function buildResponse(ResponseInterface $response): ResponseInterface
-    {
+    public function buildResponse(
+        ResponseInterface $response
+    ): ResponseInterface {
         foreach ($this->headers as $key => $value) {
             $response = $response->withAddedHeader($key, $value);
         }
@@ -105,11 +106,13 @@ class HttpException extends \Exception implements HttpExceptionInterface
             $this->message = $this->previous->getMessage();
         }
 
-        $statusCode = method_exists($this->previous, 'getStatusCode') ? $this->previous->getStatusCode() : null;
+        $statusCode = method_exists($this->previous, 'getStatusCode') ?
+            $this->previous->getStatusCode() : null;
 
         // Check status code is null
         if ($statusCode == null) {
-            $statusCode = $this->code >= 100 && $this->code <= 500 ? $this->code : 400;
+            $statusCode = $this->code >= 100 && $this->code <= 500 ?
+                $this->code : 400;
         }
 
         $this->data = [
@@ -131,8 +134,9 @@ class HttpException extends \Exception implements HttpExceptionInterface
      *
      * @return ResponseInterface
      */
-    public function buildJsonResponse(ResponseInterface $response): ResponseInterface
-    {
+    public function buildJsonResponse(
+        ResponseInterface $response
+    ): ResponseInterface {
         $this->headers['content-type'] = 'application/json';
 
         foreach ($this->headers as $key => $value) {

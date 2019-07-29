@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
+
+use Wiring\Permissions\Acl\Role;
 
 interface UserAclInterface
 {
     /**
-     * @return \Wiring\Permissions\Acl\Role
+     * @return Role
      */
-    public function getRole();
+    public function getRole(): Role;
 
     /**
      * @return int
      */
-    public function getId();
+    public function getId(): int;
 }

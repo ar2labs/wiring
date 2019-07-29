@@ -1,39 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
 
 interface SessionInterface
 {
     /**
-     * Get session.
+     * Get a session key or a default value.
      *
-     * @param $key
-     * @param null $default
-     * @return null
+     * @param string      $key
+     * @param string|null $default
+     *
+     * @return string|array|object
      */
-    public static function get($key, $default = null);
+    public static function get(string $key, ?string $default = '');
 
     /**
-     * Set session.
+     * Defines a session key.
      *
-     * @param $name
-     * @param $value
-     * @return mixed
+     * @param string      $key
+     * @param string|null $value
+     *
+     * @return string|array|object
      */
-    public static function set($name, $value);
+    public static function set(string $key, ?string $value);
 
     /**
-     * Check session exists.
+     * Checks if a session key exists.
      *
-     * @param $key
+     * @param string $key
+     *
      * @return bool
      */
-    public static function has($key);
+    public static function has(string $key): bool;
 
     /**
-     * Remove session.
+     * Remove a session key.
      *
-     * @param $key
+     * @param string $key
      */
-    public static function forget($key);
+    public static function forget(string $key);
 }

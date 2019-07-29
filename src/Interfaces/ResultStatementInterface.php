@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
 
 interface ResultStatementInterface extends \Traversable
@@ -21,7 +23,8 @@ interface ResultStatementInterface extends \Traversable
     /**
      * Sets the fetch mode to use while iterating this statement.
      *
-     * @param integer $fetchMode The fetch mode must be one of the PDO::FETCH_* constants.
+     * @param integer $fetchMode The fetch mode must be one of the
+     *                           PDO::FETCH_* constants.
      * @param mixed $arg2
      * @param mixed $arg3
      *
@@ -34,12 +37,14 @@ interface ResultStatementInterface extends \Traversable
     /**
      * Returns the next row of a result set.
      *
-     * @param integer|null $fetchMode Controls how the next row will be returned to the caller.
-     *                                The value must be one of the PDO::FETCH_* constants,
-     *                                defaulting to PDO::FETCH_BOTH.
+     * @param integer|null $fetchMode Controls how the next row will be returned
+     *                                to the caller. The value must be one of
+     *                                the PDO::FETCH_* constants, defaulting to
+     *                                PDO::FETCH_BOTH.
      *
-     * @return mixed The return value of this method on success depends on the fetch mode. In all cases, FALSE is
-     *               returned on failure.
+     * @return mixed                  The return value of this method on success
+     *                                depends on the fetch mode. In all cases,
+     *                                FALSE is returned on failure.
      *
      * @see PDO::FETCH_* constants.
      */
@@ -48,9 +53,10 @@ interface ResultStatementInterface extends \Traversable
     /**
      * Returns an array containing all of the result set rows.
      *
-     * @param integer|null $fetchMode Controls how the next row will be returned to the caller.
-     *                                The value must be one of the PDO::FETCH_* constants,
-     *                                defaulting to PDO::FETCH_BOTH.
+     * @param integer|null $fetchMode Controls how the next row will be returned
+     *                                to the caller. The value must be one of
+     *                                the PDO::FETCH_* constants, defaulting to
+     *                                PDO::FETCH_BOTH.
      *
      * @return array
      *
@@ -59,13 +65,17 @@ interface ResultStatementInterface extends \Traversable
     public function fetchAll($fetchMode = null);
 
     /**
-     * Returns a single column from the next row of a result set or FALSE if there are no more rows.
+     * Returns a single column from the next row of a result set or FALSE if
+     * there are no more rows.
      *
-     * @param integer $columnIndex 0-indexed number of the column you wish to retrieve from the row.
-     *                             If no value is supplied, PDOStatement->fetchColumn()
-     *                             fetches the first column.
+     * @param integer $columnIndex 0-indexed number of the column you wish to
+     *                             retrieve from the row.
+     *                             If no value is supplied,
+     *                             PDOStatement->fetchColumn() fetches the
+     *                             first column.
      *
-     * @return string|boolean A single column in the next row of a result set, or FALSE if there are no more rows.
+     * @return string|boolean      A single column in the next row of a result
+     *                             set, or FALSE if there are no more rows.
      */
     public function fetchColumn($columnIndex = 0);
 }

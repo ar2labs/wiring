@@ -23,11 +23,14 @@ interface HttpExceptionInterface
     public function getHeaders(): array;
 
     /**
-     * Accepts a response object and builds it in to a json representation of the exception.
+     * Accepts a response object and builds it in
+     * to a json representation of the exception.
      *
      * @param ResponseInterface $response
      *
      * @return ResponseInterface
      */
-    public function buildJsonResponse(ResponseInterface $response): ResponseInterface;
+    public function buildJsonResponse(
+        ResponseInterface $response
+    ): ResponseInterface;
 }
