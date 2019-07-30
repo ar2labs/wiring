@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Wiring\Strategy;
+namespace Wiring\Traits;
 
 use Psr\Http\Message\ResponseInterface;
 use Wiring\Interfaces\ResponseAwareInterface;

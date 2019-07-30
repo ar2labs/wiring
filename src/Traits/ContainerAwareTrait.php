@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Wiring\Strategy;
+namespace Wiring\Traits;
 
 use Psr\Container\ContainerInterface;
 use Wiring\Interfaces\ContainerAwareInterface;
