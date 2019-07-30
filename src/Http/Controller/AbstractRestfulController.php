@@ -6,8 +6,8 @@ namespace Wiring\Http\Controller;
 
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Wiring\Http\Controller\AbstractJsonController;
-use Zend\Diactoros\Response;
 use Wiring\Interfaces\RestfulControllerInterface;
+use Zend\Diactoros\Response;
 
 abstract class AbstractRestfulController
 extends AbstractJsonController

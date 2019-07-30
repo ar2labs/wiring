@@ -3,6 +3,7 @@
 namespace Wiring\Http\Controller;
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Wiring\Interfaces\{
     ConsoleInterface,
@@ -18,10 +19,9 @@ use Wiring\Interfaces\{
     FlashInterface,
     HashInterface
 };
-use Wiring\Strategy\{AbstractStrategy, ContainerAwareTrait, ResponseAwareTrait};
-use Psr\Log\LoggerInterface;
-use Wiring\Interfaces\RouterInterface;
-use Wiring\Interfaces\SessionInterface;
+use Wiring\Strategy\AbstractStrategy;
+use Wiring\Interfaces\{RouterInterface, SessionInterface};
+use Wiring\Traits\{ContainerAwareTrait, ResponseAwareTrait};
 
 abstract class AbstractController extends AbstractStrategy implements
     ContainerAwareInterface,
