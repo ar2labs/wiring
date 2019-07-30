@@ -318,11 +318,11 @@ class RequestHandler implements RequestHandlerInterface
     /**
      * Error handler.
      *
-     * @param \Exception|\Throwable $error
+     * @param Exception|Throwable $error
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      *
-     * @throws \Wiring\Handler\ErrorHandler
+     * @throws ErrorHandler
      *
      * @return mixed
      */

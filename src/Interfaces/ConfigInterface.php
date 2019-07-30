@@ -14,7 +14,7 @@ interface ConfigInterface
     /**
      * Static method for loading a Config instance.
      *
-     * @param  string|array $path
+     * @param string|array $path
      *
      * @return static
      */
@@ -49,7 +49,7 @@ interface ConfigInterface
     /**
      * Gets a value using the offset as a key.
      *
-     * @param  string $offset
+     * @param string $offset
      *
      * @return mixed
      */
@@ -58,7 +58,7 @@ interface ConfigInterface
     /**
      * Checks if a key exists.
      *
-     * @param  string $offset
+     * @param string $offset
      *
      * @return bool
      */
@@ -67,8 +67,8 @@ interface ConfigInterface
     /**
      * Sets a value using the offset as a key.
      *
-     * @param  string $offset
-     * @param  mixed  $value
+     * @param string $offset
+     * @param mixed  $value
      *
      * @return void
      */
@@ -77,7 +77,7 @@ interface ConfigInterface
     /**
      * Deletes a key and its value.
      *
-     * @param  string $offset
+     * @param string $offset
      *
      * @return void
      */

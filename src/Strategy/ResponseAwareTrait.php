@@ -15,7 +15,7 @@ trait ResponseAwareTrait
     protected $response;
 
     /**
-     * Get the current response
+     * Get the current response.
      *
      * @return ResponseInterface|null
      */
@@ -25,11 +25,11 @@ trait ResponseAwareTrait
     }
 
     /**
-     * Set the response implementation
+     * Set the response implementation.
      *
      * @param ResponseInterface $response
      *
-     * @return static
+     * @return ViewStrategyInterface
      */
     public function setResponse(ResponseInterface $response): ResponseAwareInterface
     {

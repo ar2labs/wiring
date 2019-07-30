@@ -88,10 +88,10 @@ class JsonStrategy implements JsonStrategyInterface
     /**
      * Encode the provided data to JSON.
      *
-     * @param array $data The data
-     * @param int   $encodingOptions JSON encoding options
+     * @param array   $data            The data
+     * @param int     $encodingOptions JSON encoding options
      *
-     * @return string JSON
+     * @return string
      *
      * @throws InvalidArgumentException if unable to encode the $data to JSON
      */

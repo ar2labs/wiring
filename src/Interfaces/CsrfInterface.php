@@ -40,7 +40,7 @@ interface CsrfInterface
     /**
      * Generates a new CSRF token and attaches it to the Request Object
      *
-     * @param  ServerRequestInterface $request PSR7 response object.
+     * @param ServerRequestInterface $request PSR7 response object.
      *
      * @return ServerRequestInterface          PSR7 response object.
      */
@@ -52,8 +52,8 @@ interface CsrfInterface
      * Validate CSRF token from current request
      * against token value stored in $_SESSION
      *
-     * @param  string $name  CSRF name
-     * @param  string $value CSRF token value
+     * @param string $name  CSRF name
+     * @param string $value CSRF token value
      *
      * @return bool
      */
