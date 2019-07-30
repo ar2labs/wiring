@@ -56,7 +56,7 @@ class ViewStrategy implements ViewStrategyInterface
      * Render a new template view.
      *
      * @param string $view Template view name
-     * @param array $params View params
+     * @param array  $params View params
      *
      * @return self
      */
@@ -74,7 +74,7 @@ class ViewStrategy implements ViewStrategyInterface
      *
      * @param string $data The string that is to be written.
      *
-     * @return self
+     * @return ViewStrategyInterface
      */
     public function write($data): ViewStrategyInterface
     {
@@ -87,8 +87,8 @@ class ViewStrategy implements ViewStrategyInterface
     /**
      * Return response with JSON header and status.
      *
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param int $status
+     * @param ResponseInterface $response
+     * @param int               $status
      *
      * @return ResponseInterface
      */

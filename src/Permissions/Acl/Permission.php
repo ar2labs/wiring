@@ -34,7 +34,7 @@ class Permission
     /**
      * Set a permission.
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return Permission
      */

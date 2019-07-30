@@ -97,9 +97,9 @@ abstract class AbstractJsonViewController extends AbstractController
     /**
      * Return a middleware that simply throws an error
      *
-     * @param \Throwable $error
+     * @param Throwable $error
      *
-     * @return \Psr\Http\Server\MiddlewareInterface
+     * @return MiddlewareInterface
      */
     protected function throwThrowableMiddleware(
         Throwable $error): MiddlewareInterface

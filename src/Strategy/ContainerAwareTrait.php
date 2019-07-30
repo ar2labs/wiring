@@ -27,7 +27,7 @@ trait ContainerAwareTrait
     /**
      * Set container.
      *
-     *
+     * @param ContainerInterface $container
      *
      * @return ContainerAwareInterface
      */

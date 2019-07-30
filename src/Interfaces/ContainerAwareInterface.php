@@ -18,7 +18,7 @@ interface ContainerAwareInterface
     /**
      * Set the container implementation
      *
-     * @param  ContainerInterface $container
+     * @param ContainerInterface $container
      *
      * @return ContainerAwareInterface
      */

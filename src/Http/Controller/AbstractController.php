@@ -36,7 +36,7 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @param string $id Identifier of the entry to look for.
      *
-     * @throws \Exception   Error while resolving the entry.
+     * @throws Exception   Error while resolving the entry.
      *
      * @return mixed Entry.
      */
@@ -75,7 +75,7 @@ abstract class AbstractController extends AbstractStrategy implements
      *                      Parameters not set in this array will be
      *                      automatically resolved.
      *
-     * @throws \Exception   Error while resolving the entry.
+     * @throws Exception   Error while resolving the entry.
      *
      * @return mixed
      */
@@ -102,7 +102,7 @@ abstract class AbstractController extends AbstractStrategy implements
      *                           The array can also contain DI definitions,
      *                           e.g. DI\get().
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return mixed Result of the function.
      */
@@ -123,7 +123,7 @@ abstract class AbstractController extends AbstractStrategy implements
      * @param string $name Entry name
      * @param mixed $value Value, use definition helpers to define objects.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function set($name, $value)
     {
@@ -141,7 +141,7 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @throws Exception
      *
-     * @return \Wiring\Factory\AppFactory
+     * @return AppFactory
      */
     public function app()
     {
@@ -238,7 +238,7 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @throws Exception
      *
-     * @return \Wiring\Interfaces\DatabaseInterface
+     * @return DatabaseInterface
      */
     public function database()
     {
