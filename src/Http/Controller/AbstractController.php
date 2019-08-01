@@ -5,23 +5,23 @@ namespace Wiring\Http\Controller;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Wiring\Interfaces\{
-    ConsoleInterface,
-    ContainerAwareInterface,
-    ControllerInterface,
-    ResponseAwareInterface,
-    ApplicationInterface,
-    AuthInterface,
-    CookieInterface,
-    ConfigInterface,
-    CsrfInterface,
-    DatabaseInterface,
-    FlashInterface,
-    HashInterface
-};
+use Wiring\Interfaces\ConsoleInterface;
+use Wiring\Interfaces\ContainerAwareInterface;
+use Wiring\Interfaces\ControllerInterface;
+use Wiring\Interfaces\ResponseAwareInterface;
+use Wiring\Interfaces\ApplicationInterface;
+use Wiring\Interfaces\AuthInterface;
+use Wiring\Interfaces\CookieInterface;
+use Wiring\Interfaces\ConfigInterface;
+use Wiring\Interfaces\CsrfInterface;
+use Wiring\Interfaces\DatabaseInterface;
+use Wiring\Interfaces\FlashInterface;
+use Wiring\Interfaces\HashInterface;
 use Wiring\Strategy\AbstractStrategy;
-use Wiring\Interfaces\{RouterInterface, SessionInterface};
-use Wiring\Traits\{ContainerAwareTrait, ResponseAwareTrait};
+use Wiring\Interfaces\RouterInterface;
+use Wiring\Interfaces\SessionInterface;
+use Wiring\Traits\ContainerAwareTrait;
+use Wiring\Traits\ResponseAwareTrait;
 
 abstract class AbstractController extends AbstractStrategy implements
     ContainerAwareInterface,

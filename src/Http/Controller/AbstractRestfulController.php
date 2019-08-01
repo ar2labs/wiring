@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Controller;
 
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Wiring\Http\Controller\AbstractJsonController;
 use Wiring\Interfaces\RestfulControllerInterface;
 use Zend\Diactoros\Response;
 
-abstract class AbstractRestfulController
-extends AbstractJsonController
-implements RestfulControllerInterface
+abstract class AbstractRestfulController extends AbstractJsonController implements RestfulControllerInterface
 {
     /**
      * List an existing resource.

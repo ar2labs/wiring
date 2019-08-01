@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Wiring\Interfaces;
 
 use League\Route\Route;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Wiring\Http\Exception\{MethodNotAllowedException, NotFoundException};
+use Wiring\Http\Exception\MethodNotAllowedException;
+use Wiring\Http\Exception\NotFoundException;
 
 interface StrategyInterface
 {

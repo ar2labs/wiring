@@ -215,10 +215,10 @@ class Console
                 . "var JSONString = JSON.stringify(JSONObject);"
                 . "var JSObject = JSON.parse(JSONString); "
                 . "console.$method(JSObject);";
-        } else if (is_array($obj) || $method == 'dirxml') { // Check is an array
+        } elseif (is_array($obj) || $method == 'dirxml') { // Check is an array
             $js = "var data = " . json_encode($obj) . "; "
                 . "console.$method(data);";
-        } else if ($method == 'log') { // Check is set
+        } elseif ($method == 'log') { // Check is set
             $js = "var data = '"  . $obj . "'; "
                 . "console.$method(data);";
         } else {  // Method is empty

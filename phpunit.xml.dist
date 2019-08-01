@@ -1,0 +1,19 @@
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
+        backupGlobals="true"
+        backupStaticAttributes="false"
+        bootstrap="vendor/autoload.php"
+        cacheTokens="false"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        forceCoversAnnotation="false"
+        >
+    <testsuites>
+        <testsuite name="Wiring Test Suite">
+            <directory suffix="Test.php" phpVersion="7.1.0" phpVersionOperator=">=">tests/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
