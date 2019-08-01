@@ -12,6 +12,9 @@ php:
 before_script:
   - composer self-update
   - composer install --no-interaction --prefer-source
+  
+install:
+  - sudo apt install -y --force-yes php-cmath
 
 script:
   - vendor/bin/phpunit --configuration phpunit.xml.dist --colors
