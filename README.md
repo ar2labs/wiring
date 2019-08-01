@@ -4,13 +4,54 @@ Wiring is a PHP micro framework core with Interoperability (PSRs).
 
 This package is compliant with [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR-2](https://www.php-fig.org/psr/psr-2/), [PSR-3](https://www.php-fig.org/psr/psr-3/), [PSR-4](https://www.php-fig.org/psr/psr-4/), [PSR-6](https://www.php-fig.org/psr/psr-6/), [PSR-7](https://www.php-fig.org/psr/psr-7/), [PSR-11](https://www.php-fig.org/psr/psr-11/), [PSR-14](https://www.php-fig.org/psr/psr-14/), [PSR-15](https://www.php-fig.org/psr/psr-15/), [PSR-17](https://www.php-fig.org/psr/psr-17/) and [PSR-18](https://www.php-fig.org/psr/psr-18/).
 
-## Install
+## Package install
 
-Via Composer
+1. Via Composer
 
-``` bash
-$ composer require ar2labs/wiring
-```
+    ```bash
+    composer require ar2labs/wiring
+    ```
+    or if you don't have a composer installation:
+
+    [Get Composer](https://getcomposer.org/download/)
+
+## Quick start project
+
+1. Clone the repo:
+
+    ```bash
+    git clone https://github.com/ar2labs/wiring-start.git
+    ```
+
+2. Change to the directory created
+
+    ```bash
+    cd wiring-start/
+    ```
+
+3. Composer Install
+
+    ```bash
+    composer install
+    ```
+
+4. Start PHP Built-in web server:
+
+    ```bash
+    php maker serve
+    ```
+
+    or run with php:
+
+    ```bash
+    php -S 127.0.0.1:8000 -t public/
+    ```
+
+5. Open your browser at:
+
+    ```bash
+    http://127.0.0.1:8000
+    ```
 
 ## Requirements
 
@@ -19,6 +60,17 @@ The following versions of PHP are supported by this version.
 * PHP 7.1
 * PHP 7.2
 * PHP 7.3
+
+PHP Extension Requirements:
+
+* CMath
+* Ctype
+* JSON
+* Mbstring
+* OpenSSL
+* PDO
+* Tokenizer
+* XML
 
 ## Documentation
 
