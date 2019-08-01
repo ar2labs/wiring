@@ -10,6 +10,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Wiring\Interfaces\JsonStrategyInterface;
 use Wiring\Http\Exception\HttpException;
 use Wiring\Http\Exception\MethodNotAllowedException;
@@ -180,7 +181,7 @@ abstract class AbstractJsonController extends AbstractController
             ): ResponseInterface {
                 try {
                     return $requestHandler->handle($request);
-                } catch (Throwable $exception) {
+                } catch (\Throwable $exception) {
                     $response = $this->response;
 
                     if ($exception instanceof HttpException) {

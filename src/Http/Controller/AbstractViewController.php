@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Wiring\Interfaces\ViewStrategyInterface;
 use Wiring\Http\Exception\MethodNotAllowedException;
 use Wiring\Http\Exception\NotFoundException;
@@ -17,10 +18,9 @@ use Throwable;
 abstract class AbstractViewController extends AbstractController
 {
     /**
-     * Create container and response interface.
-     *
+     * AbstractViewController constructor.
      * @param ContainerInterface $container
-     * @param ResponseFactoryInterface $response
+     * @param ResponseInterface $response
      */
     public function __construct(
         ContainerInterface $container,
@@ -31,9 +31,8 @@ abstract class AbstractViewController extends AbstractController
     }
 
     /**
-     * Get View renderer.
-     *
      * @return ViewStrategyInterface
+     * @throws \Exception
      */
     public function view(): ViewStrategyInterface
     {
@@ -41,11 +40,8 @@ abstract class AbstractViewController extends AbstractController
     }
 
     /**
-     * Invoke the route callable based on the strategy.
-     *
-     * @param Route                  $route
+     * @param Route $route
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      */
     public function invokeRouteCallable(
