@@ -18,5 +18,7 @@ final class ApplicationTest extends TestCase
         $app = new Application($container, $request, $response);
 
         $this->assertInstanceOf(Application::class, $app);
+        $this->assertInstanceOf(ResponseInterface::class, $app->run());
+        $this->assertInstanceOf(ResponseInterface::class, $app->stop());
     }
 }

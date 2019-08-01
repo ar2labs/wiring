@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Wiring\Interfaces\JsonStrategyInterface;
 use Wiring\Interfaces\ViewStrategyInterface;
 use Wiring\Http\Exception\MethodNotAllowedException;
@@ -32,9 +33,8 @@ abstract class AbstractJsonViewController extends AbstractController
     }
 
     /**
-     * Get JSON renderer.
-     *
      * @return JsonStrategyInterface
+     * @throws \Exception
      */
     public function json(): JsonStrategyInterface
     {
@@ -42,9 +42,8 @@ abstract class AbstractJsonViewController extends AbstractController
     }
 
     /**
-     * Get View renderer.
-     *
      * @return ViewStrategyInterface
+     * @throws \Exception
      */
     public function view(): ViewStrategyInterface
     {
