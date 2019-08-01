@@ -73,7 +73,7 @@ class JsonStrategy implements JsonStrategyInterface
         if ($this->isRender) {
             $response
                 ->getBody()
-                ->write($this->jsonEncode($this->data, $this->encodingOptions));
+                ->write($this->encode($this->data, $this->encodingOptions));
         } else {
             $response
                 ->getBody()
@@ -95,13 +95,11 @@ class JsonStrategy implements JsonStrategyInterface
      *
      * @throws InvalidArgumentException if unable to encode the $data to JSON
      */
-    private function jsonEncode($data, int $encodingOptions)
+    private function encode($data, int $encodingOptions)
     {
         if (is_resource($data)) {
             throw new InvalidArgumentException('Cannot JSON encode resources');
         }
-
-        // Clear json_last_error()
         json_encode(null);
 
         $json = json_encode($data, $encodingOptions);
