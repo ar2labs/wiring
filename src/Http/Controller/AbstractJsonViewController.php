@@ -6,10 +6,13 @@ namespace Wiring\Http\Controller;
 
 use League\Route\Route;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Wiring\Interfaces\{JsonStrategyInterface, ViewStrategyInterface};
-use Wiring\Http\Exception\{MethodNotAllowedException, NotFoundException};
+use Wiring\Interfaces\JsonStrategyInterface;
+use Wiring\Interfaces\ViewStrategyInterface;
+use Wiring\Http\Exception\MethodNotAllowedException;
+use Wiring\Http\Exception\NotFoundException;
 use Throwable;
 
 abstract class AbstractJsonViewController extends AbstractController
@@ -102,10 +105,9 @@ abstract class AbstractJsonViewController extends AbstractController
      * @return MiddlewareInterface
      */
     protected function throwThrowableMiddleware(
-        Throwable $error): MiddlewareInterface
-    {
-        return new class ($error) implements MiddlewareInterface
-        {
+        Throwable $error
+    ): MiddlewareInterface {
+        return new class($error) implements MiddlewareInterface {
             protected $error;
 
             public function __construct(Throwable $error)
@@ -143,8 +145,7 @@ abstract class AbstractJsonViewController extends AbstractController
      */
     public function getThrowableHandler(): MiddlewareInterface
     {
-        return new class implements MiddlewareInterface
-        {
+        return new class implements MiddlewareInterface {
             /**
              * {@inheritdoc}
              *
