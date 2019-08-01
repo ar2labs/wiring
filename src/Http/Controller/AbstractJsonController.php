@@ -123,10 +123,7 @@ abstract class AbstractJsonController extends AbstractController
     protected function buildJsonResponseMiddleware(
         HttpException $exception
     ): MiddlewareInterface {
-        return new class ($this
-            ->responseFactory
-            ->createResponse(), $exception) implements MiddlewareInterface
-        {
+        return new class($this ->responseFactory ->createResponse(), $exception) implements MiddlewareInterface {
             protected $response;
             protected $exception;
 
@@ -169,9 +166,7 @@ abstract class AbstractJsonController extends AbstractController
      */
     public function getThrowableHandler(): MiddlewareInterface
     {
-        return new class ($this->responseFactory->createResponse())
-        implements MiddlewareInterface
-        {
+        return new class($this->responseFactory->createResponse()) implements MiddlewareInterface {
             protected $response;
 
             public function __construct(ResponseInterface $response)

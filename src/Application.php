@@ -11,9 +11,8 @@ use Psr\Http\Message\ResponseInterface;
 class Application extends RequestHandler implements ApplicationInterface
 {
     /**
-     * Start the application.
-     *
      * @return ResponseInterface
+     * @throws Http\Exception\ErrorHandler
      */
     public function run(): ResponseInterface
     {
@@ -21,13 +20,12 @@ class Application extends RequestHandler implements ApplicationInterface
     }
 
     /**
-     * Stop the application.
-     *
      * @return ResponseInterface
+     * @throws Http\Exception\ErrorHandler
      */
     public function stop(): ResponseInterface
     {
-        $this->setIsAfterMiddleware(true);
+        $this->setIsAfterMiddleware();
 
         return $this->handle($this->request);
     }
