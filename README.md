@@ -35,7 +35,13 @@ This package is compliant with [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR
     composer install
     ```
 
-4. Start PHP Built-in web server:
+4. Create `.env`
+
+    ```bash
+    cp .env.example .env
+    ```
+
+5. Start PHP Built-in web server:
 
     ```bash
     php maker serve
@@ -47,7 +53,7 @@ This package is compliant with [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR
     php -S 127.0.0.1:8000 -t public/
     ```
 
-5. Open your browser at:
+6. Open your browser at:
 
     ```bash
     http://127.0.0.1:8000
