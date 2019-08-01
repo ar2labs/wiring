@@ -6,10 +6,12 @@ namespace Wiring\Http\Controller;
 
 use League\Route\Route;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Wiring\Interfaces\ViewStrategyInterface;
-use Wiring\Http\Exception\{MethodNotAllowedException, NotFoundException};
+use Wiring\Http\Exception\MethodNotAllowedException;
+use Wiring\Http\Exception\NotFoundException;
 use Throwable;
 
 abstract class AbstractViewController extends AbstractController
@@ -94,8 +96,7 @@ abstract class AbstractViewController extends AbstractController
     protected function throwThrowableMiddleware(
         Throwable $error
     ): MiddlewareInterface {
-        return new class ($error) implements MiddlewareInterface
-        {
+        return new class($error) implements MiddlewareInterface {
             protected $error;
 
             public function __construct(Throwable $error)
@@ -133,8 +134,7 @@ abstract class AbstractViewController extends AbstractController
      */
     public function getThrowableHandler(): MiddlewareInterface
     {
-        return new class implements MiddlewareInterface
-        {
+        return new class implements MiddlewareInterface {
             /**
              * {@inheritdoc}
              *

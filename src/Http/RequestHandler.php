@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Wiring\Interfaces\ApplicationInterface;
 use Wiring\Interfaces\ErrorHandlerInterface;
 use Wiring\Http\Exception\ErrorHandler;
 
@@ -63,9 +64,9 @@ class RequestHandler implements RequestHandlerInterface
     protected $finished = false;
 
     /**
-     * Constructor application.
-     *
-     * @param ServerRequestInterface $response
+     * RequestHandler constructor.
+     * @param ContainerInterface $container
+     * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      */
     public function __construct(
@@ -85,23 +86,21 @@ class RequestHandler implements RequestHandlerInterface
     }
 
     /**
-     * Call the after middleware.
+     * @throws ErrorHandler
      */
     public function __destruct()
     {
-        $this->setIsAfterMiddleware(true);
+        $this->setIsAfterMiddleware();
 
-        if ($this->isFinished() === false) {
+        if (!$this->isFinished()) {
             return $this->handle($this->request);
         }
     }
 
     /**
-     * Handles a request and produces a response.
-     *
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
+     * @throws ErrorHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -120,7 +119,6 @@ class RequestHandler implements RequestHandlerInterface
 
             // Execute the next middleware
             $this->executeMiddleware($currentMiddleware);
-
         } catch (Exception $e) {
             // Call error handler
             return $this->errorHandler($e, $this->request, $this->response);
@@ -151,11 +149,9 @@ class RequestHandler implements RequestHandlerInterface
     }
 
     /**
-     * Add middleware.
-     *
-     * @param string $key
-     *
-     * @return null|MiddlewareInterface
+     * @param MiddlewareInterface $middleware
+     * @param string|null $key
+     * @return RequestHandler
      */
     public function addMiddleware(
         MiddlewareInterface $middleware,
@@ -189,11 +185,7 @@ class RequestHandler implements RequestHandlerInterface
     }
 
     /**
-     * Execute middleware.
-     *
-     * @param string $key
-     *
-     * @return null|int
+     * @param array $middlewareArray
      */
     protected function executeMiddleware(array $middlewareArray): void
     {
@@ -300,7 +292,7 @@ class RequestHandler implements RequestHandlerInterface
      *
      * @return self
      */
-    public function setIsAfterMiddleware($isAfterMiddleware): RequestHandler
+    public function setIsAfterMiddleware(bool $isAfterMiddleware = true): RequestHandler
     {
         $this->isAfterMiddleware = $isAfterMiddleware;
 
