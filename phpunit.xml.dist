@@ -16,4 +16,16 @@
             <directory suffix="Test.php" phpVersion="7.1.0" phpVersionOperator=">=">tests/</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src/</directory>
+            <exclude>
+                <directory suffix=".php">src/Interfaces</directory>
+                <directory suffix=".php">src/Traits</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>
+    </logging>
 </phpunit>

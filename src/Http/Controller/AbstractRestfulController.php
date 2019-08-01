@@ -61,42 +61,6 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
     }
 
     /**
-     * Update/Replace an existing resource.
-     *
-     * @param ServerRequestInterface $request
-     * @param array $args
-     *
-     * @return ResponseInterface $response
-     */
-    public function update(
-        ServerRequestInterface $request,
-        array $args
-    ): ResponseInterface {
-        $response = new Response();
-        $data = $this->methodNotImplemented();
-
-        return $this->json()->render($data)->to($response, $data['code']);
-    }
-
-    /**
-     * Delete an existing resource.
-     *
-     * @param ServerRequestInterface $request
-     * @param array $args
-     *
-     * @return ResponseInterface $response
-     */
-    public function delete(
-        ServerRequestInterface $request,
-        array $args
-    ): ResponseInterface {
-        $response = new Response();
-        $data = $this->methodNotImplemented();
-
-        return $this->json()->render($data)->to($response, $data['code']);
-    }
-
-    /**
      * Get response data info.
      *
      * @param string $message
@@ -135,20 +99,17 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
     }
 
     /**
-     * Get response data redirect.
-     *
-     * @param string $message
-     * @param int $status 300 <-> 308
-     * @param mixed|array $data
-     *
-     * @return mixed|array
+     * @param ResponseInterface $response
+     * @param string $url
+     * @param int $status
+     * @return array|mixed|ResponseInterface
      */
     public function redirect(
-        string $message = 'Temporary Redirect',
-        int $status = 307,
-        $data = []
+        ResponseInterface $response,
+        string $url,
+        int $status = 307
     ) {
-        $data = $this->data('info', $message, $data, $status);
+        $data = $this->data('info', $response->getReasonPhrase(), [], $status);
 
         return $data;
     }
