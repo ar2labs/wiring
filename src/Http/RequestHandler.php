@@ -95,6 +95,8 @@ class RequestHandler implements RequestHandlerInterface
         if (!$this->isFinished()) {
             return $this->handle($this->request);
         }
+
+        return null;
     }
 
     /**
@@ -140,7 +142,6 @@ class RequestHandler implements RequestHandlerInterface
     public function getMiddleware(string $key): ?MiddlewareInterface
     {
         $position = $this->findMiddleware($key);
-
         if ($position === null) {
             return null;
         }
