@@ -7,8 +7,9 @@ namespace Wiring\Http\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Wiring\Interfaces\ErrorHandlerInterface;
 
-class ErrorHandler extends \Exception
+class ErrorHandler extends \Exception implements ErrorHandlerInterface
 {
     /**
      * @var ServerRequestInterface
@@ -76,35 +77,27 @@ class ErrorHandler extends \Exception
     }
 
     /**
-     * Get exception.
-     *
-     * @return \Exception|\Throwable
-     */
-    public function getException()
-    {
-        return $this->exception;
-    }
-
-    /**
      * Return an error into an HTTP or JSON data array.
      *
-     * @param string $title
+     * @param string $mesg
      *
      * @return array
      */
-    public function error(?string $title = null): array
+    public function error(?string $mesg = null): array
     {
-        if ($title == null) {
-            $mesg1 = 'The application could not run ' .
+        if ($mesg == null) {
+            // Default debug message
+            $msg1 = 'The application could not run ' .
                 'because of the following error:';
-            $mesg2 = 'A website error has occurred.' .
+            // Default error message
+            $msg2 = 'A website error has occurred.' .
                 'Sorry for the temporary inconvenience.';
-            $title = $this->debug ? $mesg1 : $mesg2;
+            $mesg = $this->debug ? $msg1 : $msg2;
         }
 
         $type = $this->request->getHeader('Content-Type');
         $mode = $this->request->getHeader('Debug-Mode');
-        $msg  = $this->exception->getMessage() ?? $title;
+        $msg  = $this->exception->getMessage() ?? $mesg;
         $code = $this->exception->getCode() ?? 0;
 
         // Debug mode header
@@ -164,7 +157,7 @@ class ErrorHandler extends \Exception
         $error = [
             'code' => $statusCode,
             'type' => get_class($this->exception),
-            'message' => $title
+            'message' => $mesg
         ];
 
         // Debug mode
@@ -180,9 +173,19 @@ class ErrorHandler extends \Exception
         }
 
         $error['debug'] = $this->debug;
-        $error['title'] = $title;
+        $error['title'] = $mesg;
 
         return $error;
+    }
+
+    /**
+     * Get exception.
+     *
+     * @return \Exception|\Throwable
+     */
+    public function getException()
+    {
+        return $this->exception;
     }
 
     /**
