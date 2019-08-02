@@ -79,25 +79,21 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
     /**
      * Return an error into an HTTP or JSON data array.
      *
-     * @param string $mesg
+     * @param string $message
      *
      * @return array
      */
-    public function error(?string $mesg = null): array
+    public function error(?string $message = null): array
     {
-        if ($mesg == null) {
-            // Default debug message
-            $msg1 = 'The application could not run ' .
-                'because of the following error:';
-            // Default error message
-            $msg2 = 'A website error has occurred.' .
-                'Sorry for the temporary inconvenience.';
-            $mesg = $this->debug ? $msg1 : $msg2;
+        if ($message == null) {
+            $debugMessage = 'The application could not run because of the following error:';
+            $errorMessageDefault = 'A website error has occurred. Sorry for the temporary inconvenience.';
+            $message = $this->debug ? $debugMessage : $errorMessageDefault;
         }
 
         $type = $this->request->getHeader('Content-Type');
         $mode = $this->request->getHeader('Debug-Mode');
-        $msg  = $this->exception->getMessage() ?? $mesg;
+        $msg  = $this->exception->getMessage() ?? $message;
         $code = $this->exception->getCode() ?? 0;
 
         // Debug mode header
@@ -106,26 +102,16 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         }
 
         $statusCode = method_exists($this->exception, 'getStatusCode') ?
-            $this->exception->getStatusCode() : null;
-
-        // Check status code is null
-        if ($statusCode == null) {
-            $statusCode = $code >= 100 && $code <= 500 ? $code : 400;
-        }
+            $this->exception->getStatusCode() : ($code >= 100 && $code <= 500 ? $code : 400);
 
         $this->response->withStatus($statusCode);
 
-        // Check logger exist
-        if ($this->logger !== null) {
-            // Send error to log
-            $this
-                ->logger
-                ->error($this->exception->getMessage(), $this->loggerContext);
+        if ($this->logger) {
+            $this->logger->error($this->exception->getMessage(), $this->loggerContext);
         }
 
         $this->isJson = isset($type[0]) && $type[0] == 'application/json';
 
-        // Check content-type is application/json
         if ($this->isJson) {
             // Define content-type to json
             $this->response->withHeader('Content-Type', 'application/json');
@@ -157,7 +143,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         $error = [
             'code' => $statusCode,
             'type' => get_class($this->exception),
-            'message' => $mesg
+            'message' => $message
         ];
 
         // Debug mode
@@ -173,7 +159,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         }
 
         $error['debug'] = $this->debug;
-        $error['title'] = $mesg;
+        $error['title'] = $message;
 
         return $error;
     }
