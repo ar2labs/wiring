@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Exception;
 
-use Exception;
-use Wiring\Http\Exception\HttpException;
+use \Exception;
 
 class NotFoundException extends HttpException
 {
