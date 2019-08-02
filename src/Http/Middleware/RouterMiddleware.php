@@ -13,7 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class RouterMiddleware implements MiddlewareInterface
 {
     /**
-     * @var Route Route dispatcher
+     * @var Route dispatcher
      */
     private $router;
 
@@ -85,12 +85,13 @@ class RouterMiddleware implements MiddlewareInterface
 
     /**
      * @param ServerRequestInterface $request
-     * @param $handler
+     * @param RequestHandlerInterface $handler
+     *
      * @return ServerRequestInterface
      */
     protected function setHandler(
         ServerRequestInterface $request,
-        $handler
+        RequestHandlerInterface $handler
     ): ServerRequestInterface {
         return $request->withAttribute($this->attribute, $handler);
     }
