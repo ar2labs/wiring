@@ -9,11 +9,11 @@ interface ErrorHandlerInterface
     /**
      * Return an error into an HTTP or JSON data array.
      *
-     * @param string $mesg
+     * @param string $message
      *
      * @return array
      */
-    public function error(?string $mesg = null): array;
+    public function error(?string $message = null): array;
 
     /**
      * Get exception.
