@@ -8,7 +8,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Wiring\Interfaces\EmitterInterface;
 
 class EmitterMiddleware implements MiddlewareInterface
 {
@@ -20,7 +19,7 @@ class EmitterMiddleware implements MiddlewareInterface
     /**
      * @param EmitterInterface $emitter
      */
-    public function __construct(EmitterInterface $emitter)
+    public function __construct($emitter)
     {
         $this->emitter = $emitter;
     }
