@@ -51,7 +51,7 @@ interface RestfulControllerInterface
     public function update(
         ServerRequestInterface $request,
         array $args
-    ): ServerRequestInterface;
+    ): ResponseInterface;
 
     /**
      * Delete an existing resource.
@@ -64,5 +64,5 @@ interface RestfulControllerInterface
     public function delete(
         ServerRequestInterface $request,
         array $args
-    ): ServerRequestInterface;
+    ): ResponseInterface;
 }

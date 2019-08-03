@@ -6,9 +6,9 @@ namespace Wiring\Http\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+
 use Wiring\Http\Controller\AbstractJsonController;
 use Wiring\Interfaces\RestfulControllerInterface;
-use Zend\Diactoros\Response;
 
 abstract class AbstractRestfulController extends AbstractJsonController implements RestfulControllerInterface
 {
@@ -21,7 +21,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      */
     public function index(ServerRequestInterface $request): ResponseInterface
     {
-        $response = new Response();
+        $response = $this->getResponse();
         $data = $this->methodNotImplemented();
 
         return $this->json()->render($data)->to($response);
@@ -36,7 +36,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      */
     public function create(ServerRequestInterface $request): ResponseInterface
     {
-        $response = new Response();
+        $response = $this->getResponse();
         $data = $this->methodNotImplemented();
 
         return $this->json()->render($data)->to($response, $data['code']);
@@ -54,7 +54,43 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         ServerRequestInterface $request,
         array $args
     ): ResponseInterface {
-        $response = new Response();
+        $response = $this->getResponse();
+        $data = $this->methodNotImplemented();
+
+        return $this->json()->render($data)->to($response, $data['code']);
+    }
+
+    /**
+     * Update an existing resource.
+     *
+     * @param ServerRequestInterface $request
+     * @param array                  $args
+     *
+     * @return ResponseInterface $response
+     */
+    public function update(
+        ServerRequestInterface $request,
+        array $args
+    ): ResponseInterface {
+        $response = $this->getResponse();
+        $data = $this->methodNotImplemented();
+
+        return $this->json()->render($data)->to($response, $data['code']);
+    }
+
+    /**
+     * Delete an existing resource.
+     *
+     * @param ServerRequestInterface $request
+     * @param array                  $args
+     *
+     * @return ResponseInterface $response
+     */
+    public function delete(
+        ServerRequestInterface $request,
+        array $args
+    ): ResponseInterface {
+        $response = $this->getResponse();
         $data = $this->methodNotImplemented();
 
         return $this->json()->render($data)->to($response, $data['code']);
