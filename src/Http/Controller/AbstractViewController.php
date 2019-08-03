@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Controller;
 
-use League\Route\Route;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Wiring\Interfaces\ViewStrategyInterface;
 use Wiring\Http\Exception\MethodNotAllowedException;
 use Wiring\Http\Exception\NotFoundException;
+use Wiring\Interfaces\RouteInterface;
+use Wiring\Interfaces\ViewStrategyInterface;
 use Throwable;
 
 abstract class AbstractViewController extends AbstractController
 {
     /**
      * AbstractViewController constructor.
+     *
      * @param ContainerInterface $container
      * @param ResponseInterface $response
      */
@@ -31,21 +32,15 @@ abstract class AbstractViewController extends AbstractController
     }
 
     /**
-     * @return ViewStrategyInterface
-     * @throws \Exception
-     */
-    public function view(): ViewStrategyInterface
-    {
-        return $this->get(ViewStrategyInterface::class);
-    }
-
-    /**
-     * @param Route $route
+     * Invoke the route callable based on the abstract strategy.
+     *
+     * @param RouterInterface        $route
      * @param ServerRequestInterface $request
+     *
      * @return ResponseInterface
      */
     public function invokeRouteCallable(
-        Route $route,
+        RouteInterface $route,
         ServerRequestInterface $request
     ): ResponseInterface {
         $controller = $route->getCallable($this->getContainer());
@@ -54,6 +49,17 @@ abstract class AbstractViewController extends AbstractController
         $response = $this->applyDefaultResponseHeaders($response);
 
         return $response;
+    }
+
+    /**
+     *  Get a view renderer.
+     *
+     * @return ViewStrategyInterface
+     * @throws \Exception
+     */
+    public function view(): ViewStrategyInterface
+    {
+        return $this->get(ViewStrategyInterface::class);
     }
 
     /**

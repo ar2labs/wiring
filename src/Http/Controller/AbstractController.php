@@ -70,12 +70,8 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @param string $name  Entry name or a class name.
      * @param array $params Optional parameters to use to build the entry.
-     *                      Use this to force specific parameters to
-     *                      specific values.
-     *                      Parameters not set in this array will be
-     *                      automatically resolved.
      *
-     * @throws Exception   Error while resolving the entry.
+     * @throws Exception    Error while resolving the entry.
      *
      * @return mixed
      */
@@ -97,10 +93,6 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @param callable $callable Function to call.
      * @param array $parameters  Parameters to use.
-     *                           Can be indexed by the parameter names
-     *                           or not indexed (same order as the parameters).
-     *                           The array can also contain DI definitions,
-     *                           e.g. DI\get().
      *
      * @throws Exception
      *
@@ -309,9 +301,8 @@ abstract class AbstractController extends AbstractStrategy implements
     }
 
     /**
-     * Redirect.
+     * Redirect response.
      *
-     * Note: This method is not part of the PSR-7 standard.
      *
      * This method prepares the response object to return an
      * HTTP Redirect response to the client.
@@ -327,7 +318,13 @@ abstract class AbstractController extends AbstractStrategy implements
         string $url,
         int $status = 307
     ) {
-        return $this->withRedirect($response, $url, $status);
+        $responseWithRedirect = $response->withHeader('Location', $url);
+
+        if (!is_null($status)) {
+            return $responseWithRedirect->withStatus($status);
+        }
+
+        return $responseWithRedirect;
     }
 
     /**
@@ -360,32 +357,5 @@ abstract class AbstractController extends AbstractStrategy implements
         }
 
         return $this->get(SessionInterface::class);
-    }
-
-    /**
-     * Response with redirect.
-     *
-     * @param $response ResponseInterface
-     * @param string $url
-     * @param int|null $status
-     *
-     * @return ResponseInterface
-     */
-    protected function withRedirect(
-        ResponseInterface $response,
-        string $url,
-        $status = 307
-    ) {
-        $responseWithRedirect = $response->withHeader('Location', $url);
-
-        if (is_null($status) && $response->getStatusCode() === 200) {
-            $status = 307;
-        }
-
-        if (!is_null($status)) {
-            return $responseWithRedirect->withStatus($status);
-        }
-
-        return $responseWithRedirect;
     }
 }

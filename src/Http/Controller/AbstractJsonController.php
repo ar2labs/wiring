@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Controller;
 
-use League\Route\Route;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Wiring\Interfaces\JsonStrategyInterface;
 use Wiring\Http\Exception\HttpException;
 use Wiring\Http\Exception\MethodNotAllowedException;
 use Wiring\Http\Exception\NotFoundException;
+use Wiring\Interfaces\JsonStrategyInterface;
+use Wiring\Interfaces\RouteInterface;
 
 abstract class AbstractJsonController extends AbstractController
 {
@@ -34,15 +34,15 @@ abstract class AbstractJsonController extends AbstractController
     }
 
     /**
-     * Invoke the route callable based on the strategy.
+     * Invoke the route callable based on the abstract strategy.
      *
-     * @param Route                  $route
+     * @param RouterInterface        $route
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
      */
     public function invokeRouteCallable(
-        Route $route,
+        RouteInterface $route,
         ServerRequestInterface $request
     ): ResponseInterface {
         $controller = $route->getCallable($this->getContainer());
