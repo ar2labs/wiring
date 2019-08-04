@@ -5,12 +5,8 @@
     "license": "BSD-3-Clause",
     "authors": [
         {
-            "name": "Anderson Costa",
+            "name": "AR2 Labs Members",
             "email": "ar2labs@gmail.com"
-        },
-        {
-            "name": "Vinicius Vicente",
-            "email": "vinyvicente@gmail.com"
         }
     ],
     "require": {
