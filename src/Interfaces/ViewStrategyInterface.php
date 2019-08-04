@@ -37,9 +37,9 @@ interface ViewStrategyInterface
      *
      * @param string $data The string that is to be written.
      *
-     * @return self
+     * @return ViewStrategyInterface
      */
-    public function write($data);
+    public function write(string $data): ViewStrategyInterface;
 
     /**
      * Return response with JSON header and status.
@@ -51,6 +51,6 @@ interface ViewStrategyInterface
      */
     public function to(
         ResponseInterface $response,
-        $status = 200
+        int $status = 200
     ): ResponseInterface;
 }

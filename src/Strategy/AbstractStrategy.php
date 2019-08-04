@@ -28,9 +28,9 @@ abstract class AbstractStrategy implements StrategyInterface
      * @param string $name
      * @param string $value
      *
-     * @return static
+     * @return self
      */
-    public function addDefaultResponseHeader(string $name, string $value): AbstractStrategy
+    public function addDefaultResponseHeader(string $name, string $value): self
     {
         $this->defaultResponseHeaders[strtolower($name)] = $value;
 
@@ -42,9 +42,9 @@ abstract class AbstractStrategy implements StrategyInterface
      *
      * @param array $headers
      *
-     * @return static
+     * @return self
      */
-    public function addDefaultResponseHeaders(array $headers): AbstractStrategy
+    public function addDefaultResponseHeaders(array $headers): self
     {
         foreach ($headers as $name => $value) {
             $this->addDefaultResponseHeader($name, $value);

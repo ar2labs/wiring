@@ -9,7 +9,7 @@ interface ErrorHandlerInterface
     /**
      * Return an error into an HTTP or JSON data array.
      *
-     * @param string $message
+     * @param string|null $message
      *
      * @return array
      */

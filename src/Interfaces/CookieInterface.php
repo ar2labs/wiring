@@ -45,6 +45,8 @@ interface CookieInterface
      * Remove a cookie.
      *
      * @param string $name
+     *
+     * @return void
      */
-    public static function forget(string $name);
+    public static function forget(string $name): void;
 }

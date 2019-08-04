@@ -40,7 +40,7 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @return mixed Entry.
      */
-    public function get($id)
+    public function get(string $id)
     {
         $container = $this->getContainer();
 
@@ -56,9 +56,9 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @param string $id Identifier of the entry to look for.
      *
-     * @return boolean
+     * @return bool
      */
-    public function has($id)
+    public function has(string $id): bool
     {
         $container = $this->getContainer();
         return $container->has($id);
@@ -75,7 +75,7 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @return mixed
      */
-    public function make($name, array $params = [])
+    public function make(string $name, array $params = [])
     {
         $container = $this->getContainer();
 
@@ -98,7 +98,7 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @return mixed Result of the function.
      */
-    public function call($callable, array $params = [])
+    public function call(callable $callable, array $params = [])
     {
         $container = $this->getContainer();
 
@@ -116,8 +116,10 @@ abstract class AbstractController extends AbstractStrategy implements
      * @param mixed $value Value, use definition helpers to define objects.
      *
      * @throws Exception
+     *
+     * @return ContainerAwareInterface
      */
-    public function set($name, $value)
+    public function set(string $name, $value): ContainerAwareInterface
     {
         $container = $this->getContainer();
 
@@ -232,7 +234,7 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @return DatabaseInterface
      */
-    public function database()
+    public function database(): DatabaseInterface
     {
         if (!$this->has(DatabaseInterface::class)) {
             throw new Exception('Database interface not set');

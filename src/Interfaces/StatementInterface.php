@@ -15,7 +15,7 @@ interface StatementInterface extends ResultStatementInterface
      * @param integer $type  Explicit data type for the parameter using the
      *                       PDO::PARAM_* constants.
      *
-     * @return boolean       TRUE on success or FALSE on failure.
+     * @return bool       TRUE on success or FALSE on failure.
      */
     public function bindValue($param, $value, $type = null);
 
@@ -32,7 +32,7 @@ interface StatementInterface extends ResultStatementInterface
      *                               OUT bind so that PHP allocates enough
      *                               memory to hold the returned value.
      *
-     * @return boolean TRUE on success or FALSE on failure.
+     * @return bool TRUE on success or FALSE on failure.
      */
     public function bindParam(
         $column,
@@ -64,7 +64,7 @@ interface StatementInterface extends ResultStatementInterface
      *                           there are bound parameters in the SQL
      *                           statement being executed.
      *
-     * @return boolean TRUE on success or FALSE on failure.
+     * @return bool TRUE on success or FALSE on failure.
      */
     public function execute($params = null);
 

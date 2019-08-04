@@ -35,7 +35,7 @@ class ViewStrategy implements ViewStrategyInterface
     /**
      * Define template engine.
      *
-     * @param $engine
+     * @param mixed $engine
      */
     public function __construct($engine)
     {
@@ -60,7 +60,7 @@ class ViewStrategy implements ViewStrategyInterface
      *
      * @return self
      */
-    public function render($view, array $params = []): ViewStrategyInterface
+    public function render($view, array $params = []): self
     {
         $this->view = $view;
         $this->params = $params;
@@ -76,7 +76,7 @@ class ViewStrategy implements ViewStrategyInterface
      *
      * @return ViewStrategyInterface
      */
-    public function write($data): ViewStrategyInterface
+    public function write(string $data): ViewStrategyInterface
     {
         $this->data = $data;
         $this->isRender = false;
@@ -92,7 +92,7 @@ class ViewStrategy implements ViewStrategyInterface
      *
      * @return ResponseInterface
      */
-    public function to(ResponseInterface $response, $status = 200): ResponseInterface
+    public function to(ResponseInterface $response, int $status = 200): ResponseInterface
     {
         if ($this->view) {
             $response->getBody()->write($this->engine()->render($this->view, $this->params));
