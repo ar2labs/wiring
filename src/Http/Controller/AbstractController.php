@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Controller;
 
+use Psr\Http\Message\ResponseInterface;
 use Wiring\Interfaces\ContainerAwareInterface;
 use Wiring\Interfaces\ControllerInterface;
 use Wiring\Interfaces\ResponseAwareInterface;

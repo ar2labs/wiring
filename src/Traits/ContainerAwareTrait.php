@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
+use Exception;
 use Psr\Container\ContainerInterface;
 use Wiring\Interfaces\ContainerAwareInterface;
 
