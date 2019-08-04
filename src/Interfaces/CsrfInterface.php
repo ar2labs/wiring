@@ -57,5 +57,5 @@ interface CsrfInterface
      *
      * @return bool
      */
-    public function validateToken($name, $value): bool;
+    public function validateToken(string $name, string $value): bool;
 }

@@ -59,8 +59,10 @@ class Cookie implements CookieInterface
      * Remove a cookie.
      *
      * @param string $name
+     *
+     * @return void
      */
-    public static function forget(string $name)
+    public static function forget(string $name): void
     {
         if (self::has($$name)) {
             self::set($name, '', time() - 1);

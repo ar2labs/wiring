@@ -36,9 +36,9 @@ class Permission
      *
      * @param string $name
      *
-     * @return Permission
+     * @return self
      */
-    public function setName(string $name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 

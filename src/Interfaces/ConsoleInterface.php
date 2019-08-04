@@ -10,6 +10,8 @@ interface ConsoleInterface
      * Write output to console browser.
      *
      * @var object|string $obj
+     *
+     * @return void
      */
-    public function log($obj);
+    public function log($obj): void;
 }

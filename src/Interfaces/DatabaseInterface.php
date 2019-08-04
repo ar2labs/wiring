@@ -13,14 +13,14 @@ interface DatabaseInterface
      *
      * @return StatementInterface
      */
-    public function prepare($prepareString): StatementInterface;
+    public function prepare(string $prepareString): StatementInterface;
 
     /**
      * Executes an SQL statement, returning a result set as a Statement object.
      *
      * @return StatementInterface
      */
-    public function query();
+    public function query(): StatementInterface;
 
     /**
      * Quotes a string for use in a query.
@@ -30,7 +30,7 @@ interface DatabaseInterface
      *
      * @return string
      */
-    public function quote($input, $type = \PDO::PARAM_STR);
+    public function quote(string $input, $type = \PDO::PARAM_STR): string;
 
     /**
      * Executes an SQL statement and return the number of affected rows.
@@ -39,7 +39,7 @@ interface DatabaseInterface
      *
      * @return integer
      */
-    public function exec($statement);
+    public function exec($statement): int;
 
     /**
      * Returns the ID of the last inserted row or sequence value.
@@ -48,21 +48,21 @@ interface DatabaseInterface
      *
      * @return string
      */
-    public function lastInsertId($name = null);
+    public function lastInsertId(?string $name = null): string;
 
     /**
      * Initiates a transaction.
      *
-     * @return boolean TRUE on success or FALSE on failure.
+     * @return bool TRUE on success or FALSE on failure.
      */
-    public function beginTransaction();
+    public function beginTransaction(): bool;
 
     /**
      * Commits a transaction.
      *
      * @return bool TRUE on success or FALSE on failure.
      */
-    public function commit();
+    public function commit(): bool;
 
     /**
      * Rolls back the current transaction, as initiated by beginTransaction().
@@ -78,7 +78,7 @@ interface DatabaseInterface
      * @return string|null The error code, or null if no
      * operation has been run on the database handle.
      */
-    public function errorCode();
+    public function errorCode(): ?string;
 
     /**
      * Returns extended error information associated with the last operation on
@@ -86,5 +86,5 @@ interface DatabaseInterface
      *
      * @return array
      */
-    public function errorInfo();
+    public function errorInfo(): array;
 }
