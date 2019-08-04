@@ -9,11 +9,11 @@ use Psr\Http\Message\ResponseInterface;
 interface EmitterInterface
 {
     /**
-     * Emit a response.
+     * Emitter for PSR-7 response.
      *
      * @param ResponseInterface $response
      *
-     * @return bool
+     * @return ResponseInterface
      */
-    public function emit(ResponseInterface $response): bool;
+    public function emit(ResponseInterface $response): ResponseInterface;
 }
