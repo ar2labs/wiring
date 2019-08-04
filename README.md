@@ -1,6 +1,9 @@
 # Wiring
 
 [![Build Status](https://travis-ci.org/ar2labs/wiring.svg?branch=master)](https://travis-ci.org/ar2labs/wiring)
+<a href="https://packagist.org/packages/ar2labs/wiring"><img src="https://poser.pugx.org/ar2labs/wiring/d/total.svg" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/ar2labs/wiring"><img src="https://poser.pugx.org/ar2labs/wiring/v/stable.svg" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/ar2labs/wiring"><img src="https://poser.pugx.org/ar2labs/wiring/license.svg" alt="License"></a>
 
 Wiring is a PHP micro framework core with Interoperability (PSRs).
 
