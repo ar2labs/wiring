@@ -135,6 +135,8 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
     }
 
     /**
+     * Custom Redirect response.
+     *
      * @param ResponseInterface $response
      * @param string $url
      * @param int $status
