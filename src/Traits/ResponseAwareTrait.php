@@ -29,7 +29,7 @@ trait ResponseAwareTrait
      *
      * @param ResponseInterface $response
      *
-     * @return ViewStrategyInterface
+     * @return ResponseAwareInterface
      */
     public function setResponse(ResponseInterface $response): ResponseAwareInterface
     {

@@ -11,16 +11,16 @@ interface ControllerInterface
      *
      * @return mixed Entry.
      */
-    public function get($id);
+    public function get(string $id);
 
     /**
      * Check if the container can return an entry for the given identifier.
      *
      * @param string $id Identifier of the entry to look for.
      *
-     * @return boolean
+     * @return bool
      */
-    public function has($id);
+    public function has(string $id): bool;
 
     /**
      * Resolves an entry by its name.
@@ -36,7 +36,7 @@ interface ControllerInterface
      *
      * @return mixed
      */
-    public function make($name, array $parameters = []);
+    public function make(string $name, array $parameters = []);
 
     /**
      * Call the given function using the given parameters.
@@ -52,7 +52,7 @@ interface ControllerInterface
      *
      * @return mixed Result of the function.
      */
-    public function call($callable, array $parameters = []);
+    public function call(callable $callable, array $parameters = []);
 
     /**
      * Define an object or a value in the container.
@@ -61,8 +61,10 @@ interface ControllerInterface
      * @param mixed  $value Value, use definition helpers to define objects
      *
      * @throws \Exception
+     *
+     * @return ContainerAwareInterface
      */
-    public function set($name, $value);
+    public function set(string $name, $value): ContainerAwareInterface;
 
     /**
      * Return database connection.
@@ -71,5 +73,5 @@ interface ControllerInterface
      *
      * @return DatabaseInterface
      */
-    public function database();
+    public function database(): DatabaseInterface;
 }

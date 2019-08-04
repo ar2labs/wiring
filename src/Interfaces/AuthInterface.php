@@ -18,5 +18,5 @@ interface AuthInterface
      *
      * @return object|null
      */
-    public function user();
+    public function user(): ?object;
 }

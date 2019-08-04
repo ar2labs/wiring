@@ -20,7 +20,7 @@ interface StrategyAwareInterface
      *
      * @param StrategyInterface $strategy
      *
-     * @return static
+     * @return StrategyAwareInterface
      */
     public function setStrategy(
         StrategyInterface $strategy

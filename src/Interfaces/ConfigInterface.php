@@ -9,16 +9,16 @@ interface ConfigInterface
      *
      * @param array $path
      */
-    public function __construct($path);
+    public function __construct(array $path);
 
     /**
      * Static method for loading a Config instance.
      *
      * @param string|array $path
      *
-     * @return static
+     * @return ConfigInterface
      */
-    public static function load($path);
+    public static function load(?string $path): ConfigInterface;
 
     /**
      * @param string $key
@@ -26,25 +26,27 @@ interface ConfigInterface
      *
      * @return mixed|null
      */
-    public function get($key, $default = null);
+    public function get(string $key, $default = null);
 
     /**
      * @param string $key
      * @param mixed $value
+     *
+     * @return void
      */
-    public function set($key, $value);
+    public function set(string $key, $value): void;
 
     /**
      * @param string $key
      *
      * @return bool
      */
-    public function has($key);
+    public function has(string $key): bool;
 
     /**
      * @return array|null
      */
-    public function all();
+    public function all(): ?array;
 
     /**
      * Gets a value using the offset as a key.
@@ -53,7 +55,7 @@ interface ConfigInterface
      *
      * @return mixed
      */
-    public function offsetGet($offset);
+    public function offsetGet(string $offset);
 
     /**
      * Checks if a key exists.
@@ -62,7 +64,7 @@ interface ConfigInterface
      *
      * @return bool
      */
-    public function offsetExists($offset);
+    public function offsetExists(string $offset): bool;
 
     /**
      * Sets a value using the offset as a key.
@@ -72,7 +74,7 @@ interface ConfigInterface
      *
      * @return void
      */
-    public function offsetSet($offset, $value);
+    public function offsetSet(string $offset, $value): void;
 
     /**
      * Deletes a key and its value.
@@ -81,7 +83,7 @@ interface ConfigInterface
      *
      * @return void
      */
-    public function offsetUnset($offset);
+    public function offsetUnset(string $offset): void;
 
     /**
      * Returns the data array element referenced by its internal cursor.
@@ -127,5 +129,5 @@ interface ConfigInterface
      *
      * @return bool True if the current index is valid; false otherwise
      */
-    public function valid();
+    public function valid(): bool;
 }

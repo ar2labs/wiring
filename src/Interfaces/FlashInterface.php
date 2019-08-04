@@ -28,5 +28,5 @@ interface FlashInterface
      *
      * @return string|null Returns the message
      */
-    public function getMessage(string $key): string;
+    public function getMessage(string $key): ?string;
 }
