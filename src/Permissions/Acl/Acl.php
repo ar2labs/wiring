@@ -57,7 +57,7 @@ class Acl
      *
      * @return self
      */
-    public function setUser(UserAclInterface $user): Acl
+    public function setUser(UserAclInterface $user): self
     {
         $this->user = $user;
 
@@ -71,7 +71,7 @@ class Acl
      *
      * @return Role|bool
      */
-    public function hasRole(string $name)
+    public function hasRole(string $name): ?Role
     {
         /** @var \Wiring\Permissions\Acl\Role $role */
         foreach ($this->roles as $role) {

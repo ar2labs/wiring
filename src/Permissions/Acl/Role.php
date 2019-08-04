@@ -43,7 +43,7 @@ class Role
      *
      * @return self
      */
-    public function setName(string $name): Role
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -67,7 +67,7 @@ class Role
      *
      * @return self
      */
-    public function addPermission(Permission $permission): Role
+    public function addPermission(Permission $permission): self
     {
         $this->permissions[] = $permission;
 

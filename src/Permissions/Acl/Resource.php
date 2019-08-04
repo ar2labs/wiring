@@ -47,7 +47,7 @@ class Resource
      *
      * @return self
      */
-    public function setName(string $name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -71,7 +71,7 @@ class Resource
      *
      * @return self
      */
-    public function setOwnerField(string $ownerField): Resource
+    public function setOwnerField(string $ownerField): self
     {
         $this->ownerField = $ownerField;
 

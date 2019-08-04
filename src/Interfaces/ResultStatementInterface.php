@@ -9,7 +9,7 @@ interface ResultStatementInterface extends \Traversable
     /**
      * Closes the cursor, enabling the statement to be executed again.
      *
-     * @return boolean
+     * @return bool
      */
     public function closeCursor();
 
@@ -28,7 +28,7 @@ interface ResultStatementInterface extends \Traversable
      * @param mixed $arg2
      * @param mixed $arg3
      *
-     * @return boolean
+     * @return bool
      *
      * @see PDO::FETCH_* constants.
      */
