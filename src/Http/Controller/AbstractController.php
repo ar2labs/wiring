@@ -19,7 +19,7 @@ abstract class AbstractController extends AbstractStrategy implements
     ControllerInterface,
     ResponseAwareInterface
 {
-    // NOTE: Use Aware Traits for get instance of the other componentes.
+    // NOTE: Use Aware Traits for get instance of the other components.
     use ContainerAwareTrait;
     use ResponseAwareTrait;
     use DatabaseAwareTrait;
@@ -43,7 +43,7 @@ abstract class AbstractController extends AbstractStrategy implements
         ResponseInterface $response,
         string $url,
         int $status = 307
-    ) {
+    ): ResponseInterface {
         $responseWithRedirect = $response->withHeader('Location', $url);
 
         if (!is_null($status)) {
