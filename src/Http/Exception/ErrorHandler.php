@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Exception;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Wiring\Interfaces\ErrorHandlerInterface;
 
-class ErrorHandler extends \Exception implements ErrorHandlerInterface
+class ErrorHandler implements ErrorHandlerInterface
 {
     /**
      * @var ServerRequestInterface
@@ -58,7 +59,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
     public function __construct(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        $exception,
+        Exception $exception,
         LoggerInterface $logger = null,
         $loggerContext = [],
         $debug = false
@@ -69,11 +70,6 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         $this->logger = $logger;
         $this->loggerContext = $loggerContext;
         $this->debug = $debug;
-
-        $msg  = $this->exception->getMessage() ?? 'An error has occurred.';
-        $code = $this->exception->getCode() ?? 0;
-
-        parent::__construct($msg, $code, $exception);
     }
 
     /**
