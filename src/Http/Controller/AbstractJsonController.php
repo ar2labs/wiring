@@ -48,7 +48,7 @@ abstract class AbstractJsonController extends AbstractController
         $response = $controller($request, $route->getVars());
 
         if ($this->isJsonEncodable($response)) {
-            $body     = json_encode($response);
+            $body = json_encode($response);
             $response = $this->responseFactory;
             $response->getBody()->write($body);
         }
@@ -131,7 +131,7 @@ abstract class AbstractJsonController extends AbstractController
                 ResponseInterface $response,
                 HttpException $exception
             ) {
-                $this->response  = $response;
+                $this->response = $response;
                 $this->exception = $exception;
             }
 
@@ -191,7 +191,7 @@ abstract class AbstractJsonController extends AbstractController
                         'code' => 500,
                         'status' => 'error',
                         'message' => $exception->getMessage(),
-                        'data' => []
+                        'data' => [],
                     ]));
 
                     $response = $response

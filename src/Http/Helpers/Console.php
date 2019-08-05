@@ -122,7 +122,7 @@ class Console
         }
 
         // Join array elements with a string delimiter
-        $args = implode(",", $data);
+        $args = implode(',', $data);
 
         // Echo to output
         echo "console.assert($args);";
@@ -211,15 +211,15 @@ class Console
         ob_start();
 
         if (is_object($obj)) { // Check is an object
-            $js = "var JSONObject = " . json_encode($obj) . ";\n"
-                . "var JSONString = JSON.stringify(JSONObject);"
-                . "var JSObject = JSON.parse(JSONString); "
+            $js = 'var JSONObject = ' . json_encode($obj) . ";\n"
+                . 'var JSONString = JSON.stringify(JSONObject);'
+                . 'var JSObject = JSON.parse(JSONString); '
                 . "console.$method(JSObject);";
         } elseif (is_array($obj) || $method == 'dirxml') { // Check is an array
-            $js = "var data = " . json_encode($obj) . "; "
+            $js = 'var data = ' . json_encode($obj) . '; '
                 . "console.$method(data);";
         } elseif ($method == 'log') { // Check is set
-            $js = "var data = '"  . $obj . "'; "
+            $js = "var data = '" . $obj . "'; "
                 . "console.$method(data);";
         } else {  // Method is empty
             $js = "console.$method();";

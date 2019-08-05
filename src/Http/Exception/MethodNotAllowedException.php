@@ -23,7 +23,7 @@ class MethodNotAllowedException extends HttpException
         int        $code = 0
     ) {
         $headers = [
-            'Allow' => implode(', ', $allowed)
+            'Allow' => implode(', ', $allowed),
         ];
 
         parent::__construct(405, $message, $previous, $headers, $code);

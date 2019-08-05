@@ -34,7 +34,7 @@ class Acl
         foreach ($roles as $role) {
             // Check role instance
             if (!$role instanceof Role) {
-                throw new \InvalidArgumentException("Role is invalid!");
+                throw new \InvalidArgumentException('Role is invalid!');
             }
         }
 
@@ -43,7 +43,7 @@ class Acl
         foreach ($resources as $resource) {
             // Check resource instance
             if (!$resource instanceof Resource) {
-                throw new \InvalidArgumentException("Resource is invalid!");
+                throw new \InvalidArgumentException('Resource is invalid!');
             }
         }
 
