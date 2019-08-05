@@ -89,7 +89,7 @@ abstract class AbstractViewController extends AbstractController
     }
 
     /**
-     * Return a middleware that simply throws an error
+     * Return a middleware that simply throws an error.
      *
      * @param Throwable $error
      *
