@@ -5,6 +5,7 @@ namespace Wiring\Http\Controller;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Wiring\Interfaces\ConsoleInterface;
 use Wiring\Interfaces\ContainerAwareInterface;
 use Wiring\Interfaces\ControllerInterface;
@@ -30,6 +31,9 @@ abstract class AbstractController extends AbstractStrategy implements
 {
     use ContainerAwareTrait;
     use ResponseAwareTrait;
+
+    /** @var ResponseFactoryInterface */
+    protected $responseFactory;
 
     /**
      * Get an entry of the container by its identifier and returns it.
@@ -135,7 +139,7 @@ abstract class AbstractController extends AbstractStrategy implements
      *
      * @throws Exception
      *
-     * @return AppFactory
+     * @return mixed
      */
     public function app()
     {
