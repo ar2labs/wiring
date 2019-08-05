@@ -32,7 +32,7 @@ class Cookie implements CookieInterface
      */
     public static function set(
         string $name,
-        string $value = "",
+        string $value = '',
         int $expiry = 0,
         bool $secure = false
     ): bool {

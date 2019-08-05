@@ -70,7 +70,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         $this->loggerContext = $loggerContext;
         $this->debug = $debug;
 
-        $msg  = $this->exception->getMessage() ?? 'An error has occurred.';
+        $msg = $this->exception->getMessage() ?? 'An error has occurred.';
         $code = $this->exception->getCode() ?? 0;
 
         parent::__construct($msg, $code, $exception);
@@ -93,7 +93,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
 
         $type = $this->request->getHeader('Content-Type');
         $mode = $this->request->getHeader('Debug-Mode');
-        $msg  = $this->exception->getMessage() ?? $message;
+        $msg = $this->exception->getMessage() ?? $message;
         $code = $this->exception->getCode() ?? 0;
 
         // Debug mode header
@@ -120,7 +120,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
                 'code' => $statusCode,
                 'status' => 'error',
                 'message' => $msg,
-                'data' => []
+                'data' => [],
             ];
 
             // Debug mode header
@@ -143,7 +143,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         $error = [
             'code' => $statusCode,
             'type' => get_class($this->exception),
-            'message' => $message
+            'message' => $message,
         ];
 
         // Debug mode

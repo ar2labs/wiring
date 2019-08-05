@@ -50,7 +50,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
         array      $headers = [],
         int        $code = 0
     ) {
-        $this->status  = $status;
+        $this->status = $status;
         $this->message = $message;
         $this->previous = $previous;
         $this->headers = $headers;
@@ -118,7 +118,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
         $this->data = [
             'type' => $this->previous ? get_class($this->previous) : 'error',
             'code' => $statusCode,
-            'message' => $this->message
+            'message' => $this->message,
         ];
 
         $response->withStatus($statusCode);
@@ -151,10 +151,10 @@ class HttpException extends \Exception implements HttpExceptionInterface
 
         if ($response->getBody()->isWritable()) {
             $response->getBody()->write(json_encode([
-                'code'   => $this->status,
+                'code' => $this->status,
                 'status' => 'error',
                 'message' => $this->message,
-                'data' => $data
+                'data' => $data,
             ]));
         }
 

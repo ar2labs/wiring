@@ -9,7 +9,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Wiring\Http\Exception\MethodNotAllowedException;
 use Wiring\Http\Exception\NotFoundException;
-use Wiring\Interfaces\RouteInterface;
 
 interface StrategyInterface
 {

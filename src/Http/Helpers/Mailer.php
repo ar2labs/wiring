@@ -39,7 +39,7 @@ class Mailer
 
         $message->body($this->container->get(ViewRendererInterface::class)
             ->render($template, [
-                'data' => $data
+                'data' => $data,
             ]));
 
         call_user_func($callback, $message);
