@@ -89,7 +89,7 @@ class ErrorHandler implements ErrorHandlerInterface
 
         $type = $this->request->getHeader('Content-Type');
         $mode = $this->request->getHeader('Debug-Mode');
-        $msg  = $this->exception->getMessage() ?? $message;
+        $msg = $this->exception->getMessage() ?? $message;
         $code = $this->exception->getCode() ?? 0;
 
         // Debug mode header
@@ -116,7 +116,7 @@ class ErrorHandler implements ErrorHandlerInterface
                 'code' => $statusCode,
                 'status' => 'error',
                 'message' => $msg,
-                'data' => []
+                'data' => [],
             ];
 
             // Debug mode header
@@ -139,7 +139,7 @@ class ErrorHandler implements ErrorHandlerInterface
         $error = [
             'code' => $statusCode,
             'type' => get_class($this->exception),
-            'message' => $message
+            'message' => $message,
         ];
 
         // Debug mode

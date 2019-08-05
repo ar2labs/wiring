@@ -7,7 +7,6 @@ namespace Wiring\Http\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-use Wiring\Http\Controller\AbstractJsonController;
 use Wiring\Interfaces\RestfulControllerInterface;
 
 abstract class AbstractRestfulController extends AbstractJsonController implements RestfulControllerInterface
@@ -210,7 +209,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
             'code' => $code,
             'status' => $status,
             'message' => $message,
-            'data' => $data
+            'data' => $data,
         ];
 
         return $result;

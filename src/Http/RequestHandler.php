@@ -146,7 +146,7 @@ class RequestHandler implements RequestHandlerInterface
             return null;
         }
 
-        return $this->middleware[$position]["middleware"];
+        return $this->middleware[$position]['middleware'];
     }
 
     /**
@@ -159,9 +159,9 @@ class RequestHandler implements RequestHandlerInterface
         ?string $key = null
     ): RequestHandler {
         $this->middleware[] = [
-            "key" => $key,
-            "middleware" => $middleware,
-            "after" => true
+            'key' => $key,
+            'middleware' => $middleware,
+            'after' => true,
         ];
 
         return $this;
@@ -177,7 +177,7 @@ class RequestHandler implements RequestHandlerInterface
     protected function findMiddleware(string $key): ?int
     {
         foreach ($this->middleware as $k => $middleware) {
-            if ($middleware["key"] === $key) {
+            if ($middleware['key'] === $key) {
                 return $k;
             }
         }
@@ -191,7 +191,7 @@ class RequestHandler implements RequestHandlerInterface
     protected function executeMiddleware(array $middlewareArray): void
     {
         /** @var MiddlewareInterface $middleware */
-        $middleware = $middlewareArray["middleware"];
+        $middleware = $middlewareArray['middleware'];
 
         $this->response = $middleware->process($this->request, $this);
     }
@@ -254,9 +254,9 @@ class RequestHandler implements RequestHandlerInterface
         ?string $key
     ): RequestHandler {
         $this->middleware[] = [
-            "key" => $key,
-            "middleware" => $middleware,
-            "after" => true
+            'key' => $key,
+            'middleware' => $middleware,
+            'after' => true,
         ];
 
         return $this;

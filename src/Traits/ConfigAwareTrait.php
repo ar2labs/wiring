@@ -65,6 +65,6 @@ trait ConfigAwareTrait
      */
     public function lang($key)
     {
-        return $this->config("lang." . $key);
+        return $this->config('lang.' . $key);
     }
 }

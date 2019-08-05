@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Wiring\Interfaces;
 
-use Wiring\Interfaces\StrategyInterface;
-
 interface StrategyAwareInterface
 {
     /**

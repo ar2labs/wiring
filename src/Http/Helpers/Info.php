@@ -27,7 +27,7 @@ class Info
 
         // Set custom version info
         $ver = sprintf(
-            "PHP Version %s / Wiring Version %s",
+            'PHP Version %s / Wiring Version %s',
             phpversion(),
             'APP_VERSION'
         );
@@ -36,7 +36,7 @@ class Info
         $exp = [
             '%^.*<body>(.*)</body>.*$%ms' => '$1',
             '/<h1 class="p">(.*?)<\/h1>/i' => '<h1 class="p">' . $ver . '</h1>',
-            '/<img[^>]+\>/i' => '<img src="./img/watermark.png" height="56">'
+            '/<img[^>]+\>/i' => '<img src="./img/watermark.png" height="56">',
         ];
 
         //  Perform a regular expression search and replace
