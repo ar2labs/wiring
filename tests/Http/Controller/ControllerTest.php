@@ -11,7 +11,7 @@ use Wiring\Interfaces\ViewStrategyInterface;
 
 class SimpleMockController extends AbstractViewController {
     public function indexAction(): ResponseInterface {
-        return $this->redirect($this->response, 'test', 307);
+        return $this->response;
     }
 }
 
@@ -28,6 +28,8 @@ final class ControllerTest extends TestCase
             ->with(ViewStrategyInterface::class)
             ->willReturn($view);
         $response = $this->createMock(ResponseInterface::class);
+        $response->method('withStatus')
+            ->willReturnSelf();
 
         $controller = new SimpleMockController($container, $response);
 

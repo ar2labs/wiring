@@ -24,6 +24,8 @@ abstract class AbstractController extends AbstractStrategy implements
     use ResponseAwareTrait;
     use DatabaseAwareTrait;
 
+    private const DEFAULT_STATUS_CODE_REDIRECT = 307;
+
     /** @var ResponseFactoryInterface */
     protected $responseFactory;
 
@@ -42,7 +44,7 @@ abstract class AbstractController extends AbstractStrategy implements
     public function redirect(
         ResponseInterface $response,
         string $url,
-        int $status = 307
+        int $status = self::DEFAULT_STATUS_CODE_REDIRECT
     ): ResponseInterface {
         $responseWithRedirect = $response->withHeader('Location', $url);
 
