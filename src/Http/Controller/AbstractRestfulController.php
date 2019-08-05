@@ -145,7 +145,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         ResponseInterface $response,
         string $url,
         int $status = 307
-    ) {
+    ): ResponseInterface {
         $data = $this->data('info', $response->getReasonPhrase(), [], $status);
 
         return $data;
