@@ -109,7 +109,7 @@ abstract class AbstractViewController extends AbstractController
             public function process(
                 ServerRequestInterface $request,
                 RequestHandlerInterface $requestHandler
-            ): ?ResponseInterface {
+            ): ResponseInterface {
                 throw $this->error;
             }
         };

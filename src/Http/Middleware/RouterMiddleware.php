@@ -70,17 +70,17 @@ class RouterMiddleware implements MiddlewareInterface
      */
     public function getRouter()
     {
-        return $this->route;
+        return $this->router;
     }
 
     /**
      * Set the router.
      *
-     * @param mixed $route
+     * @param mixed $router
      */
-    public function setRouter($route)
+    public function setRouter($router)
     {
-        $this->route = $route;
+        $this->router = $router;
     }
 
     /**

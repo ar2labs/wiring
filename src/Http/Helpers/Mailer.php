@@ -2,8 +2,8 @@
 
 namespace Wiring\Http\Helpers;
 
-use Wiring\Strategy\Mailtrap\Message;
-use Wiring\Interfaces\ViewRendererInterface;
+use Wiring\Http\Helpers\Mailtrap\Message;
+use Wiring\Interfaces\ViewStrategyInterface;
 use Psr\Container\ContainerInterface;
 
 class Mailer
@@ -37,7 +37,7 @@ class Mailer
     {
         $message = new Message($this->mailer);
 
-        $message->body($this->container->get(ViewRendererInterface::class)
+        $message->body($this->container->get(ViewStrategyInterface::class)
             ->render($template, [
                 'data' => $data
             ]));
