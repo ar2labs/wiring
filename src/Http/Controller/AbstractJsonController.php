@@ -6,7 +6,6 @@ namespace Wiring\Http\Controller;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -22,7 +21,7 @@ abstract class AbstractJsonController extends AbstractController
      * Create container and response interface.
      *
      * @param ContainerInterface $container
-     * @param ResponseFactoryInterface $response
+     * @param ResponseInterface $response
      */
     public function __construct(
         ContainerInterface $container,

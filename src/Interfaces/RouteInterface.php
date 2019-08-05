@@ -6,7 +6,7 @@ namespace Wiring\Interfaces;
 
 use Psr\Container\ContainerInterface;
 
-interface RouterInterface
+interface RouteInterface
 {
     /**
      * Invoke the controller callable based on the abstract strategy.
