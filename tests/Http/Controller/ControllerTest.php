@@ -9,8 +9,10 @@ use Wiring\Http\Controller\AbstractController;
 use Wiring\Http\Controller\AbstractViewController;
 use Wiring\Interfaces\ViewStrategyInterface;
 
-class SimpleMockController extends AbstractViewController {
-    public function indexAction(): ResponseInterface {
+class SimpleMockController extends AbstractViewController
+{
+    public function indexAction(): ResponseInterface
+    {
         return $this->response;
     }
 }
@@ -23,7 +25,7 @@ final class ControllerTest extends TestCase
     public function testSimpleController()
     {
         $container = $this->createMock(ContainerInterface::class);
-        $view      = $this->createMock(ViewStrategyInterface::class);
+        $view = $this->createMock(ViewStrategyInterface::class);
         $container->method('get')
             ->with(ViewStrategyInterface::class)
             ->willReturn($view);

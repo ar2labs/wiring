@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Exception;
 
-use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Throwable;
 use Wiring\Interfaces\ErrorHandlerInterface;
 
 class ErrorHandler implements ErrorHandlerInterface
@@ -23,7 +23,7 @@ class ErrorHandler implements ErrorHandlerInterface
     protected $response;
 
     /**
-     * @var \Exception|\Throwable
+     * @var Throwable
      */
     protected $exception;
 
@@ -52,17 +52,18 @@ class ErrorHandler implements ErrorHandlerInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
+     * @param Throwable              $exception
      * @param LoggerInterface        $logger
-     * @param \Exception|\Throwable  $exception
+     * @param array                  $loggerContext
      * @param bool                   $debug
      */
     public function __construct(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        Exception $exception,
+        Throwable $exception,
         LoggerInterface $logger = null,
-        $loggerContext = [],
-        $debug = false
+        array $loggerContext = [],
+        bool $debug = false
     ) {
         $this->request = $request;
         $this->response = $response;
@@ -163,9 +164,9 @@ class ErrorHandler implements ErrorHandlerInterface
     /**
      * Get exception.
      *
-     * @return \Exception|\Throwable
+     * @return Throwable|null
      */
-    public function getException()
+    public function getException(): ?Throwable
     {
         return $this->exception;
     }
