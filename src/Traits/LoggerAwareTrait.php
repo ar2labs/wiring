@@ -43,11 +43,11 @@ trait LoggerAwareTrait
      *
      * @throws Exception
      *
-     * @return mixed
+     * @return LoggerInterface
      */
-    public function logger()
+    public function logger(): LoggerInterface
     {
-        if (method_exists($this, 'has')) {
+        if (!method_exists($this, 'has')) {
             throw new Exception('Container instance not found.');
         }
 

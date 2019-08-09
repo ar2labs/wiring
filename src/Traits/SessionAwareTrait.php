@@ -47,7 +47,7 @@ trait SessionAwareTrait
      */
     public function session(): SessionInterface
     {
-        if (method_exists($this, 'has')) {
+        if (!method_exists($this, 'has')) {
             throw new Exception('Container instance not found.');
         }
 

@@ -43,11 +43,11 @@ trait AuthAwareTrait
      *
      * @throws Exception
      *
-     * @return AuthInterface|null
+     * @return AuthInterface
      */
-    public function auth(): ?AuthInterface
+    public function auth(): AuthInterface
     {
-        if (method_exists($this, 'has')) {
+        if (!method_exists($this, 'has')) {
             throw new Exception('Container instance not found.');
         }
 

@@ -46,7 +46,7 @@ trait FlashAwareTrait
      */
     public function flash(): FlashInterface
     {
-        if (method_exists($this, 'has')) {
+        if (!method_exists($this, 'has')) {
             throw new Exception('Container instance not found.');
         }
 

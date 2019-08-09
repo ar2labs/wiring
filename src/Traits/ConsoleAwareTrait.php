@@ -46,7 +46,7 @@ trait ConsoleAwareTrait
      */
     public function console(): ConsoleInterface
     {
-        if (method_exists($this, 'has')) {
+        if (!method_exists($this, 'has')) {
             throw new Exception('Container instance not found.');
         }
 
