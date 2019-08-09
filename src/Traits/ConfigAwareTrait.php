@@ -46,7 +46,7 @@ trait ConfigAwareTrait
      */
     public function config(): ConfigInterface
     {
-        if (method_exists($this, 'has')) {
+        if (!method_exists($this, 'has')) {
             throw new Exception('Container instance not found.');
         }
 
