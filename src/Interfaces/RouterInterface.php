@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Wiring\Interfaces;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 interface RouterInterface
 {
-    const NOT_FOUND = 0;
-    const FOUND = 1;
-    const METHOD_NOT_ALLOWED = 2;
-
     /**
      * Dispatches against the provided HTTP method and URI.
      *
-     * @param string $httpMethod
-     * @param string $uri
+     * @param ServerRequestInterface $request
      *
-     * @return array
+     * @return ResponseInterface
      */
-    public function dispatch(string $httpMethod, string $uri): array;
+    public function dispatch(ServerRequestInterface $request): ResponseInterface;
 }

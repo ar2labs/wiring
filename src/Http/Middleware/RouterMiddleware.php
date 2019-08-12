@@ -13,9 +13,9 @@ use Psr\Http\Message\ServerRequestInterface;
 class RouterMiddleware implements MiddlewareInterface
 {
     /**
-     * @var Route dispatcher
+     * @var ResponseInterface dispatcher
      */
-    private $router;
+    private $dispatcher;
 
     /**
      * @var ResponseFactoryInterface
@@ -31,14 +31,14 @@ class RouterMiddleware implements MiddlewareInterface
      * Set the Dispatcher instance and optionally the response
      * factory to return the error responses.
      *
-     * @param Router $router
+     * @param ResponseInterface $dispatcher
      * @param ResponseFactoryInterface $responseFactory
      */
     public function __construct(
-        $router,
+        ResponseInterface $dispatcher,
         ResponseFactoryInterface $responseFactory = null
     ) {
-        $this->router = $router;
+        $this->dispatcher = $dispatcher;
         $this->responseFactory = $responseFactory;
     }
 
@@ -49,7 +49,7 @@ class RouterMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        return $this->router->dispatch($request);
+        return $this->dispatcher;
     }
 
     /**
@@ -61,26 +61,6 @@ class RouterMiddleware implements MiddlewareInterface
         $this->responseFactory = $responseFactory;
 
         return $this;
-    }
-
-    /**
-     * Get the router.
-     *
-     * @return mixed
-     */
-    public function getRouter()
-    {
-        return $this->router;
-    }
-
-    /**
-     * Set the router.
-     *
-     * @param mixed $router
-     */
-    public function setRouter($router)
-    {
-        $this->router = $router;
     }
 
     /**
