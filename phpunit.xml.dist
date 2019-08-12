@@ -22,6 +22,8 @@
             <exclude>
                 <directory suffix=".php">src/Interfaces</directory>
                 <directory suffix=".php">src/Traits</directory>
+                <directory suffix=".*">src/Http/Controller/AbstractController.php</directory>
+                <directory suffix=".*">src/Http/Controller/AbstractRestfulController.php</directory>
             </exclude>
         </whitelist>
     </filter>
