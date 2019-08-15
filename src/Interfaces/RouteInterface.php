@@ -13,7 +13,7 @@ interface RouteInterface
      *
      * @param ContainerInterface|null $container
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return callable
      */

@@ -71,7 +71,7 @@ class Acl
      *
      * @return Role|bool
      */
-    public function hasRole(string $name): ?Role
+    public function hasRole(string $name)
     {
         /** @var \Wiring\Permissions\Acl\Role $role */
         foreach ($this->roles as $role) {
@@ -115,7 +115,7 @@ class Acl
     /**
      * Can permission.
      *
-     * @param                       $permission
+     * @param mixed                 $permission
      * @param UserAclInterface|null $user
      *
      * @return bool
@@ -141,7 +141,7 @@ class Acl
     /**
      * Cannot permission.
      *
-     * @param                       $permission
+     * @param mixed                 $permission
      * @param UserAclInterface|null $user
      *
      * @return bool

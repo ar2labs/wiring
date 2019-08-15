@@ -7,9 +7,9 @@ interface MailerInterface
     /**
      * Send mail.
      *
-     * @param $template
-     * @param $data
-     * @param $callback
+     * @param mixed    $template
+     * @param mixed    $data
+     * @param callable $callback
      */
     public function send($template, $data, $callback);
 }

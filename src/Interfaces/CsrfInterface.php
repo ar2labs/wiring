@@ -23,12 +23,12 @@ interface CsrfInterface
     public function getTokenValueKey(): ?string;
 
     /**
-     * @param $prefix
-     * @param $storage
+     * @param mixed $prefix
+     * @param mixed $storage
      *
      * @return mixed
      */
-    public function validateStorage();
+    public function validateStorage($prefix, $storage);
 
     /**
      * Generates a new CSRF token
