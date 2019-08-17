@@ -10,7 +10,7 @@ class Message
     /**
      * Message constructor.
      *
-     * @param $mailer
+     * @param mixed $mailer
      */
     public function __construct($mailer)
     {
@@ -18,25 +18,25 @@ class Message
     }
 
     /**
-     * @param $address
+     * @param string $address
      */
-    public function to($address)
+    public function to(string $address): void
     {
         $this->mailer->addAddress($address);
     }
 
     /**
-     * @param $subject
+     * @param string $subject
      */
-    public function subject($subject)
+    public function subject(string $subject): void
     {
         $this->mailer->Subject = utf8_decode($subject);
     }
 
     /**
-     * @param $body
+     * @param string $body
      */
-    public function body($body)
+    public function body(string $body): void
     {
         $this->mailer->Body = utf8_decode($body);
     }

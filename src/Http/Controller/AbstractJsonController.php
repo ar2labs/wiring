@@ -35,7 +35,7 @@ abstract class AbstractJsonController extends AbstractController
     /**
      * Invoke the route callable based on the abstract strategy.
      *
-     * @param RouterInterface        $route
+     * @param RouteInterface        $route
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface

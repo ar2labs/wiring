@@ -22,7 +22,7 @@ abstract class AbstractJsonViewController extends AbstractController
      * Create container and response interface.
      *
      * @param ContainerInterface $container
-     * @param ResponseFactoryInterface $response
+     * @param ResponseInterface $response
      */
     public function __construct(
         ContainerInterface $container,
@@ -53,7 +53,7 @@ abstract class AbstractJsonViewController extends AbstractController
     /**
      * Invoke the route callable based on the abstract strategy.
      *
-     * @param RouterInterface        $route
+     * @param RouteInterface        $route
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
