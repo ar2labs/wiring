@@ -122,7 +122,7 @@ trait ContainerAwareTrait
      * Missing parameters will be resolved from the container.
      *
      * @param callable $callable Function to call.
-     * @param array $parameters  Parameters to use.
+     * @param array $params  Parameters to use.
      *
      * @throws Exception
      *

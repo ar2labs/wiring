@@ -17,8 +17,8 @@ class Mailer
     /**
      * Mailer constructor.
      *
-     * @param $mailer
-     * @param $container
+     * @param mixed              $mailer
+     * @param ContainerInterface $container
      */
     public function __construct($mailer, ContainerInterface $container)
     {
@@ -29,11 +29,11 @@ class Mailer
     /**
      * Send mail.
      *
-     * @param $template
-     * @param $data
-     * @param $callback
+     * @param mixed    $template
+     * @param mixed    $data
+     * @param callable $callback
      */
-    public function send($template, $data, $callback)
+    public function send($template, $data, $callback): void
     {
         $message = new Message($this->mailer);
 

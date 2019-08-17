@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Middleware;
 
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -18,17 +19,23 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
     private $emitter;
 
     /**
+     * @var ResponseFactoryInterface|null
+     */
+    private $responseFactory;
+
+    /**
      * Set your preferred emitter, this is optional.
      *
      * Note: Not set a interface for emitter,
      * no PSR have been set yet.
      *
      * @param EmitterInterface|null $emitter
-     * @param ResponseFactoryInterface $responseFactory
+     * @param ResponseFactoryInterface|null $responseFactory
      */
-    public function __construct($emitter = null)
+    public function __construct(?EmitterInterface $emitter = null, ?ResponseFactoryInterface $responseFactory)
     {
         $this->emitter = $emitter;
+        $this->responseFactory = $responseFactory;
     }
 
     /**

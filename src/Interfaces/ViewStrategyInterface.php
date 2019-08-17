@@ -11,7 +11,7 @@ interface ViewStrategyInterface
     /**
      * Define template engine.
      *
-     * @param $engine
+     * @param mixed $engine
      */
     public function __construct($engine);
 

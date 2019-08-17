@@ -35,7 +35,7 @@ abstract class AbstractController extends AbstractStrategy implements
      * This method prepares the response object to return an
      * HTTP Redirect response to the client.
      *
-     * @param ResponseInterface
+     * @param ResponseInterface $response
      * @param string $url
      * @param int|null $status
      *
@@ -44,7 +44,7 @@ abstract class AbstractController extends AbstractStrategy implements
     public function redirect(
         ResponseInterface $response,
         string $url,
-        int $status = self::DEFAULT_STATUS_CODE_REDIRECT
+        ?int $status = self::DEFAULT_STATUS_CODE_REDIRECT
     ): ResponseInterface {
         $responseWithRedirect = $response->withHeader('Location', $url);
 

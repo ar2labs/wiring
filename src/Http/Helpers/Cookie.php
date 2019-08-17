@@ -46,11 +46,11 @@ class Cookie implements CookieInterface
     /**
      * Checks if a cookie exists.
      *
-     * @param $name
+     * @param string $name
      *
      * @return bool
      */
-    public static function has($name): bool
+    public static function has(string $name): bool
     {
         return (isset($_COOKIE[$name])) ? true : false;
     }

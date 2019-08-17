@@ -14,11 +14,11 @@ interface ConfigInterface
     /**
      * Static method for loading a Config instance.
      *
-     * @param string|array $path
+     * @param mixed $path
      *
      * @return ConfigInterface
      */
-    public static function load(?string $path): ConfigInterface;
+    public static function load($path): ConfigInterface;
 
     /**
      * @param string $key
