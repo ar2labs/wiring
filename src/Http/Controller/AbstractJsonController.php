@@ -6,6 +6,7 @@ namespace Wiring\Http\Controller;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -17,6 +18,9 @@ use Wiring\Interfaces\RouteInterface;
 
 abstract class AbstractJsonController extends AbstractController
 {
+    /** @var ResponseFactoryInterface */
+    protected $responseFactory;
+
     /**
      * Create container and response interface.
      *
@@ -35,7 +39,7 @@ abstract class AbstractJsonController extends AbstractController
     /**
      * Invoke the route callable based on the abstract strategy.
      *
-     * @param RouteInterface        $route
+     * @param RouteInterface         $route
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
@@ -49,7 +53,6 @@ abstract class AbstractJsonController extends AbstractController
 
         if ($this->isJsonEncodable($response)) {
             $body = json_encode($response);
-            $response = $this->responseFactory;
             $response->getBody()->write($body);
         }
 
@@ -123,7 +126,7 @@ abstract class AbstractJsonController extends AbstractController
     protected function buildJsonResponseMiddleware(
         HttpException $exception
     ): MiddlewareInterface {
-        return new class($this ->responseFactory ->createResponse(), $exception) implements MiddlewareInterface {
+        return new class($this->responseFactory->createResponse(), $exception) implements MiddlewareInterface {
             protected $response;
             protected $exception;
 

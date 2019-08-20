@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Middleware;
 
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -19,23 +18,16 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
     private $emitter;
 
     /**
-     * @var ResponseFactoryInterface|null
-     */
-    private $responseFactory;
-
-    /**
      * Set your preferred emitter, this is optional.
      *
      * Note: Not set a interface for emitter,
      * no PSR have been set yet.
      *
      * @param EmitterInterface|null $emitter
-     * @param ResponseFactoryInterface|null $responseFactory
      */
-    public function __construct(?EmitterInterface $emitter = null, ?ResponseFactoryInterface $responseFactory)
+    public function __construct(?EmitterInterface $emitter = null)
     {
         $this->emitter = $emitter;
-        $this->responseFactory = $responseFactory;
     }
 
     /**
@@ -115,7 +107,8 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
             // While the stream is not the end of the stream.
             while (!$stream->eof()) {
                 // Output one or more strings
-                echo $stream->read($streamLenght);
+                echo $stream->read(is_int($streamLenght) ?
+                    $streamLenght : (int) $streamLenght);
             }
         }
 

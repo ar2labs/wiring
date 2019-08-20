@@ -88,8 +88,8 @@ class JsonStrategy implements JsonStrategyInterface
     /**
      * Encode the provided data to JSON.
      *
-     * @param array   $data            The data
-     * @param int     $encodingOptions JSON encoding options
+     * @param array|mixed $data            The data
+     * @param int         $encodingOptions JSON encoding options
      *
      * @return string
      *
@@ -108,6 +108,13 @@ class JsonStrategy implements JsonStrategyInterface
                 'Unable to encode data to JSON in %s: %s',
                 __CLASS__,
                 json_last_error_msg()
+            ));
+        }
+
+        if (!\is_string($json)) {
+            throw new InvalidArgumentException(sprintf(
+                'Unable to encode data to JSON in %s',
+                __CLASS__
             ));
         }
 

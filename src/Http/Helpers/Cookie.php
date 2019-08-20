@@ -26,7 +26,10 @@ class Cookie implements CookieInterface
      * @param string $name
      * @param string $value
      * @param int    $expiry
+     * @param string $path
+     * @param string $domain
      * @param bool   $secure
+     * @param bool   $httponly
      *
      * @return bool
      */
@@ -34,9 +37,12 @@ class Cookie implements CookieInterface
         string $name,
         string $value = '',
         int $expiry = 0,
-        bool $secure = false
+        string $path = '/',
+        string $domain = '',
+        bool $secure = false,
+        bool $httponly = true
     ): bool {
-        if (setcookie($name, $value, $expiry, '/', null, $secure, true)) {
+        if (setcookie($name, $value, $expiry, $path, $domain, $secure, $httponly)) {
             return true;
         }
 

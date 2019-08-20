@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Tests\Http\Controller;
 
 use PHPUnit\Framework\TestCase;
@@ -11,22 +13,6 @@ use Wiring\Http\Controller\AbstractViewController;
 use Wiring\Interfaces\JsonStrategyInterface;
 use Wiring\Interfaces\ViewStrategyInterface;
 
-class SimpleMockController extends AbstractViewController
-{
-    public function indexAction(): ResponseInterface
-    {
-        return $this->response;
-    }
-}
-
-class SimpleJsonController extends AbstractJsonController
-{
-    public function indexAction(): ResponseInterface
-    {
-        return $this->response;
-    }
-}
-
 final class ControllerTest extends TestCase
 {
     /**
@@ -35,10 +21,13 @@ final class ControllerTest extends TestCase
     public function testSimpleController()
     {
         $container = $this->createMock(ContainerInterface::class);
+
         $view = $this->createMock(ViewStrategyInterface::class);
+
         $container->method('get')
             ->with(ViewStrategyInterface::class)
             ->willReturn($view);
+
         $response = $this->createMock(ResponseInterface::class);
         $response->method('withStatus')
             ->willReturnSelf();
@@ -57,10 +46,13 @@ final class ControllerTest extends TestCase
     public function testJsonController()
     {
         $container = $this->createMock(ContainerInterface::class);
+
         $view = $this->createMock(JsonStrategyInterface::class);
+
         $container->method('get')
             ->with(JsonStrategyInterface::class)
             ->willReturn($view);
+
         $response = $this->createMock(ResponseInterface::class);
         $response->method('withStatus')
             ->willReturnSelf();

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Wiring\Http\Controller;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Wiring\Interfaces\ContainerAwareInterface;
 use Wiring\Interfaces\ControllerInterface;
 use Wiring\Interfaces\ResponseAwareInterface;
@@ -25,9 +24,6 @@ abstract class AbstractController extends AbstractStrategy implements
     use DatabaseAwareTrait;
 
     private const DEFAULT_STATUS_CODE_REDIRECT = 307;
-
-    /** @var ResponseFactoryInterface */
-    protected $responseFactory;
 
     /**
      * Redirect response.

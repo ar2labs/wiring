@@ -150,12 +150,16 @@ class HttpException extends \Exception implements HttpExceptionInterface
         $data = [];
 
         if ($response->getBody()->isWritable()) {
-            $response->getBody()->write(json_encode([
+            $json = json_encode([
                 'code' => $this->status,
                 'status' => 'error',
                 'message' => $this->message,
                 'data' => $data,
-            ]));
+            ]);
+
+            if (is_string($json)) {
+                $response->getBody()->write($json);
+            }
         }
 
         return $response->withStatus($this->status, $this->message);
