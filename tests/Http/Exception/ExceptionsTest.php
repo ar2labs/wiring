@@ -20,6 +20,11 @@ class ExceptionsTest extends TestCase
         $this->assertInstanceOf(HttpException::class, $exception);
         $this->assertEquals(400, $exception->getStatusCode());
 
+        $exception = new UnauthorizedException();
+
+        $this->assertInstanceOf(HttpException::class, $exception);
+        $this->assertEquals(401, $exception->getStatusCode());
+
         $exception = new MethodNotAllowedException;
 
         $this->assertInstanceOf(HttpException::class, $exception);
@@ -29,11 +34,6 @@ class ExceptionsTest extends TestCase
 
         $this->assertInstanceOf(HttpException::class, $exception);
         $this->assertEquals(404, $exception->getStatusCode());
-
-        $exception = new UnauthorizedException();
-
-        $this->assertInstanceOf(HttpException::class, $exception);
-        $this->assertEquals(401, $exception->getStatusCode());
 
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('isWritable')

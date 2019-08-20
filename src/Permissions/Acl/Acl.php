@@ -97,7 +97,9 @@ class Acl
     public function hasPermission(string $role, string $permission): bool
     {
         // Check role
-        if ($itemRole = $this->hasRole($role)) {
+        $itemRole = $this->hasRole($role);
+
+        if ($itemRole instanceof Role) {
             /** @var \Wiring\Permissions\Acl\Permission $itemPermission */
             foreach ($itemRole->getPermissions() as $itemPermission) {
                 // Check permission
@@ -128,7 +130,8 @@ class Acl
             return $this->hasPermission($role, $permission);
         }
 
-        if ($this->user) {
+        if (method_exists($this->user, 'getRole')) {
+            // Get role name
             $role = $this->user->getRole()->getName();
             // Check role permission
             return $this->hasPermission($role, $permission);

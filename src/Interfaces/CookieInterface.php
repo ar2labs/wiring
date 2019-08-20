@@ -21,7 +21,10 @@ interface CookieInterface
      * @param string $name
      * @param string $value
      * @param int    $expiry
+     * @param string $path
+     * @param string $domain
      * @param bool   $secure
+     * @param bool   $httponly
      *
      * @return bool
      */
@@ -29,8 +32,11 @@ interface CookieInterface
         string $name,
         string $value = '',
         int $expiry = 0,
-        bool $secure = false
-    ): bool;
+        string $path = '/',
+        string $domain = '',
+        bool $secure = false,
+        bool $httponly = true
+    );
 
     /**
      * Checks if a cookie exists.

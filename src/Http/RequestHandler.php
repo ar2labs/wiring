@@ -65,6 +65,7 @@ class RequestHandler implements RequestHandlerInterface
 
     /**
      * RequestHandler constructor.
+     *
      * @param ContainerInterface $container
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
@@ -86,17 +87,17 @@ class RequestHandler implements RequestHandlerInterface
     }
 
     /**
-     * @throws ErrorHandler
+     * Response destructor.
+     *
+     * @return null|ResponseInterface
      */
     public function __destruct()
     {
         $this->setIsAfterMiddleware();
 
         if (!$this->isFinished()) {
-            return $this->handle($this->request);
+            $this->handle($this->request);
         }
-
-        return null;
     }
 
     /**
@@ -199,7 +200,7 @@ class RequestHandler implements RequestHandlerInterface
     /**
      * Add router middleware.
      *
-     * @param $router
+     * @param MiddlewareInterface $router
      *
      * @return self
      */

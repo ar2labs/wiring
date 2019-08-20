@@ -43,7 +43,7 @@ class Info
         $replacements = preg_replace(
             array_keys($exp),
             array_values($exp),
-            $content
+            is_string($content) ? $content : ''
         );
 
         // Print custom content

@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 use Wiring\Interfaces\ErrorHandlerInterface;
 
-class ErrorHandler implements ErrorHandlerInterface
+class ErrorHandler extends \Exception implements ErrorHandlerInterface
 {
     /**
      * @var ServerRequestInterface
@@ -71,6 +71,12 @@ class ErrorHandler implements ErrorHandlerInterface
         $this->logger = $logger;
         $this->loggerContext = $loggerContext;
         $this->debug = $debug;
+
+        parent::__construct(
+            $exception->getMessage() ?? 'Undefined error message.',
+            $exception->getCode() ?? 0,
+            $exception
+        );
     }
 
     /**
@@ -103,7 +109,7 @@ class ErrorHandler implements ErrorHandlerInterface
 
         $this->response->withStatus($statusCode);
 
-        if ($this->logger) {
+        if (method_exists($this->logger, 'error')) {
             $this->logger->error($this->exception->getMessage(), $this->loggerContext);
         }
 
