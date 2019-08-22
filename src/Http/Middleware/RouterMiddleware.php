@@ -9,13 +9,14 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Wiring\Interfaces\RouterInterface;
 
 class RouterMiddleware implements MiddlewareInterface
 {
     /**
-     * @var ResponseInterface dispatcher
+     * @var RouterInterface
      */
-    private $dispatcher;
+    private $router;
 
     /**
      * @var ResponseFactoryInterface
@@ -28,28 +29,28 @@ class RouterMiddleware implements MiddlewareInterface
     private $attribute = 'request-handler';
 
     /**
-     * Set the Dispatcher instance and optionally the response
+     * Set the Router instance and optionally the response
      * factory to return the error responses.
      *
-     * @param ResponseInterface $dispatcher
+     * @param RouterInterface $router
      * @param ResponseFactoryInterface $responseFactory
      */
     public function __construct(
-        ResponseInterface $dispatcher,
+        RouterInterface $router,
         ResponseFactoryInterface $responseFactory = null
     ) {
-        $this->dispatcher = $dispatcher;
+        $this->router = $router;
         $this->responseFactory = $responseFactory;
     }
 
     /**
-     * Process a server request and return a response.
+     * Process a dispatch request and return a response.
      */
     public function process(
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        return $this->dispatcher;
+        return $this->router->dispatch($request);
     }
 
     /**
