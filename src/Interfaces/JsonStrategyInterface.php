@@ -30,13 +30,13 @@ interface JsonStrategyInterface
     /**
      * Return response with JSON header and status.
      *
-     * @param ResponseInterface $response
-     * @param int               $status
+     * @param ResponseInterface|null $response
+     * @param int                    $status
      *
      * @return ResponseInterface
      */
     public function to(
-        ResponseInterface $response,
+        ?ResponseInterface $response,
         int $status = 200
     ): ResponseInterface;
 }

@@ -45,8 +45,8 @@ class HttpException extends \Exception implements HttpExceptionInterface
      */
     public function __construct(
         int        $status,
-        string     $message = null,
-        $previous = null,
+        string     $message = '',
+        \Exception $previous = null,
         array      $headers = [],
         int        $code = 0
     ) {

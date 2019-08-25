@@ -37,7 +37,7 @@ class RouterMiddleware implements MiddlewareInterface
      */
     public function __construct(
         RouterInterface $router,
-        ResponseFactoryInterface $responseFactory = null
+        ResponseFactoryInterface $responseFactory
     ) {
         $this->router = $router;
         $this->responseFactory = $responseFactory;

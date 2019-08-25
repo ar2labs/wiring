@@ -9,9 +9,9 @@ class Info
     /**
      * Get custom PHP info.
      *
-     * @return string
+     * @return mixed
      */
-    public function phpinfo(): string
+    public function phpinfo()
     {
         // Start buffering
         ob_start();
