@@ -26,8 +26,8 @@ class Resource
         ?string $name = null,
         ?string $ownerField = null
     ) {
-        $this->name = $name;
-        $this->ownerField = $ownerField;
+        $this->name = (string)$name;
+        $this->ownerField = (string)$ownerField;
     }
 
     /**
