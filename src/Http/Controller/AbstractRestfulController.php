@@ -195,7 +195,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      * @param string $status
      * @param string $message
      * @param mixed|array $data
-     * @param int $code
+     * @param int|null $code
      *
      * @return mixed|array
      */
@@ -203,7 +203,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         string $status,
         string $message = 'OK',
         $data = [],
-        int $code = 200
+        ?int $code = 200
     ) {
         $result = [
             'code' => $code,

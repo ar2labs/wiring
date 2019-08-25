@@ -23,7 +23,7 @@ class Role
      */
     public function __construct(?string $name = null)
     {
-        $this->name = $name;
+        $this->name = (string)$name;
     }
 
     /**

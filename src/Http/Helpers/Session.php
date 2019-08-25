@@ -14,7 +14,7 @@ class Session implements SessionInterface
      * @param string      $key
      * @param string|null $default
      *
-     * @return string|array|object
+     * @return mixed
      */
     public static function get(string $key, ?string $default = '')
     {
@@ -31,7 +31,7 @@ class Session implements SessionInterface
      * @param string      $key
      * @param string|null $value
      *
-     * @return string|array|object
+     * @return mixed
      */
     public static function set(string $key, ?string $value)
     {
