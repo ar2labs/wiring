@@ -102,12 +102,12 @@ class HttpException extends \Exception implements HttpExceptionInterface
             $response = $response->withAddedHeader($key, $value);
         }
 
-        if (empty($this->message)) {
+        if ((empty($this->message)) && ($this->previous instanceof \Exception)) {
             $this->message = $this->previous->getMessage();
         }
 
-        $statusCode = method_exists($this->previous, 'getStatusCode') ?
-            $this->previous->getStatusCode() : null;
+        $statusCode = ($this->previous instanceof \Exception) ?
+            $this->previous->getCode() : null;
 
         // Check status code is null
         if ($statusCode == null) {
@@ -143,7 +143,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
             $response = $response->withAddedHeader($key, $value);
         }
 
-        if (empty($this->message)) {
+        if ((empty($this->message)) && ($this->previous instanceof \Exception)) {
             $this->message = $this->previous->getMessage();
         }
 

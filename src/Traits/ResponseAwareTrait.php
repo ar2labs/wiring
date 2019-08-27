@@ -10,16 +10,16 @@ use Wiring\Interfaces\ResponseAwareInterface;
 trait ResponseAwareTrait
 {
     /**
-     * @var ResponseInterface|null
+     * @var ResponseInterface
      */
     protected $response;
 
     /**
      * Get the current response.
      *
-     * @return ResponseInterface|null
+     * @return ResponseInterface
      */
-    public function getResponse(): ?ResponseInterface
+    public function getResponse(): ResponseInterface
     {
         return $this->response;
     }

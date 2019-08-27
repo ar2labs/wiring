@@ -125,14 +125,14 @@ class Acl
     public function can($permission, UserAclInterface $user = null): bool
     {
         if ($user) {
-            $role = (string)$user->getRole()->getName();
+            $role = (string) $user->getRole()->getName();
             // Check role permission
             return $this->hasPermission($role, $permission);
         }
 
         if (method_exists($this->user, 'getRole')) {
             // Get role name
-            $role = (string)$this->user->getRole()->getName();
+            $role = (string) $this->user->getRole()->getName();
             // Check role permission
             return $this->hasPermission($role, $permission);
         }
