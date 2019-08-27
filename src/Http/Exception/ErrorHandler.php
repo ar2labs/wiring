@@ -28,7 +28,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
     protected $exception;
 
     /**
-     * @var LoggerInterface
+     * @var LoggerInterface|null
      */
     protected $logger;
 
@@ -53,7 +53,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
      * @param Throwable              $exception
-     * @param LoggerInterface        $logger
+     * @param LoggerInterface|null   $logger
      * @param array                  $loggerContext
      * @param bool                   $debug
      */
@@ -109,7 +109,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
 
         $this->response->withStatus($statusCode);
 
-        if (method_exists($this->logger, 'error')) {
+        if ($this->logger instanceof LoggerInterface) {
             $this->logger->error($this->exception->getMessage(), $this->loggerContext);
         }
 

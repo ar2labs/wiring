@@ -70,6 +70,14 @@ trait ContainerAwareTrait
     {
         $container = $this->getContainer();
 
+        if (!$container instanceof ContainerInterface) {
+            throw new Exception('Container not found');
+        }
+
+        if (!method_exists($container, 'has')) {
+            throw new Exception('Container method not found');
+        }
+
         return $container->has($id);
     }
 
@@ -86,6 +94,10 @@ trait ContainerAwareTrait
     public function set(string $name, $value): ContainerAwareInterface
     {
         $container = $this->getContainer();
+
+        if (!$container instanceof ContainerInterface) {
+            throw new Exception('Container not found');
+        }
 
         if (!method_exists($container, 'set')) {
             throw new Exception('Container method not found');
@@ -109,6 +121,10 @@ trait ContainerAwareTrait
     {
         $container = $this->getContainer();
 
+        if (!$container instanceof ContainerInterface) {
+            throw new Exception('Container not found');
+        }
+
         if (!method_exists($container, 'make')) {
             throw new Exception('Container method not found');
         }
@@ -131,6 +147,10 @@ trait ContainerAwareTrait
     public function call(callable $callable, array $params = [])
     {
         $container = $this->getContainer();
+
+        if (!$container instanceof ContainerInterface) {
+            throw new Exception('Container not found');
+        }
 
         if (!method_exists($container, 'call')) {
             throw new Exception('Container method not found');

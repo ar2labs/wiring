@@ -19,7 +19,7 @@ class RouterMiddleware implements MiddlewareInterface
     private $router;
 
     /**
-     * @var ResponseFactoryInterface
+     * @var ResponseFactoryInterface|null
      */
     private $responseFactory;
 
@@ -33,11 +33,11 @@ class RouterMiddleware implements MiddlewareInterface
      * factory to return the error responses.
      *
      * @param RouterInterface $router
-     * @param ResponseFactoryInterface $responseFactory
+     * @param ResponseFactoryInterface|null $responseFactory
      */
     public function __construct(
         RouterInterface $router,
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory = null
     ) {
         $this->router = $router;
         $this->responseFactory = $responseFactory;
