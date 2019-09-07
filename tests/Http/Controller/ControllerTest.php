@@ -20,15 +20,15 @@ final class ControllerTest extends TestCase
      */
     public function testSimpleController()
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createContainerMock();
 
-        $view = $this->createMock(ViewStrategyInterface::class);
+        $view = $this->createViewStrategyMock();
 
         $container->method('get')
             ->with(ViewStrategyInterface::class)
             ->willReturn($view);
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createResponseMock();
         $response->method('withStatus')
             ->willReturnSelf();
 
@@ -45,15 +45,15 @@ final class ControllerTest extends TestCase
      */
     public function testJsonController()
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createContainerMock();
 
-        $view = $this->createMock(JsonStrategyInterface::class);
+        $view = $this->createJsonStrategyMock();
 
         $container->method('get')
             ->with(JsonStrategyInterface::class)
             ->willReturn($view);
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createResponseMock();
         $response->method('withStatus')
             ->willReturnSelf();
 
@@ -63,5 +63,25 @@ final class ControllerTest extends TestCase
         $this->assertInstanceOf(AbstractJsonController::class, $controller);
         $this->assertInstanceOf(JsonStrategyInterface::class, $controller->json());
         $this->assertInstanceOf(ResponseInterface::class, $controller->indexAction());
+    }
+
+    private function createContainerMock()
+    {
+        return $this->createMock(ContainerInterface::class);
+    }
+
+    private function createViewStrategyMock()
+    {
+        return $this->createMock(ViewStrategyInterface::class);
+    }
+
+    private function createResponseMock()
+    {
+        return $this->createMock(ResponseInterface::class);
+    }
+
+    private function createJsonStrategyMock()
+    {
+        return $this->createMock(JsonStrategyInterface::class);
     }
 }
