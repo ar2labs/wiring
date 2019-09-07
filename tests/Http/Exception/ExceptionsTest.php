@@ -35,11 +35,11 @@ class ExceptionsTest extends TestCase
         $this->assertInstanceOf(HttpException::class, $exception);
         $this->assertEquals(404, $exception->getStatusCode());
 
-        $stream = $this->createMock(StreamInterface::class);
+        $stream = $this->createStreamMock();
         $stream->method('isWritable')
             ->willReturn(false);
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createResponseMock();
         $response->method('withStatus')
             ->willReturnSelf();
         $response->method('withAddedHeader')
@@ -51,5 +51,15 @@ class ExceptionsTest extends TestCase
         $this->assertIsArray($exception->getData());
         $this->assertInstanceOf(ResponseInterface::class, $exception->buildJsonResponse($response));
         $this->assertInstanceOf(ResponseInterface::class, $exception->buildResponse($response));
+    }
+
+    private function createResponseMock()
+    {
+        return $this->createMock(ResponseInterface::class);
+    }
+
+    private function createStreamMock()
+    {
+        return $this->createMock(StreamInterface::class);
     }
 }
