@@ -14,14 +14,29 @@ final class ApplicationTest extends TestCase
 {
     public function testInstanceCreated()
     {
-        $container = $this->createMock(ContainerInterface::class);
-        $request = $this->createMock(ServerRequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $container = $this->createContainerMock();
+        $request = $this->createServerRequestMock();
+        $response = $this->createResponseMock();
 
         $app = new Application($container, $request, $response);
 
         $this->assertInstanceOf(Application::class, $app);
         $this->assertInstanceOf(ResponseInterface::class, $app->run());
         $this->assertInstanceOf(ResponseInterface::class, $app->stop());
+    }
+
+    private function createContainerMock()
+    {
+        return $this->createMock(ContainerInterface::class);
+    }
+
+    private function createServerRequestMock()
+    {
+        return $this->createMock(ServerRequestInterface::class);
+    }
+
+    private function createResponseMock()
+    {
+        return $this->createMock(ResponseInterface::class);
     }
 }
