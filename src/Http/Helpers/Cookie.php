@@ -42,11 +42,7 @@ class Cookie implements CookieInterface
         bool $secure = false,
         bool $httponly = true
     ): bool {
-        if (setcookie($name, $value, $expiry, $path, $domain, $secure, $httponly)) {
-            return true;
-        }
-
-        return false;
+        return setcookie($name, $value, $expiry, $path, $domain, $secure, $httponly);
     }
 
     /**
@@ -70,7 +66,7 @@ class Cookie implements CookieInterface
      */
     public static function forget(string $name): void
     {
-        if (self::has($$name)) {
+        if (self::has($name)) {
             self::set($name, '', time() - 1);
         }
     }
