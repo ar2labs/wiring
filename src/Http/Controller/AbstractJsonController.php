@@ -56,9 +56,7 @@ abstract class AbstractJsonController extends AbstractController
             $response->getBody()->write($body);
         }
 
-        $response = $this->applyDefaultResponseHeaders($response);
-
-        return $response;
+        return $this->applyDefaultResponseHeaders($response);
     }
 
     /**
@@ -179,30 +177,26 @@ abstract class AbstractJsonController extends AbstractController
 
             public function process(
                 ServerRequestInterface $request,
-                RequestHandlerInterface $requestHandler
+                RequestHandlerInterface $handler
             ): ResponseInterface {
                 try {
-                    return $requestHandler->handle($request);
+                    return $handler->handle($request);
                 } catch (\Throwable $exception) {
-                    $response = $this->response;
-
                     if ($exception instanceof HttpException) {
-                        return $exception->buildJsonResponse($response);
+                        return $exception->buildJsonResponse($this->response);
                     }
 
-                    $response->getBody()->write(json_encode([
+                    $this->response->getBody()->write(json_encode([
                         'code' => 500,
                         'status' => 'error',
                         'message' => $exception->getMessage(),
                         'data' => [],
                     ]));
 
-                    $response = $response
-                        ->withAddedHeader('content-type', 'application/json');
-
                     $reason = strtok($exception->getMessage(), "\n");
 
-                    return $response
+                    return $this->response
+                        ->withAddedHeader('content-type', 'application/json')
                         ->withStatus(500, $reason);
                 }
             }
