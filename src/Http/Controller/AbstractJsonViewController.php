@@ -63,11 +63,9 @@ abstract class AbstractJsonViewController extends AbstractController
         ServerRequestInterface $request
     ): ResponseInterface {
         $controller = $route->getCallable($this->getContainer());
-
         $response = $controller($request, $route->getVars());
-        $response = $this->applyDefaultResponseHeaders($response);
 
-        return $response;
+        return $this->applyDefaultResponseHeaders($response);
     }
 
     /**
@@ -152,11 +150,13 @@ abstract class AbstractJsonViewController extends AbstractController
              */
             public function process(
                 ServerRequestInterface $request,
-                RequestHandlerInterface $requestHandler
+                RequestHandlerInterface $handler
             ): ResponseInterface {
                 try {
-                    return $requestHandler->handle($request);
+                    return $handler->handle($request);
                 } catch (Throwable $e) {
+                    error_log($e->getMessage());
+
                     throw $e;
                 }
             }
