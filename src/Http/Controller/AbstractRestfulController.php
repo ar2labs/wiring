@@ -183,14 +183,12 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         $data = [],
         ?int $code = 200
     ) {
-        $result = [
+        return [
             'code' => $code,
             'status' => $status,
             'message' => $message,
             'data' => $data,
         ];
-
-        return $result;
     }
 
     /**
