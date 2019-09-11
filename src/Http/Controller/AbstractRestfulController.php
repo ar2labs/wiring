@@ -35,10 +35,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      */
     public function create(ServerRequestInterface $request): ResponseInterface
     {
-        $response = $this->getResponse();
-        $data = $this->methodNotImplemented();
-
-        return $this->json()->render($data)->to($response, $data['code']);
+        return $this->methodNotImplemented();
     }
 
     /**
@@ -53,10 +50,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         ServerRequestInterface $request,
         array $args
     ): ResponseInterface {
-        $response = $this->getResponse();
-        $data = $this->methodNotImplemented();
-
-        return $this->json()->render($data)->to($response, $data['code']);
+        return $this->methodNotImplemented();
     }
 
     /**
@@ -71,10 +65,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         ServerRequestInterface $request,
         array $args
     ): ResponseInterface {
-        $response = $this->getResponse();
-        $data = $this->methodNotImplemented();
-
-        return $this->json()->render($data)->to($response, $data['code']);
+        return $this->methodNotImplemented();
     }
 
     /**
@@ -89,10 +80,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         ServerRequestInterface $request,
         array $args
     ): ResponseInterface {
-        $response = $this->getResponse();
-        $data = $this->methodNotImplemented();
-
-        return $this->json()->render($data)->to($response, $data['code']);
+        return $this->methodNotImplemented();
     }
 
     /**
@@ -109,9 +97,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         int $status = 100,
         $data = []
     ) {
-        $data = $this->data('info', $message, $data, $status);
-
-        return $data;
+        return $this->data('info', $message, $data, $status);
     }
 
     /**
@@ -128,9 +114,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         $data = [],
         int $status = 200
     ) {
-        $data = $this->data('success', $message, $data, $status);
-
-        return $data;
+        return $this->data('success', $message, $data, $status);
     }
 
     /**
@@ -146,9 +130,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         string $url,
         ?int $status = 307
     ): ResponseInterface {
-        $data = $this->data('info', $response->getReasonPhrase(), [], $status);
-
-        return $data;
+        return $this->data('info', $response->getReasonPhrase(), [], $status);
     }
 
     /**
@@ -165,9 +147,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         int $status = 400,
         $data = []
     ) {
-        $data = $this->data('error', $message, $data, $status);
-
-        return $data;
+        return $this->data('error', $message, $data, $status);
     }
 
     /**
@@ -184,9 +164,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
         int $status = 500,
         $data = []
     ) {
-        $data = $this->data('fail', $message, $data, $status);
-
-        return $data;
+        return $this->data('fail', $message, $data, $status);
     }
 
     /**
@@ -222,6 +200,9 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      */
     private function methodNotImplemented()
     {
-        return $this->error('Method Not Implemented', 501);
+        $data = $this->error('Method Not Implemented', 501);
+        $response = $this->getResponse();
+
+        return $this->json()->render($data)->to($response, $data['code']);
     }
 }
