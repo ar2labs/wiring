@@ -71,14 +71,14 @@ abstract class AbstractJsonViewController extends AbstractController
     /**
      * Get a middleware that will decorate a NotFoundException.
      *
-     * @param NotFoundException $exception
+     * @param NotFoundException $exceptionNotFound
      *
      * @return MiddlewareInterface
      */
     public function getNotFoundDecorator(
-        NotFoundException $exception
+        NotFoundException $exceptionNotFound
     ): MiddlewareInterface {
-        return $this->throwThrowableMiddleware($exception);
+        return $this->throwThrowableMiddleware($exceptionNotFound);
     }
 
     /**
