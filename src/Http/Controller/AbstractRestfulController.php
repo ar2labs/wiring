@@ -6,7 +6,6 @@ namespace Wiring\Http\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-
 use Wiring\Interfaces\RestfulControllerInterface;
 
 abstract class AbstractRestfulController extends AbstractJsonController implements RestfulControllerInterface
