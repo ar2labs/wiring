@@ -31,9 +31,9 @@ abstract class AbstractJsonController extends AbstractController
         ContainerInterface $container,
         ResponseInterface $response
     ) {
-        $this->setContainer($container);
-        $this->setResponse($response);
         $this->addDefaultResponseHeader('content-type', 'application/json');
+
+        parent::__construct($container, $response);
     }
 
     /**
@@ -143,19 +143,6 @@ abstract class AbstractJsonController extends AbstractController
                 return $this->exception->buildJsonResponse($this->response);
             }
         };
-    }
-
-    /**
-     * Get a middleware that will act as an exception handler.
-     *
-     * The middleware must wrap the rest of the middleware stack and catch any
-     * thrown exceptions.
-     *
-     * @return MiddlewareInterface
-     */
-    public function getExceptionHandler(): MiddlewareInterface
-    {
-        return $this->getThrowableHandler();
     }
 
     /**
