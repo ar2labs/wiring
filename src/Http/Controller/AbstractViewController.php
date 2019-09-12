@@ -41,11 +41,9 @@ abstract class AbstractViewController extends AbstractController
         ServerRequestInterface $request
     ): ResponseInterface {
         $controller = $route->getCallable($this->getContainer());
-
         $response = $controller($request, $route->getVars());
-        $response = $this->applyDefaultResponseHeaders($response);
 
-        return $response;
+        return $this->applyDefaultResponseHeaders($response);
     }
 
     /**
@@ -62,14 +60,14 @@ abstract class AbstractViewController extends AbstractController
     /**
      * Get a middleware that will decorate a NotFoundException.
      *
-     * @param NotFoundException $exception
+     * @param NotFoundException $exceptionNotFound
      *
      * @return MiddlewareInterface
      */
     public function getNotFoundDecorator(
-        NotFoundException $exception
+        NotFoundException $exceptionNotFound
     ): MiddlewareInterface {
-        return $this->throwThrowableMiddleware($exception);
+        return $this->throwThrowableMiddleware($exceptionNotFound);
     }
 
     /**
@@ -146,6 +144,8 @@ abstract class AbstractViewController extends AbstractController
                 try {
                     return $requestHandler->handle($request);
                 } catch (Throwable $e) {
+                    error_log($e->getMessage());
+
                     throw $e;
                 }
             }

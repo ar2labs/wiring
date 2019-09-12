@@ -91,14 +91,14 @@ abstract class AbstractJsonController extends AbstractController
     /**
      * Get a middleware that will decorate a NotFoundException.
      *
-     * @param NotFoundException $exception
+     * @param NotFoundException $exceptionNotFound
      *
      * @return MiddlewareInterface
      */
     public function getNotFoundDecorator(
-        NotFoundException $exception
+        NotFoundException $exceptionNotFound
     ): MiddlewareInterface {
-        return $this->buildJsonResponseMiddleware($exception);
+        return $this->buildJsonResponseMiddleware($exceptionNotFound);
     }
 
     /**
