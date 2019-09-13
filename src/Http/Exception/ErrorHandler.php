@@ -12,6 +12,27 @@ use Wiring\Interfaces\ErrorHandlerInterface;
 
 class ErrorHandler extends \Exception implements ErrorHandlerInterface
 {
+    // Define constants error
+    const ERROR_CODE = 'code';
+    const ERROR_TYPE = 'type';
+    const ERROR_STATUS = 'status';
+    const ERROR_TITLE = 'title';
+    const ERROR_MESSAGE = 'message';
+    const ERROR_DATA = 'data';
+    const ERROR_FILE = 'file';
+    const ERROR_LINE = 'line';
+    const ERROR_TRACE = 'trace';
+    const ERROR_DEBUG = 'debug';
+
+    // Define types & messages
+    const CONTENT_TYPE = 'Content-Type';
+    const APP_JSON = 'application/json';
+    const APP_HTML = 'text/html';
+    const DEBUG_MODE = 'Debug-Mode';
+    const UNDEFINED_MESSAGE = 'Undefined error message.';
+    const DEFAULT_MESSAGE = 'A website error has occurred. Sorry for the temporary inconvenience.';
+    const DEBUG_MESSAGE = 'The application could not run because of the following error:';
+
     /**
      * @var ServerRequestInterface
      */
@@ -73,7 +94,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         $this->debug = $debug;
 
         parent::__construct(
-            $exception->getMessage() ?? 'Undefined error message.',
+            $exception->getMessage() ?? UNDEFINED_MESSAGE,
             $exception->getCode() ?? 0,
             $exception
         );
@@ -88,14 +109,13 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
      */
     public function error(?string $message = null): array
     {
+        $type = $this->request->getHeader(CONTENT_TYPE);
+        $mode = $this->request->getHeader(DEBUG_MODE);
+
         if ($message == null) {
-            $debugMessage = 'The application could not run because of the following error:';
-            $errorMessageDefault = 'A website error has occurred. Sorry for the temporary inconvenience.';
-            $message = $this->debug ? $debugMessage : $errorMessageDefault;
+            $message = $this->debug ? DEBUG_MESSAGE : DEFAULT_MESSAGE;
         }
 
-        $type = $this->request->getHeader('Content-Type');
-        $mode = $this->request->getHeader('Debug-Mode');
         $msg = $this->exception->getMessage() ?? $message;
         $code = $this->exception->getCode() ?? 0;
 
@@ -113,26 +133,27 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
             $this->logger->error($this->exception->getMessage(), $this->loggerContext);
         }
 
-        $this->isJson = isset($type[0]) && $type[0] == 'application/json';
+        $this->isJson = isset($type[0]) && $type[0] == APP_JSON;
 
         if ($this->isJson) {
             // Define content-type to json
-            $this->response->withHeader('Content-Type', 'application/json');
+            $this->response->withHeader(CONTENT_TYPE, APP_JSON);
 
             $error = [
-                'code' => $statusCode,
-                'status' => 'error',
-                'message' => $msg,
-                'data' => [],
+                ERROR_CODE => $statusCode,
+                ERROR_STATUS => 'error',
+                ERROR_MESSAGE => $msg,
+                ERROR_DATA => [],
             ];
 
             // Debug mode header
             if (is_array($mode) && ($mode[0] == '1')) {
-                $error['data'] = [
-                    'code' => $code,
-                    'error' => $this->exception->getTraceAsString(),
-                    'file' => $this->exception->getFile(),
-                    'line' => $this->exception->getLine(),
+                // Debug details
+                $error[ERROR_DATA] = [
+                    ERROR_CODE => $code,
+                    ERROR_MESSAGE => $this->exception->getTraceAsString(),
+                    ERROR_FILE => $this->exception->getFile(),
+                    ERROR_LINE => $this->exception->getLine(),
                 ];
             }
 
@@ -140,13 +161,13 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         }
 
         // Define content-type to html
-        $this->response->withHeader('Content-Type', 'text/html');
+        $this->response->withHeader(CONTENT_TYPE, APP_HTML);
         $message = sprintf('<span>%s</span>', htmlentities($msg));
 
         $error = [
-            'code' => $statusCode,
-            'type' => get_class($this->exception),
-            'message' => $message,
+            ERROR_CODE => $statusCode,
+            ERROR_TYPE => get_class($this->exception),
+            ERROR_MESSAGE => $message,
         ];
 
         // Debug mode
@@ -154,15 +175,15 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
             $trace = $this->exception->getTraceAsString();
             $trace = sprintf('<pre>%s</pre>', htmlentities($trace));
 
-            $error['message'] = $message;
-            $error['file'] = $this->exception->getFile();
-            $error['line'] = $this->exception->getLine();
-            $error['code'] = $statusCode;
-            $error['trace'] = $trace;
+            $error[ERROR_MESSAGE] = $message;
+            $error[ERROR_CODE] = $statusCode;
+            $error[ERROR_FILE] = $this->exception->getFile();
+            $error[ERROR_LINE] = $this->exception->getLine();
+            $error[ERROR_TRACE] = $trace;
         }
 
-        $error['debug'] = $this->debug;
-        $error['title'] = $message;
+        $error[ERROR_DEBUG] = $this->debug;
+        $error[ERROR_TITLE] = $message;
 
         return $error;
     }
