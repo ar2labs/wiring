@@ -94,7 +94,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         $this->debug = $debug;
 
         parent::__construct(
-            $exception->getMessage() ?? UNDEFINED_MESSAGE,
+            $exception->getMessage() ?? self::UNDEFINED_MESSAGE,
             $exception->getCode() ?? 0,
             $exception
         );
@@ -109,11 +109,11 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
      */
     public function error(?string $message = null): array
     {
-        $type = $this->request->getHeader(CONTENT_TYPE);
-        $mode = $this->request->getHeader(DEBUG_MODE);
+        $type = $this->request->getHeader(self::CONTENT_TYPE);
+        $mode = $this->request->getHeader(self::DEBUG_MODE);
 
         if ($message == null) {
-            $message = $this->debug ? DEBUG_MESSAGE : DEFAULT_MESSAGE;
+            $message = $this->debug ? self::DEBUG_MESSAGE : self::DEFAULT_MESSAGE;
         }
 
         $msg = $this->exception->getMessage() ?? $message;
@@ -133,27 +133,27 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
             $this->logger->error($this->exception->getMessage(), $this->loggerContext);
         }
 
-        $this->isJson = isset($type[0]) && $type[0] == APP_JSON;
+        $this->isJson = isset($type[0]) && $type[0] == self::APP_JSON;
 
         if ($this->isJson) {
             // Define content-type to json
-            $this->response->withHeader(CONTENT_TYPE, APP_JSON);
+            $this->response->withHeader(self::CONTENT_TYPE, self::APP_JSON);
 
             $error = [
-                ERROR_CODE => $statusCode,
-                ERROR_STATUS => 'error',
-                ERROR_MESSAGE => $msg,
-                ERROR_DATA => [],
+                self::ERROR_CODE => $statusCode,
+                self::ERROR_STATUS => 'error',
+                self::ERROR_MESSAGE => $msg,
+                self::ERROR_DATA => [],
             ];
 
             // Debug mode header
             if (is_array($mode) && ($mode[0] == '1')) {
                 // Debug details
-                $error[ERROR_DATA] = [
-                    ERROR_CODE => $code,
-                    ERROR_MESSAGE => $this->exception->getTraceAsString(),
-                    ERROR_FILE => $this->exception->getFile(),
-                    ERROR_LINE => $this->exception->getLine(),
+                $error[self::ERROR_DATA] = [
+                    self::ERROR_CODE => $code,
+                    self::ERROR_MESSAGE => $this->exception->getTraceAsString(),
+                    self::ERROR_FILE => $this->exception->getFile(),
+                    self::ERROR_LINE => $this->exception->getLine(),
                 ];
             }
 
@@ -161,13 +161,13 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         }
 
         // Define content-type to html
-        $this->response->withHeader(CONTENT_TYPE, APP_HTML);
+        $this->response->withHeader(self::CONTENT_TYPE, self::APP_HTML);
         $message = sprintf('<span>%s</span>', htmlentities($msg));
 
         $error = [
-            ERROR_CODE => $statusCode,
-            ERROR_TYPE => get_class($this->exception),
-            ERROR_MESSAGE => $message,
+            self::ERROR_CODE => $statusCode,
+            self::ERROR_TYPE => get_class($this->exception),
+            self::ERROR_MESSAGE => $message,
         ];
 
         // Debug mode
@@ -175,15 +175,15 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
             $trace = $this->exception->getTraceAsString();
             $trace = sprintf('<pre>%s</pre>', htmlentities($trace));
 
-            $error[ERROR_MESSAGE] = $message;
-            $error[ERROR_CODE] = $statusCode;
-            $error[ERROR_FILE] = $this->exception->getFile();
-            $error[ERROR_LINE] = $this->exception->getLine();
-            $error[ERROR_TRACE] = $trace;
+            $error[self::ERROR_MESSAGE] = $message;
+            $error[self::ERROR_CODE] = $statusCode;
+            $error[self::ERROR_FILE] = $this->exception->getFile();
+            $error[self::ERROR_LINE] = $this->exception->getLine();
+            $error[self::ERROR_TRACE] = $trace;
         }
 
-        $error[ERROR_DEBUG] = $this->debug;
-        $error[ERROR_TITLE] = $message;
+        $error[self::ERROR_DEBUG] = $this->debug;
+        $error[self::ERROR_TITLE] = $message;
 
         return $error;
     }
