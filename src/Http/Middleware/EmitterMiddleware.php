@@ -73,7 +73,7 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
         // Retrieves all message header values
         foreach ($response->getHeaders() as $name => $values) {
             // Set cookie status
-            $cookie = stripos($name, 'Set-Cookie') === 0 ? false : true;
+            $cookie = stripos($name, 'Set-Cookie') !== 0;
             // Get header value
             foreach ($values as $value) {
                 header(sprintf('%s: %s', $name, $value), $cookie);
