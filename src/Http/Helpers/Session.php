@@ -47,7 +47,7 @@ class Session implements SessionInterface
      */
     public static function has(string $key): bool
     {
-        return (isset($_SESSION[$key])) ? true : false;
+        return isset($_SESSION[$key]);
     }
 
     /**

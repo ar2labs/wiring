@@ -54,7 +54,7 @@ class Cookie implements CookieInterface
      */
     public static function has(string $name): bool
     {
-        return (isset($_COOKIE[$name])) ? true : false;
+        return isset($_COOKIE[$name]);
     }
 
     /**

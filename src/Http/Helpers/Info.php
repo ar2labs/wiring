@@ -39,14 +39,11 @@ class Info
             '/<img[^>]+\>/i' => '<img src="./img/watermark.png" height="56">',
         ];
 
-        //  Perform a regular expression search and replace
-        $replacements = preg_replace(
+        // Perform a regular expression search and replace
+        return preg_replace(
             array_keys($exp),
             array_values($exp),
             is_string($content) ? $content : ''
         );
-
-        // Print custom content
-        return $replacements;
     }
 }
