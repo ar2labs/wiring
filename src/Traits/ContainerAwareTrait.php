@@ -73,7 +73,7 @@ trait ContainerAwareTrait
         }
 
         if (!method_exists($this->container, 'has')) {
-            throw new BadMethodCallException('Container method not found');
+            throw new BadMethodCallException('[HAS] Container method not found');
         }
 
         return $this->container->has($id);
@@ -96,7 +96,7 @@ trait ContainerAwareTrait
         }
 
         if (!method_exists($this->container, 'set')) {
-            throw new BadMethodCallException('Container method not found');
+            throw new BadMethodCallException('[SET] Container method not found');
         }
 
         return $this->container->set($name, $value);
@@ -120,7 +120,7 @@ trait ContainerAwareTrait
         }
 
         if (!method_exists($this->container, 'make')) {
-            throw new BadMethodCallException('Container method not found');
+            throw new BadMethodCallException('[MAKE] Container method not found');
         }
 
         return $this->container->make($name, $params);
@@ -145,7 +145,7 @@ trait ContainerAwareTrait
         }
 
         if (!method_exists($this->container, 'call')) {
-            throw new BadMethodCallException('Container method not found');
+            throw new BadMethodCallException('[CALL] Container method not found');
         }
 
         return $this->container->call($callable, $params);

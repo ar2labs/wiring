@@ -42,7 +42,7 @@ class Cookie implements CookieInterface
         bool $secure = false,
         bool $httponly = true
     ): bool {
-        return setcookie($name, $value, $expiry, $path, $domain, $secure, $httponly);
+        return setrawcookie($name, $value, $expiry, $path, $domain, $secure, $httponly);
     }
 
     /**
