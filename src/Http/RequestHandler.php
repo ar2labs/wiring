@@ -106,7 +106,9 @@ class RequestHandler implements RequestHandlerInterface
 
     /**
      * @param ServerRequestInterface $request
+     *
      * @return ResponseInterface
+     *
      * @throws ErrorHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -151,7 +153,9 @@ class RequestHandler implements RequestHandlerInterface
 
     /**
      * @param MiddlewareInterface $middleware
+     *
      * @param string|null $key
+     *
      * @return RequestHandler
      */
     public function addMiddleware(
@@ -187,6 +191,8 @@ class RequestHandler implements RequestHandlerInterface
     }
 
     /**
+     * Execute a middleware.
+     *
      * @param array $middlewareArray
      */
     protected function executeMiddleware(array $middlewareArray): void
