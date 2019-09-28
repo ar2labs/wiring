@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Wiring\Traits;
 
 use BadMethodCallException;
-use Exception;
 use Wiring\Interfaces\AuthInterface;
 
 trait AuthAwareTrait
@@ -53,7 +52,7 @@ trait AuthAwareTrait
         }
 
         if (!$this->has(AuthInterface::class)) {
-            throw new Exception('Auth interface not set');
+            throw new BadMethodCallException('Auth interface not set');
         }
 
         return $this->get(AuthInterface::class);

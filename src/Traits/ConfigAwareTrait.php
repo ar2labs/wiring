@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Wiring\Traits;
 
 use BadMethodCallException;
-use Exception;
 use Wiring\Interfaces\ConfigInterface;
 
 trait ConfigAwareTrait
@@ -53,7 +52,7 @@ trait ConfigAwareTrait
         }
 
         if (!$this->has(ConfigInterface::class)) {
-            throw new Exception('Config interface not defined.');
+            throw new BadMethodCallException('Config interface not defined.');
         }
 
         return $this->get(ConfigInterface::class);

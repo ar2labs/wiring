@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Wiring\Traits;
 
 use BadMethodCallException;
-use Exception;
 use Wiring\Interfaces\HashInterface;
 
 trait HashAwareTrait
@@ -53,7 +52,7 @@ trait HashAwareTrait
         }
 
         if (!$this->has(HashInterface::class)) {
-            throw new Exception('Hash interface not set');
+            throw new BadMethodCallException('Hash interface not set');
         }
 
         return $this->get(HashInterface::class);
