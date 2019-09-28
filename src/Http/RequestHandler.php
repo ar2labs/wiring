@@ -23,6 +23,10 @@ use Wiring\Http\Exception\ErrorHandler;
  */
 class RequestHandler implements RequestHandlerInterface
 {
+    const KEY = 'key';
+    const AFTER = 'after';
+    const MIDDLEWARE = 'middleware';
+
     /**
      * @var ContainerInterface
      */
@@ -114,17 +118,12 @@ class RequestHandler implements RequestHandlerInterface
 
             // Stop if there isn't any executable middleware remaining
             if (isset($this->middleware[$this->currentMiddleware]) === false) {
+                // Return response
                 return $this->response;
             }
 
-            // Get the next middleware
-            $currentMiddleware = $this->middleware[$this->currentMiddleware];
-
-            // Execute the next middleware
-            $this->executeMiddleware($currentMiddleware);
-        } catch (Exception $e) {
-            // Call error handler
-            return $this->errorHandler($e, $this->request, $this->response);
+            // Get and execute the next middleware
+            $this->executeMiddleware($this->middleware[$this->currentMiddleware]);
         } catch (Throwable $e) {
             // Call error handler
             return $this->errorHandler($e, $this->request, $this->response);
@@ -147,7 +146,7 @@ class RequestHandler implements RequestHandlerInterface
             return null;
         }
 
-        return $this->middleware[$position]['middleware'];
+        return $this->middleware[$position][self::MIDDLEWARE];
     }
 
     /**
@@ -159,10 +158,11 @@ class RequestHandler implements RequestHandlerInterface
         MiddlewareInterface $middleware,
         ?string $key = null
     ): RequestHandler {
+        // Set middleware array
         $this->middleware[] = [
-            'key' => $key,
-            'middleware' => $middleware,
-            'after' => true,
+            self::KEY => $key,
+            self::MIDDLEWARE => $middleware,
+            self::AFTER => false,
         ];
 
         return $this;
@@ -178,7 +178,7 @@ class RequestHandler implements RequestHandlerInterface
     protected function findMiddleware(string $key): ?int
     {
         foreach ($this->middleware as $k => $middleware) {
-            if ($middleware['key'] === $key) {
+            if ($middleware[self::KEY] === $key) {
                 return $k;
             }
         }
@@ -191,10 +191,10 @@ class RequestHandler implements RequestHandlerInterface
      */
     protected function executeMiddleware(array $middlewareArray): void
     {
-        /** @var MiddlewareInterface $middleware */
-        $middleware = $middlewareArray['middleware'];
-
-        $this->response = $middleware->process($this->request, $this);
+        if ($middlewareArray[self::MIDDLEWARE] instanceof MiddlewareInterface) {
+            $this->response = ($middlewareArray[self::MIDDLEWARE])
+                ->process($this->request, $this);
+        }
     }
 
     /**
@@ -254,10 +254,11 @@ class RequestHandler implements RequestHandlerInterface
         MiddlewareInterface $middleware,
         ?string $key
     ): RequestHandler {
+        // Set middleware array
         $this->middleware[] = [
-            'key' => $key,
-            'middleware' => $middleware,
-            'after' => true,
+            self::KEY => $key,
+            self::MIDDLEWARE => $middleware,
+            self::AFTER => true,
         ];
 
         return $this;

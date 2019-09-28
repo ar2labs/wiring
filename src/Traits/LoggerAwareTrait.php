@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
-use Exception;
+use BadMethodCallException;
 use Psr\Log\LoggerInterface;
 
 trait LoggerAwareTrait
@@ -48,11 +48,11 @@ trait LoggerAwareTrait
     public function logger(): LoggerInterface
     {
         if (!method_exists($this, 'has')) {
-            throw new Exception('Container instance not found.');
+            throw new BadMethodCallException('Container instance not found.');
         }
 
         if (!$this->has(LoggerInterface::class)) {
-            throw new Exception('Logger interface not set');
+            throw new BadMethodCallException('Logger interface not set');
         }
 
         return $this->get(LoggerInterface::class);

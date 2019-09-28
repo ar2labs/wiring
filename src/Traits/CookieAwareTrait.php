@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
+use BadMethodCallException;
 use Wiring\Interfaces\CookieInterface;
 
 trait CookieAwareTrait
@@ -47,11 +48,11 @@ trait CookieAwareTrait
     public function cookie(): CookieInterface
     {
         if (!method_exists($this, 'has')) {
-            throw new Exception('Container instance not found.');
+            throw new BadMethodCallException('Container instance not found.');
         }
 
         if (!$this->has(CookieInterface::class)) {
-            throw new Exception('Cookie interface not defined.');
+            throw new BadMethodCallException('Cookie interface not defined.');
         }
 
         return $this->get(CookieInterface::class);

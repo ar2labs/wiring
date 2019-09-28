@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
-use Exception;
+use BadMethodCallException;
 use Psr\Container\ContainerInterface;
 use Wiring\Interfaces\ContainerAwareInterface;
 
@@ -50,13 +50,11 @@ trait ContainerAwareTrait
      */
     public function get(string $id)
     {
-        $container = $this->getContainer();
-
-        if (!$container) {
-            throw new Exception('Container not found');
+        if (!$this->container) {
+            throw new BadMethodCallException('Container not found');
         }
 
-        return $container->get($id);
+        return $this->container->get($id);
     }
 
     /**
@@ -68,17 +66,15 @@ trait ContainerAwareTrait
      */
     public function has(string $id): bool
     {
-        $container = $this->getContainer();
-
-        if (!$container instanceof ContainerInterface) {
-            throw new Exception('Container not found');
+        if (!$this->container instanceof ContainerInterface) {
+            throw new BadMethodCallException('Container not found');
         }
 
-        if (!method_exists($container, 'has')) {
-            throw new Exception('Container method not found');
+        if (!method_exists($this->container, 'has')) {
+            throw new BadMethodCallException('Container method not found');
         }
 
-        return $container->has($id);
+        return $this->container->has($id);
     }
 
     /**
@@ -93,17 +89,15 @@ trait ContainerAwareTrait
      */
     public function set(string $name, $value): ContainerAwareInterface
     {
-        $container = $this->getContainer();
-
-        if (!$container instanceof ContainerInterface) {
-            throw new Exception('Container not found');
+        if (!$this->container instanceof ContainerInterface) {
+            throw new BadMethodCallException('Container not found');
         }
 
-        if (!method_exists($container, 'set')) {
-            throw new Exception('Container method not found');
+        if (!method_exists($this->container, 'set')) {
+            throw new BadMethodCallException('Container method not found');
         }
 
-        return $container->set($name, $value);
+        return $this->container->set($name, $value);
     }
 
     /**
@@ -119,17 +113,15 @@ trait ContainerAwareTrait
      */
     public function make(string $name, array $params = [])
     {
-        $container = $this->getContainer();
-
-        if (!$container instanceof ContainerInterface) {
-            throw new Exception('Container not found');
+        if (!$this->container instanceof ContainerInterface) {
+            throw new BadMethodCallException('Container not found');
         }
 
-        if (!method_exists($container, 'make')) {
-            throw new Exception('Container method not found');
+        if (!method_exists($this->container, 'make')) {
+            throw new BadMethodCallException('Container method not found');
         }
 
-        return $container->make($name, $params);
+        return $this->container->make($name, $params);
     }
 
     /**
@@ -146,16 +138,14 @@ trait ContainerAwareTrait
      */
     public function call(callable $callable, array $params = [])
     {
-        $container = $this->getContainer();
-
-        if (!$container instanceof ContainerInterface) {
-            throw new Exception('Container not found');
+        if (!$this->container instanceof ContainerInterface) {
+            throw new BadMethodCallException('Container not found');
         }
 
-        if (!method_exists($container, 'call')) {
-            throw new Exception('Container method not found');
+        if (!method_exists($this->container, 'call')) {
+            throw new BadMethodCallException('Container method not found');
         }
 
-        return $container->call($callable, $params);
+        return $this->container->call($callable, $params);
     }
 }

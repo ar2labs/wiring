@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
+use BadMethodCallException;
 use Wiring\Interfaces\ConfigInterface;
 
 trait ConfigAwareTrait
@@ -47,11 +48,11 @@ trait ConfigAwareTrait
     public function config(): ConfigInterface
     {
         if (!method_exists($this, 'has')) {
-            throw new Exception('Container instance not found.');
+            throw new BadMethodCallException('Container instance not found.');
         }
 
         if (!$this->has(ConfigInterface::class)) {
-            throw new Exception('Config interface not defined.');
+            throw new BadMethodCallException('Config interface not defined.');
         }
 
         return $this->get(ConfigInterface::class);

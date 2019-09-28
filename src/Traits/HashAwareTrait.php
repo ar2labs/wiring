@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
-use Exception;
+use BadMethodCallException;
 use Wiring\Interfaces\HashInterface;
 
 trait HashAwareTrait
@@ -48,11 +48,11 @@ trait HashAwareTrait
     public function hash(): ?HashInterface
     {
         if (!method_exists($this, 'has')) {
-            throw new Exception('Container instance not found.');
+            throw new BadMethodCallException('Container instance not found.');
         }
 
         if (!$this->has(HashInterface::class)) {
-            throw new Exception('Hash interface not set');
+            throw new BadMethodCallException('Hash interface not set');
         }
 
         return $this->get(HashInterface::class);

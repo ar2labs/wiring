@@ -31,12 +31,12 @@ interface HashInterface
     /**
      * Generate a random string.
      *
-     * @param int $length
      * @param string $characters
+     * @param int $length
      *
      * @return string
      */
-    public function generate(int $length = 64, string $characters): string;
+    public function generate(string $characters, int $length = 64): string;
 
     /**
      * Get a SHA256 hash.
