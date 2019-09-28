@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Wiring\Traits;
 
 use BadMethodCallException;
+use Exception;
 use Wiring\Interfaces\SessionInterface;
 
 trait SessionAwareTrait
@@ -41,7 +42,7 @@ trait SessionAwareTrait
     /**
      * Get container session instance.
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return SessionInterface
      */
@@ -52,7 +53,7 @@ trait SessionAwareTrait
         }
 
         if (!$this->has(SessionInterface::class)) {
-            throw new BadMethodCallException('Session interface not defined.');
+            throw new Exception('Session interface not defined.');
         }
 
         return $this->get(SessionInterface::class);
