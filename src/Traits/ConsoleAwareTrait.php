@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Wiring\Traits;
 
 use BadMethodCallException;
+use Exception;
 use Wiring\Interfaces\ConsoleInterface;
 
 trait ConsoleAwareTrait
@@ -41,7 +42,7 @@ trait ConsoleAwareTrait
     /**
      * Get console log.
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return ConsoleInterface
      */
@@ -52,7 +53,7 @@ trait ConsoleAwareTrait
         }
 
         if (!$this->has(ConsoleInterface::class)) {
-            throw new BadMethodCallException('Console interface not defined.');
+            throw new Exception('Console interface not defined.');
         }
 
         return $this->get(ConsoleInterface::class);

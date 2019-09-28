@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Wiring\Traits;
 
 use BadMethodCallException;
+use Exception;
 use Wiring\Interfaces\CookieInterface;
 
 trait CookieAwareTrait
@@ -41,7 +42,7 @@ trait CookieAwareTrait
     /**
      * Get on the client cookies.
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return CookieInterface
      */
@@ -52,7 +53,7 @@ trait CookieAwareTrait
         }
 
         if (!$this->has(CookieInterface::class)) {
-            throw new BadMethodCallException('Cookie interface not defined.');
+            throw new Exception('Cookie interface not defined.');
         }
 
         return $this->get(CookieInterface::class);

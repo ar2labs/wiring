@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Wiring\Traits;
 
 use BadMethodCallException;
+use Exception;
 use Psr\Container\ContainerInterface;
 use Wiring\Interfaces\ContainerAwareInterface;
 
@@ -44,14 +45,14 @@ trait ContainerAwareTrait
      *
      * @param string $id Identifier of the entry to look for.
      *
-     * @throws Exception   Error while resolving the entry.
+     * @throws \Exception   Error while resolving the entry.
      *
      * @return mixed Entry.
      */
     public function get(string $id)
     {
         if (!$this->container) {
-            throw new BadMethodCallException('Container not found');
+            throw new Exception('Container not found');
         }
 
         return $this->container->get($id);
@@ -62,6 +63,8 @@ trait ContainerAwareTrait
      *
      * @param string $id Identifier of the entry to look for.
      *
+     * @throws \Exception
+     *
      * @return bool
      */
     public function has(string $id): bool
@@ -71,7 +74,7 @@ trait ContainerAwareTrait
         }
 
         if (!method_exists($this->container, 'has')) {
-            throw new BadMethodCallException('Container method not found');
+            throw new Exception('Container method not found');
         }
 
         return $this->container->has($id);
@@ -83,7 +86,7 @@ trait ContainerAwareTrait
      * @param string $name Entry name
      * @param mixed $value Value, use definition helpers to define objects.
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return ContainerAwareInterface
      */
@@ -94,7 +97,7 @@ trait ContainerAwareTrait
         }
 
         if (!method_exists($this->container, 'set')) {
-            throw new BadMethodCallException('Container method not found');
+            throw new Exception('Container method not found');
         }
 
         return $this->container->set($name, $value);
@@ -107,14 +110,14 @@ trait ContainerAwareTrait
      * @param string $name  Entry name or a class name.
      * @param array $params Optional parameters to use to build the entry.
      *
-     * @throws Exception    Error while resolving the entry.
+     * @throws \Exception   Error while resolving the entry.
      *
      * @return mixed
      */
     public function make(string $name, array $params = [])
     {
         if (!$this->container instanceof ContainerInterface) {
-            throw new BadMethodCallException('Container not found');
+            throw new Exception('Container not found');
         }
 
         if (!method_exists($this->container, 'make')) {
@@ -132,14 +135,14 @@ trait ContainerAwareTrait
      * @param callable $callable Function to call.
      * @param array $params  Parameters to use.
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return mixed Result of the function.
      */
     public function call(callable $callable, array $params = [])
     {
         if (!$this->container instanceof ContainerInterface) {
-            throw new BadMethodCallException('Container not found');
+            throw new Exception('Container not found');
         }
 
         if (!method_exists($this->container, 'call')) {
