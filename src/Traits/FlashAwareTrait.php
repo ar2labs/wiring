@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Wiring\Traits;
 
 use BadMethodCallException;
-use Exception;
 use Wiring\Interfaces\FlashInterface;
 
 trait FlashAwareTrait
@@ -53,7 +52,7 @@ trait FlashAwareTrait
         }
 
         if (!$this->has(FlashInterface::class)) {
-            throw new Exception('Flash interface not defined.');
+            throw new BadMethodCallException('Flash interface not defined.');
         }
 
         return $this->get(FlashInterface::class);

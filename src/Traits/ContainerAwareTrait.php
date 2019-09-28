@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Wiring\Traits;
 
 use BadMethodCallException;
-use Exception;
 use Psr\Container\ContainerInterface;
 use Wiring\Interfaces\ContainerAwareInterface;
 
@@ -52,7 +51,7 @@ trait ContainerAwareTrait
     public function get(string $id)
     {
         if (!$this->container) {
-            throw new Exception('Container not found');
+            throw new BadMethodCallException('[GET] Container not found');
         }
 
         return $this->container->get($id);
@@ -70,11 +69,11 @@ trait ContainerAwareTrait
     public function has(string $id): bool
     {
         if (!$this->container instanceof ContainerInterface) {
-            throw new BadMethodCallException('Container not found');
+            throw new BadMethodCallException('[HAS] Container not found');
         }
 
         if (!method_exists($this->container, 'has')) {
-            throw new Exception('Container method not found');
+            throw new BadMethodCallException('Container method not found');
         }
 
         return $this->container->has($id);
@@ -93,11 +92,11 @@ trait ContainerAwareTrait
     public function set(string $name, $value): ContainerAwareInterface
     {
         if (!$this->container instanceof ContainerInterface) {
-            throw new BadMethodCallException('Container not found');
+            throw new BadMethodCallException('[SET] Container not found');
         }
 
         if (!method_exists($this->container, 'set')) {
-            throw new Exception('Container method not found');
+            throw new BadMethodCallException('Container method not found');
         }
 
         return $this->container->set($name, $value);
@@ -117,7 +116,7 @@ trait ContainerAwareTrait
     public function make(string $name, array $params = [])
     {
         if (!$this->container instanceof ContainerInterface) {
-            throw new Exception('Container not found');
+            throw new BadMethodCallException('[MAKE] Container not found');
         }
 
         if (!method_exists($this->container, 'make')) {
@@ -142,7 +141,7 @@ trait ContainerAwareTrait
     public function call(callable $callable, array $params = [])
     {
         if (!$this->container instanceof ContainerInterface) {
-            throw new Exception('Container not found');
+            throw new BadMethodCallException('[CALL] Container not found');
         }
 
         if (!method_exists($this->container, 'call')) {
