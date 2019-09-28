@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
-use Exception;
+use BadMethodCallException;
 use Wiring\Interfaces\AuthInterface;
 
 trait AuthAwareTrait
@@ -48,11 +48,11 @@ trait AuthAwareTrait
     public function auth(): AuthInterface
     {
         if (!method_exists($this, 'has')) {
-            throw new Exception('Container instance not found.');
+            throw new BadMethodCallException('Container instance not found.');
         }
 
         if (!$this->has(AuthInterface::class)) {
-            throw new Exception('Auth interface not set');
+            throw new BadMethodCallException('Auth interface not set');
         }
 
         return $this->get(AuthInterface::class);

@@ -6,6 +6,10 @@ namespace Wiring\Http\Helpers;
 
 class Console
 {
+    // Define constants
+    const LOG = 'log';
+    const CONSOLE_LOG = 'console.log';
+
     /**
      * Write output to console browser.
      *
@@ -13,7 +17,7 @@ class Console
      */
     public function log($obj)
     {
-        $this->method('log', $obj);
+        $this->method(self::LOG, $obj);
     }
 
     /**
@@ -23,7 +27,7 @@ class Console
      */
     public function debug($obj)
     {
-        $this->method('log', $obj);
+        $this->method(self::LOG, $obj);
     }
 
     /**
@@ -131,7 +135,7 @@ class Console
         $output = ob_get_contents();
 
         // Store output in new array with zero index
-        $_SESSION['console.log'][] = $output;
+        $_SESSION[self::CONSOLE_LOG][] = $output;
 
         // Stop buffering
         ob_end_clean();
@@ -142,7 +146,7 @@ class Console
      */
     public function clear()
     {
-        unset($_SESSION['console.log']);
+        unset($_SESSION[self::CONSOLE_LOG]);
     }
 
     /**
@@ -205,7 +209,7 @@ class Console
      * @var string        $method
      * @var object|string $obj
      */
-    private function method(string $method = 'log', $obj)
+    private function method(string $method, $obj)
     {
         // Start buffering
         ob_start();
@@ -218,7 +222,7 @@ class Console
         } elseif (is_array($obj) || $method == 'dirxml') { // Check is an array
             $js = 'var data = ' . json_encode($obj) . '; '
                 . "console.$method(data);";
-        } elseif ($method == 'log') { // Check is set
+        } elseif ($method == self::LOG) { // Check is set
             $js = "var data = '" . $obj . "'; "
                 . "console.$method(data);";
         } else {  // Method is empty
@@ -233,7 +237,7 @@ class Console
             $output = ob_get_contents();
 
             // Store output in new array with zero index
-            $_SESSION['console.log'][] = $output;
+            $_SESSION[self::CONSOLE_LOG][] = $output;
         }
 
         // Stop buffering
