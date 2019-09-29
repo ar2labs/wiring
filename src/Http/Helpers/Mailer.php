@@ -27,23 +27,24 @@ class Mailer
     }
 
     /**
-     * Send mail.
+     * Create a message and send it.
      *
-     * @param mixed    $template
-     * @param mixed    $data
+     * @param string   $template
+     * @param array    $data
      * @param callable $callback
+     *
+     * @return bool
      */
-    public function send($template, $data, $callback): void
+    public function send(string $template, array $data, callable $callback): bool
     {
-        $message = new Message($this->mailer);
+        $view = $this->container->get(ViewStrategyInterface::class);
+        $html = $view->engine()->render($template, $data);
 
-        $message->body($this->container->get(ViewStrategyInterface::class)
-            ->render($template, [
-                'data' => $data,
-            ]));
+        $message = new Message($this->mailer);
+        $message->body($html);
 
         call_user_func($callback, $message);
 
-        $this->mailer->send();
+        return $this->mailer->send();
     }
 }
