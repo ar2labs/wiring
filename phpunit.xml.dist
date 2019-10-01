@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
-        backupGlobals="true"
+        xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/7.1/phpunit.xsd"
+        backupGlobals="false"
         backupStaticAttributes="false"
-        bootstrap="vendor/autoload.php"
+        beStrictAboutTestsThatDoNotTestAnything="true"
+        beStrictAboutChangesToGlobalState="true"
+        beStrictAboutOutputDuringTests="true"
         cacheTokens="false"
         colors="true"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
         forceCoversAnnotation="false"
+        processIsolation="false"
+        stopOnFailure="false"
+        bootstrap="vendor/autoload.php"
         >
     <testsuites>
         <testsuite name="Wiring Test Suite">
-            <directory suffix="Test.php" phpVersion="7.1.0" phpVersionOperator=">=">tests/</directory>
+            <directory suffix="Test.php" phpVersion="7.1.0" phpVersionOperator=">=">./tests/</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src/</directory>
-            <exclude>
-                <directory suffix=".php">src/Interfaces</directory>
-                <directory suffix=".php">src/Traits</directory>
-                <directory suffix=".*">src/Http/Controller/AbstractController.php</directory>
-                <directory suffix=".*">src/Http/Controller/AbstractRestfulController.php</directory>
-            </exclude>
+            <directory suffix=".php">./src/</directory>
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>
+        <log type="coverage-html" target="./coverage" lowUpperBound="20" highLowerBound="50" />
     </logging>
 </phpunit>

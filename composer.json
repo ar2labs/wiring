@@ -28,7 +28,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Wiring\\": "src/"
+            "Wiring\\": "src/",
+            "Wiring\\Tests\\": "tests/"
         }
     },
     "autoload-dev": {
@@ -37,6 +38,11 @@
         }
     },
     "scripts": {
+        "test": [
+            "@phpunit",
+            "@phpstan"
+        ],
+        "phpunit": "phpunit",
         "phpstan": "phpstan analyse src tests --level=max --no-progress"
     }
 }
