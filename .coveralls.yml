@@ -1,2 +1,1 @@
-coverage_clover: clover.xml
 json_path: coveralls-upload.json
