@@ -15,7 +15,7 @@ class ExceptionsTest extends TestCase
 {
     public function testExceptions()
     {
-        $exception = new BadRequestException;
+        $exception = new BadRequestException();
 
         $this->assertInstanceOf(HttpException::class, $exception);
         $this->assertEquals(400, $exception->getStatusCode());
@@ -25,7 +25,7 @@ class ExceptionsTest extends TestCase
         $this->assertInstanceOf(HttpException::class, $exception);
         $this->assertEquals(401, $exception->getStatusCode());
 
-        $exception = new MethodNotAllowedException;
+        $exception = new MethodNotAllowedException();
 
         $this->assertInstanceOf(HttpException::class, $exception);
         $this->assertEquals(405, $exception->getStatusCode());
@@ -35,9 +35,15 @@ class ExceptionsTest extends TestCase
         $this->assertInstanceOf(HttpException::class, $exception);
         $this->assertEquals(404, $exception->getStatusCode());
 
+        // Empty message test
+        $exception = new HttpException(0, '', new HttpException(0, ''));
+
+        $this->assertInstanceOf(HttpException::class, $exception);
+        $this->assertEquals(0, $exception->getStatusCode());
+
         $stream = $this->createStreamMock();
         $stream->method('isWritable')
-            ->willReturn(false);
+            ->willReturn(true);
 
         $response = $this->createResponseMock();
         $response->method('withStatus')
