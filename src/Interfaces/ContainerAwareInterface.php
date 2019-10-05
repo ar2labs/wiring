@@ -11,7 +11,7 @@ interface ContainerAwareInterface
     /**
      * Get the current container
      *
-     * @return ContainerInterface|null
+     * @return ContainerInterface
      */
     public function getContainer(): ?ContainerInterface;
 

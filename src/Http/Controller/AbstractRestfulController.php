@@ -117,22 +117,6 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
     }
 
     /**
-     * Custom Redirect response.
-     *
-     * @param ResponseInterface $response
-     * @param string $url
-     * @param int|null $status
-     * @return ResponseInterface
-     */
-    public function redirect(
-        ResponseInterface $response,
-        string $url,
-        ?int $status = 307
-    ): ResponseInterface {
-        return $this->data('info', $response->getReasonPhrase(), [], $status);
-    }
-
-    /**
      * Get response data error.
      *
      * @param string $message
