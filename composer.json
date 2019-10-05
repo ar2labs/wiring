@@ -39,10 +39,12 @@
     },
     "scripts": {
         "test": [
+            "@php-cs-fixer",
             "@phpunit",
             "@phpstan"
         ],
-        "phpunit": "phpunit",
-        "phpstan": "phpstan analyse src tests --level=max --no-progress"
+        "php-cs-fixer": "php-cs-fixer fix --config=php_cs.dist --no-interaction",
+        "phpunit": "phpunit --configuration phpunit.xml.dist --coverage-html coverage --colors=always",
+        "phpstan": "phpstan analyse src tests --level=max --no-progress --ansi"
     }
 }
