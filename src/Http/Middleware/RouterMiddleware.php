@@ -24,11 +24,6 @@ class RouterMiddleware implements MiddlewareInterface
     private $responseFactory;
 
     /**
-     * @var string Attribute name for handler reference
-     */
-    private $attribute = 'request-handler';
-
-    /**
      * Set the Router instance and optionally the response
      * factory to return the error responses.
      *
@@ -62,18 +57,5 @@ class RouterMiddleware implements MiddlewareInterface
         $this->responseFactory = $responseFactory;
 
         return $this;
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     *
-     * @return ServerRequestInterface
-     */
-    protected function setHandler(
-        ServerRequestInterface $request,
-        RequestHandlerInterface $handler
-    ): ServerRequestInterface {
-        return $request->withAttribute($this->attribute, $handler);
     }
 }
