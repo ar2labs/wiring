@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Controller;
 
+use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
+use Wiring\Http\Exception\ErrorHandler;
 use Wiring\Http\Exception\HttpException;
 use Wiring\Http\Exception\MethodNotAllowedException;
 use Wiring\Http\Exception\NotFoundException;
@@ -18,9 +20,6 @@ use Wiring\Interfaces\RouteInterface;
 
 abstract class AbstractJsonController extends AbstractController
 {
-    /** @var ResponseFactoryInterface */
-    protected $responseFactory;
-
     /**
      * Create container and response interface.
      *
@@ -124,7 +123,7 @@ abstract class AbstractJsonController extends AbstractController
     protected function buildJsonResponseMiddleware(
         HttpException $exception
     ): MiddlewareInterface {
-        return new class($this->responseFactory->createResponse(), $exception) implements MiddlewareInterface {
+        return new class($this->response, $exception) implements MiddlewareInterface {
             protected $response;
             protected $exception;
 
@@ -154,39 +153,60 @@ abstract class AbstractJsonController extends AbstractController
      */
     public function getThrowableHandler(): MiddlewareInterface
     {
-        return new class($this->responseFactory->createResponse()) implements MiddlewareInterface {
-            protected $response;
+        if ($this->container instanceof ContainerInterface) {
+            // Return throwable handler
+            return new class($this->container, $this->response) implements MiddlewareInterface {
+                protected $container;
+                protected $response;
 
-            public function __construct(ResponseInterface $response)
-            {
-                $this->response = $response;
-            }
+                public function __construct(ContainerInterface $container, ResponseInterface $response)
+                {
+                    $this->container = $container;
+                    $this->response = $response;
+                }
 
-            public function process(
-                ServerRequestInterface $request,
-                RequestHandlerInterface $handler
-            ): ResponseInterface {
-                try {
-                    return $handler->handle($request);
-                } catch (\Throwable $exception) {
-                    if ($exception instanceof HttpException) {
-                        return $exception->buildJsonResponse($this->response);
+                public function process(
+                    ServerRequestInterface $request,
+                    RequestHandlerInterface $handler
+                ): ResponseInterface {
+                    try {
+                        return $handler->handle($request);
+                    } catch (Throwable $e) {
+                        // Call error handler
+                        return $this->errorHandler($e, $request, $this->response);
                     }
+                }
 
-                    $this->response->getBody()->write(json_encode([
+                /**
+                 * Error handler.
+                 *
+                 * @param Throwable $error
+                 * @param ServerRequestInterface $request
+                 * @param ResponseInterface $response
+                 *
+                 * @throws ErrorHandler
+                 *
+                 * @return ResponseInterface
+                 */
+                protected function errorHandler(
+                    Throwable $error,
+                    ServerRequestInterface $request,
+                    ResponseInterface $response
+                ): ResponseInterface {
+                    // Create new error handler
+                    $errorHandler = new ErrorHandler($request, $response, $error);
+                    $error = $errorHandler->error();
+
+                    $response->getBody()->write((string) json_encode([
                         'code' => 500,
                         'status' => 'error',
-                        'message' => $exception->getMessage(),
+                        'message' => $error['message'],
                         'data' => [],
                     ]));
 
-                    $reason = strtok($exception->getMessage(), "\n");
-
-                    return $this->response
-                        ->withAddedHeader('content-type', 'application/json')
-                        ->withStatus(500, $reason);
+                    return $response;
                 }
-            }
-        };
+            };
+        }
     }
 }
