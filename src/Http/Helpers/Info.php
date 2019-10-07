@@ -29,7 +29,7 @@ class Info
         $ver = sprintf(
             'PHP Version %s / Wiring Version %s',
             phpversion(),
-            'APP_VERSION'
+            defined('APP_VERSION') ? APP_VERSION : '2.0.0'
         );
 
         // Regex replacements
