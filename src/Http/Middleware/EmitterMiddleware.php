@@ -70,51 +70,45 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
      */
     public function emit(ResponseInterface $response): ResponseInterface
     {
-        // Check headers
-        if (is_array($response->getHeaders())) {
-            // Retrieves all message header values
-            foreach ($response->getHeaders() as $name => $values) {
-                // Set cookie status
-                $cookie = stripos($name, 'Set-Cookie') !== 0;
-                // Get header value
-                foreach ($values as $value) {
-                    header(sprintf('%s: %s', $name, $value), $cookie);
-                    $cookie = false;
-                }
+        // Retrieves all message header values
+        foreach ($response->getHeaders() as $name => $values) {
+            // Set cookie status
+            $cookie = stripos($name, 'Set-Cookie') !== 0;
+            // Get header value
+            foreach ($values as $value) {
+                header(sprintf('%s: %s', $name, $value), $cookie);
+                $cookie = false;
             }
         }
 
-        // Check status code
-        if ($response->getStatusCode()) {
-            // Send a raw HTTP header
-            header(sprintf(
-                'HTTP/%s %s %s',
-                $response->getProtocolVersion(),
-                $response->getStatusCode(),
-                $response->getReasonPhrase()
-            ), true, $response->getStatusCode());
+        // Send a raw HTTP header
+        header(sprintf(
+            'HTTP/%s %s %s',
+            $response->getProtocolVersion(),
+            $response->getStatusCode(),
+            $response->getReasonPhrase()
+        ), true, $response->getStatusCode());
 
-            // Checks no content is false
-            if (in_array($response->getStatusCode(), [204, 205, 304]) === false) {
-                // Gets the body as a stream
-                $stream = $response->getBody();
+        // Checks no content is false
+        if (in_array($response->getStatusCode(), [204, 205, 304]) === false) {
+            // Gets the body as a stream
+            $stream = $response->getBody();
 
-                // Returns whether or not the stream is seekable
-                if ($stream->isSeekable()) {
-                    // Seek to the beginning of the stream
-                    $stream->rewind();
-                }
+            // Returns whether or not the stream is seekable
+            if ($stream->isSeekable()) {
+                // Seek to the beginning of the stream
+                $stream->rewind();
+            }
 
-                // Get stream lenght
-                $streamLenght = (!$response->getHeaderLine('Content-Length')) ?
-                    $stream->getSize() : $response->getHeaderLine('Content-Length');
+            // Get stream lenght
+            $streamLenght = (!$response->getHeaderLine('Content-Length')) ?
+                $stream->getSize() : $response->getHeaderLine('Content-Length');
 
-                // While the stream is not the end of the stream.
-                while (!$stream->eof()) {
-                    // Output one or more strings
-                    echo $stream->read(is_int($streamLenght) ?
-                        $streamLenght : (int) $streamLenght);
-                }
+            // While the stream is not the end of the stream and lenght > 0
+            while ((!$stream->eof()) && ($streamLenght > 0)) {
+                // Output one or more strings
+                echo $stream->read(is_int($streamLenght) ?
+                    $streamLenght : (int) $streamLenght);
             }
         }
 

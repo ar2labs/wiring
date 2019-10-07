@@ -42,13 +42,29 @@ final class MiddlewareTest extends TestCase
             $emitterMiddleware->process($request, $handler)
         );
 
-        // Without emitter param
-        $emitterMiddleware = new EmitterMiddleware();
+        $response = $this->createResponseMock();
+        $response->method('getHeaders')
+            ->willReturn(['Set-Cookie' => ['0']]);
 
-        $this->assertInstanceOf(
-            ResponseInterface::class,
-            $emitterMiddleware->process($request, $handler)
-        );
+        $response->method('getProtocolVersion')
+            ->willReturn('1.1');
+
+        $response->method('getStatusCode')
+            ->willReturn(200);
+
+        $response->method('getReasonPhrase')
+            ->willReturn('OK');
+
+        $stream = $this->createStreamMock();
+        $stream->method('isSeekable')
+            ->willReturn(true);
+
+        $response->method('getBody')
+            ->willReturn($stream);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf(ResponseInterface::class,
+            $emitterMiddleware->emit($response));
     }
 
     /**
@@ -88,6 +104,11 @@ final class MiddlewareTest extends TestCase
             ->disableArgumentCloning()
             ->disallowMockingUnknownTypes()
             ->getMock();
+    }
+
+    private function createResponseMock()
+    {
+        return $this->createMock(ResponseInterface::class);
     }
 
     private function createStreamMock()
