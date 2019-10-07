@@ -18,7 +18,6 @@ use Wiring\Http\Controller\AbstractJsonViewController;
 use Wiring\Http\Controller\AbstractRestfulController;
 use Wiring\Http\Controller\AbstractViewController;
 use Wiring\Http\Exception\NotFoundException;
-use Wiring\Interfaces\ErrorHandlerInterface;
 use Wiring\Interfaces\JsonStrategyInterface;
 use Wiring\Interfaces\ViewStrategyInterface;
 
@@ -224,10 +223,5 @@ final class ControllerTest extends TestCase
     private function createStreamMock()
     {
         return $this->createMock(StreamInterface::class);
-    }
-
-    private function createErrorHandlerMock()
-    {
-        return $this->createMock(ErrorHandlerInterface::class);
     }
 }
