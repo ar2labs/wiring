@@ -52,7 +52,7 @@ interface CookieInterface
      *
      * @param string $name
      *
-     * @return void
+     * @return bool
      */
-    public static function forget(string $name): void;
+    public static function forget(string $name): bool;
 }

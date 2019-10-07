@@ -20,7 +20,7 @@ class Message
     /**
      * @param string $address
      */
-    public function to(string $address): void
+    public function to(string $address)
     {
         $this->mailer->addAddress($address);
     }
@@ -28,7 +28,7 @@ class Message
     /**
      * @param string $subject
      */
-    public function subject(string $subject): void
+    public function subject(string $subject)
     {
         $this->mailer->Subject = utf8_decode($subject);
     }
@@ -36,8 +36,8 @@ class Message
     /**
      * @param string $body
      */
-    public function body(string $body): void
+    public function body(?string $body)
     {
-        $this->mailer->Body = utf8_decode($body);
+        $this->mailer->Body = !empty($body) ? utf8_decode($body) : '';
     }
 }

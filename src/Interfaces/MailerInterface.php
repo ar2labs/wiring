@@ -5,11 +5,12 @@ namespace Wiring\Interfaces;
 interface MailerInterface
 {
     /**
-     * Send mail.
-     *
-     * @param mixed    $template
-     * @param mixed    $data
-     * @param callable $callback
+     * Add email address.
      */
-    public function send($template, $data, $callback);
+    public function addAddress(string $email): void;
+
+    /**
+     * Send mail.
+     */
+    public function send(): bool;
 }
