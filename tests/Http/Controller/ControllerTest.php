@@ -120,12 +120,18 @@ final class ControllerTest extends TestCase
 
         $controller = new SimpleJsonController($container, $response);
 
+        $headers = [
+            'Content-Type' => 'application/json',
+        ];
+
         $this->assertInstanceOf(AbstractController::class, $controller);
         $this->assertInstanceOf(AbstractJsonController::class, $controller);
         $this->assertInstanceOf(JsonStrategyInterface::class, $controller->json());
         $this->assertInstanceOf(ResponseInterface::class, $controller->indexAction());
         $this->assertInstanceOf(MiddlewareInterface::class, $controller->getThrowableHandler());
         $this->assertInstanceOf(ResponseInterface::class, $controller->getThrowableHandler()->process($request, $handler));
+        $this->assertInstanceOf(SimpleJsonController::class, $controller->addDefaultResponseHeaders($headers));
+        $this->assertIsArray($controller->getDefaultResponseHeaders());
 
         $handler->method('handle')
             ->willThrowException(new Exception('Throwable test'));
