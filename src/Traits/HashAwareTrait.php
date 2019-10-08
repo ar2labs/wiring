@@ -47,7 +47,7 @@ trait HashAwareTrait
     public function hash(): ?HashInterface
     {
         if (!$this->has(HashInterface::class)) {
-            throw new \Exception('Hash interface not implemented.');
+            throw new \LogicException('Hash interface not implemented.');
         }
 
         return $this->get(HashInterface::class);

@@ -47,7 +47,7 @@ trait FlashAwareTrait
     public function flash(): FlashInterface
     {
         if (!$this->has(FlashInterface::class)) {
-            throw new \Exception('Flash interface not implemented.');
+            throw new \BadFunctionCallException('Flash interface not implemented.');
         }
 
         return $this->get(FlashInterface::class);

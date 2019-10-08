@@ -47,7 +47,7 @@ trait ConsoleAwareTrait
     public function console(): ConsoleInterface
     {
         if (!$this->has(ConsoleInterface::class)) {
-            throw new \Exception('Console interface not implemented.');
+            throw new \BadFunctionCallException('Console interface not implemented.');
         }
 
         return $this->get(ConsoleInterface::class);

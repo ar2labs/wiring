@@ -47,7 +47,7 @@ trait ConfigAwareTrait
     public function config(): ConfigInterface
     {
         if (!$this->has(ConfigInterface::class)) {
-            throw new \Exception('Config interface not implemented.');
+            throw new \BadFunctionCallException('Config interface not implemented.');
         }
 
         return $this->get(ConfigInterface::class);

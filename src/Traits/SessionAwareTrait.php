@@ -47,7 +47,7 @@ trait SessionAwareTrait
     public function session(): SessionInterface
     {
         if (!$this->has(SessionInterface::class)) {
-            throw new \Exception('Session interface not implemented.');
+            throw new \BadFunctionCallException('Session interface not implemented.');
         }
 
         return $this->get(SessionInterface::class);

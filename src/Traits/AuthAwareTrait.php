@@ -47,7 +47,7 @@ trait AuthAwareTrait
     public function auth(): AuthInterface
     {
         if (!$this->has(AuthInterface::class)) {
-            throw new \Exception('Auth interface not implemented.');
+            throw new \BadFunctionCallException('Auth interface not implemented.');
         }
 
         return $this->get(AuthInterface::class);

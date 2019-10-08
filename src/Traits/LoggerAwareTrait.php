@@ -47,7 +47,7 @@ trait LoggerAwareTrait
     public function logger(): LoggerInterface
     {
         if (!$this->has(LoggerInterface::class)) {
-            throw new \Exception('Logger interface not implemented.');
+            throw new \BadFunctionCallException('Logger interface not implemented.');
         }
 
         return $this->get(LoggerInterface::class);

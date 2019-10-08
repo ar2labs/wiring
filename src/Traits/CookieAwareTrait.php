@@ -47,7 +47,7 @@ trait CookieAwareTrait
     public function cookie(): CookieInterface
     {
         if (!$this->has(CookieInterface::class)) {
-            throw new \Exception('Cookie interface not implemented.');
+            throw new \BadFunctionCallException('Cookie interface not implemented.');
         }
 
         return $this->get(CookieInterface::class);
