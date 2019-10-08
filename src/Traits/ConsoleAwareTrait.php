@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
-use BadMethodCallException;
 use Wiring\Interfaces\ConsoleInterface;
 
 trait ConsoleAwareTrait
@@ -47,12 +46,8 @@ trait ConsoleAwareTrait
      */
     public function console(): ConsoleInterface
     {
-        if (!method_exists($this, 'has')) {
-            throw new BadMethodCallException('Container instance not found.');
-        }
-
         if (!$this->has(ConsoleInterface::class)) {
-            throw new BadMethodCallException('Console interface not defined.');
+            throw new \Exception('Console interface not implemented.');
         }
 
         return $this->get(ConsoleInterface::class);

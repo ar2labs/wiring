@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
-use BadMethodCallException;
 use Wiring\Interfaces\SessionInterface;
 
 trait SessionAwareTrait
@@ -47,12 +46,8 @@ trait SessionAwareTrait
      */
     public function session(): SessionInterface
     {
-        if (!method_exists($this, 'has')) {
-            throw new BadMethodCallException('Container instance not found.');
-        }
-
         if (!$this->has(SessionInterface::class)) {
-            throw new BadMethodCallException('Session interface not defined.');
+            throw new \Exception('Session interface not implemented.');
         }
 
         return $this->get(SessionInterface::class);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
-use BadMethodCallException;
 use Wiring\Interfaces\DatabaseInterface;
 
 trait DatabaseAwareTrait
@@ -47,12 +46,8 @@ trait DatabaseAwareTrait
      */
     public function database(): DatabaseInterface
     {
-        if (!method_exists($this, 'has')) {
-            throw new BadMethodCallException('Container instance not found.');
-        }
-
         if (!$this->has(DatabaseInterface::class)) {
-            throw new BadMethodCallException('Database interface not defined.');
+            throw new \Exception('Database interface not implemented.');
         }
 
         return $this->get(DatabaseInterface::class);
