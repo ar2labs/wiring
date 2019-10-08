@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
-use BadMethodCallException;
 use Wiring\Interfaces\ConfigInterface;
 
 trait ConfigAwareTrait
@@ -47,12 +46,8 @@ trait ConfigAwareTrait
      */
     public function config(): ConfigInterface
     {
-        if (!method_exists($this, 'has')) {
-            throw new BadMethodCallException('Container instance not found.');
-        }
-
         if (!$this->has(ConfigInterface::class)) {
-            throw new BadMethodCallException('Config interface not defined.');
+            throw new \Exception('Config interface not implemented.');
         }
 
         return $this->get(ConfigInterface::class);
@@ -61,11 +56,13 @@ trait ConfigAwareTrait
     /**
      * Get language message properties.
      *
-     * @param $key
+     * @param string $key
+     * @param null $default
+     *
      * @return mixed
      */
-    public function lang($key)
+    public function lang(string $key, $default = null)
     {
-        return $this->config('lang.' . $key);
+        return $this->config()->get('lang.' . $key, $default);
     }
 }

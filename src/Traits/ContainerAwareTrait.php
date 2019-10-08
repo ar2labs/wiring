@@ -51,7 +51,7 @@ trait ContainerAwareTrait
     public function get(string $id)
     {
         if (!$this->container) {
-            throw new BadMethodCallException('[GET] Container not found');
+            throw new BadMethodCallException('Method get does not exist.');
         }
 
         return $this->container->get($id);
@@ -68,86 +68,10 @@ trait ContainerAwareTrait
      */
     public function has(string $id): bool
     {
-        if (!$this->container instanceof ContainerInterface) {
-            throw new BadMethodCallException('[HAS] Container not found');
-        }
-
-        if (!method_exists($this->container, 'has')) {
-            throw new BadMethodCallException('[HAS] Container method not found');
+        if ((!$this->container) || (!method_exists($this->container, 'has'))) {
+            throw new BadMethodCallException('Method has does not exist.');
         }
 
         return $this->container->has($id);
-    }
-
-    /**
-     * Define an object or a value in the container.
-     *
-     * @param string $name Entry name
-     * @param mixed $value Value, use definition helpers to define objects.
-     *
-     * @throws \Exception
-     *
-     * @return ContainerAwareInterface
-     */
-    public function set(string $name, $value): ContainerAwareInterface
-    {
-        if (!$this->container instanceof ContainerInterface) {
-            throw new BadMethodCallException('[SET] Container not found');
-        }
-
-        if (!method_exists($this->container, 'set')) {
-            throw new BadMethodCallException('[SET] Container method not found');
-        }
-
-        return $this->container->set($name, $value);
-    }
-
-    /**
-     * Resolves an entry by its name.
-     * If given a class name, it will return a new instance of that class.
-     *
-     * @param string $name  Entry name or a class name.
-     * @param array $params Optional parameters to use to build the entry.
-     *
-     * @throws \Exception   Error while resolving the entry.
-     *
-     * @return mixed
-     */
-    public function make(string $name, array $params = [])
-    {
-        if (!$this->container instanceof ContainerInterface) {
-            throw new BadMethodCallException('[MAKE] Container not found');
-        }
-
-        if (!method_exists($this->container, 'make')) {
-            throw new BadMethodCallException('[MAKE] Container method not found');
-        }
-
-        return $this->container->make($name, $params);
-    }
-
-    /**
-     * Call the given function using the given parameters.
-     *
-     * Missing parameters will be resolved from the container.
-     *
-     * @param callable $callable Function to call.
-     * @param array $params  Parameters to use.
-     *
-     * @throws \Exception
-     *
-     * @return mixed Result of the function.
-     */
-    public function call(callable $callable, array $params = [])
-    {
-        if (!$this->container instanceof ContainerInterface) {
-            throw new BadMethodCallException('[CALL] Container not found');
-        }
-
-        if (!method_exists($this->container, 'call')) {
-            throw new BadMethodCallException('[CALL] Container method not found');
-        }
-
-        return $this->container->call($callable, $params);
     }
 }

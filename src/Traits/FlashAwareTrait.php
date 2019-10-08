@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
-use BadMethodCallException;
 use Wiring\Interfaces\FlashInterface;
 
 trait FlashAwareTrait
@@ -47,12 +46,8 @@ trait FlashAwareTrait
      */
     public function flash(): FlashInterface
     {
-        if (!method_exists($this, 'has')) {
-            throw new BadMethodCallException('Container instance not found.');
-        }
-
         if (!$this->has(FlashInterface::class)) {
-            throw new BadMethodCallException('Flash interface not defined.');
+            throw new \Exception('Flash interface not implemented.');
         }
 
         return $this->get(FlashInterface::class);
