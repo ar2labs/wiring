@@ -2,11 +2,10 @@
 
 [![Build Status](https://travis-ci.org/ar2labs/wiring.svg?branch=master)](https://travis-ci.org/ar2labs/wiring)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.github.ar2labs-wiring&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.ar2labs-wiring)
-[![Coverage Status](https://coveralls.io/repos/github/ar2labs/wiring/badge.svg?branch=master&kill_cache=1)](https://coveralls.io/github/ar2labs/wiring?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/ar2labs/wiring/badge.svg?branch=master&service=github)](https://coveralls.io/github/ar2labs/wiring?branch=master)
 <a href="https://packagist.org/packages/ar2labs/wiring"><img src="https://poser.pugx.org/ar2labs/wiring/d/total.svg" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/ar2labs/wiring"><img src="https://poser.pugx.org/ar2labs/wiring/v/stable.svg" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/ar2labs/wiring"><img src="https://poser.pugx.org/ar2labs/wiring/license.svg" alt="License"></a>
-
 Wiring is a PHP micro framework core with Interoperability (PSRs).
 
 This package is compliant with [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR-2](https://www.php-fig.org/psr/psr-2/), [PSR-3](https://www.php-fig.org/psr/psr-3/), [PSR-4](https://www.php-fig.org/psr/psr-4/), [PSR-6](https://www.php-fig.org/psr/psr-6/), [PSR-7](https://www.php-fig.org/psr/psr-7/), [PSR-11](https://www.php-fig.org/psr/psr-11/), [PSR-14](https://www.php-fig.org/psr/psr-14/), [PSR-15](https://www.php-fig.org/psr/psr-15/), [PSR-17](https://www.php-fig.org/psr/psr-17/) and [PSR-18](https://www.php-fig.org/psr/psr-18/).
