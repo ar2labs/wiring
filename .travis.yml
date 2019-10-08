@@ -13,7 +13,7 @@ cache:
 
 env:
   global:
-    - COMPOSER_ARGS="--dev --no-interaction"
+    - COMPOSER_ARGS="--dev"
     - COVERAGE_DEPS="php-coveralls/php-coveralls"
 
 addons:
@@ -25,8 +25,8 @@ addons:
 
 before_script:
   - composer self-update
-  - composer require ${COMPOSER_ARGS} ${COVERAGE_DEPS}
-  - composer install ${COMPOSER_ARGS}
+  - composer require --dev php-coveralls/php-coveralls --no-interaction
+  - composer install --dev --no-interaction
 
 script:
   - vendor/bin/php-cs-fixer fix --config=php_cs.dist --no-interaction
