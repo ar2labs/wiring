@@ -47,7 +47,7 @@ trait DatabaseAwareTrait
     public function database(): DatabaseInterface
     {
         if (!$this->has(DatabaseInterface::class)) {
-            throw new \Exception('Database interface not implemented.');
+            throw new \BadFunctionCallException('Database interface not implemented.');
         }
 
         return $this->get(DatabaseInterface::class);
