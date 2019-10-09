@@ -47,7 +47,7 @@ final class TraitsTest extends TestCase
         $this->assertInstanceOf(AuthInterface::class,
             $simpleAuthAware->auth());
 
-        // Auth interface not implemented
+        // States that auth interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
             ->with(AuthInterface::class)
@@ -92,7 +92,7 @@ final class TraitsTest extends TestCase
             $simpleConfigAware->config());
         $this->assertNull($simpleConfigAware->lang('test'));
 
-        // Auth interface not implemented
+        // States that config interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
             ->with(ConfigInterface::class)
@@ -136,7 +136,7 @@ final class TraitsTest extends TestCase
         $this->assertInstanceOf(ConsoleInterface::class,
             $simpleConsoleAware->console());
 
-        // Auth interface not implemented
+        // States that console interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
             ->with(ConsoleInterface::class)
@@ -205,7 +205,7 @@ final class TraitsTest extends TestCase
         $this->assertInstanceOf(CookieInterface::class,
             $simpleCookieAware->cookie());
 
-        // Auth interface not implemented
+        // States that cookie interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
             ->with(CookieInterface::class)
@@ -249,7 +249,7 @@ final class TraitsTest extends TestCase
         $this->assertInstanceOf(DatabaseInterface::class,
             $simpleDatabaseAware->database());
 
-        // Auth interface not implemented
+        // States that database interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
             ->with(DatabaseInterface::class)
@@ -293,7 +293,7 @@ final class TraitsTest extends TestCase
         $this->assertInstanceOf(FlashInterface::class,
             $simpleFlashAware->flash());
 
-        // Auth interface not implemented
+        // States that flash interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
             ->with(FlashInterface::class)
@@ -337,7 +337,7 @@ final class TraitsTest extends TestCase
         $this->assertInstanceOf(HashInterface::class,
             $simpleHashAware->hash());
 
-        // Auth interface not implemented
+        // States that hash interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
             ->with(HashInterface::class)
@@ -381,7 +381,7 @@ final class TraitsTest extends TestCase
         $this->assertInstanceOf(LoggerInterface::class,
             $simpleLoggerAware->logger());
 
-        // Auth interface not implemented
+        // States that logger interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
             ->with(LoggerInterface::class)
@@ -425,7 +425,7 @@ final class TraitsTest extends TestCase
         $this->assertInstanceOf(SessionInterface::class,
             $simpleSessionAware->session());
 
-        // Auth interface not implemented
+        // States that session interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
             ->with(SessionInterface::class)
