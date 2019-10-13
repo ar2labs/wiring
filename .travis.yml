@@ -36,4 +36,4 @@ script:
   - 'if [[ ${TRAVIS_PULL_REQUEST} == "false" && ${TRAVIS_BRANCH} == "master" ]]; then sonar-scanner; fi'
 
 after_success:
-  - vendor/bin/php-coveralls --coverage_clover=clover.xml -v
+  - vendor/bin/php-coveralls --coverage_clover=coverage-report.clover -v
