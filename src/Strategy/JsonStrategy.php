@@ -111,13 +111,6 @@ class JsonStrategy implements JsonStrategyInterface
             ));
         }
 
-        if (!\is_string($json)) {
-            throw new InvalidArgumentException(sprintf(
-                'Unable to encode data to JSON in %s',
-                __CLASS__
-            ));
-        }
-
-        return $json;
+        return (string) $json;
     }
 }

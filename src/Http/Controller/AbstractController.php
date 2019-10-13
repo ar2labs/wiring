@@ -50,6 +50,7 @@ abstract class AbstractController extends AbstractStrategy implements
     /**
      * @param RouteInterface $route
      * @param ServerRequestInterface $request
+     *
      * @return ResponseInterface
      */
     public function invokeRouteCallable(
@@ -59,6 +60,17 @@ abstract class AbstractController extends AbstractStrategy implements
         $controller = $route->getCallable($this->getContainer());
         $response = $controller($request, $route->getVars());
 
+        return $this->applyDefaultResponseHeaders($response);
+    }
+
+    /**
+     * @param ResponseInterface $response
+     *
+     * @return ResponseInterface
+     */
+    public function addDefaultResponse(
+        ResponseInterface $response
+    ): ResponseInterface {
         return $this->applyDefaultResponseHeaders($response);
     }
 

@@ -137,6 +137,15 @@ final class ControllerTest extends TestCase
             ->willThrowException(new Exception('Throwable test'));
 
         $this->assertInstanceOf(ResponseInterface::class, $controller->getThrowableHandler()->process($request, $handler));
+
+        $response->method('hasHeader')
+            ->with('content-type')
+            ->willReturn(false);
+
+        $response->method('withHeader')
+            ->willReturnSelf();
+
+        $this->assertInstanceOf(ResponseInterface::class, $controller->addDefaultResponse($response));
     }
 
     /**

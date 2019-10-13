@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Tests\Strategy;
 
+use InvalidArgumentException;
 use Wiring\Strategy\JsonStrategy;
 use Wiring\Interfaces\JsonStrategyInterface;
 use PHPUnit\Framework\TestCase;
@@ -28,6 +29,9 @@ final class JsonStrategyTest extends TestCase
         $this->assertInstanceOf(JsonStrategyInterface::class, $result);
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     */
     public function testTo()
     {
         $stream = $this->createStreamMock();
@@ -52,9 +56,33 @@ final class JsonStrategyTest extends TestCase
         $this->assertInstanceOf(ResponseInterface ::class,
             $jsonStrategy->to($response));
 
-        $jsonStrategy->render(['key1' => 'value1', 'key2' => 'value2']);
+        $array = ['key1' => 'value1', 'key2' => 'value2'];
+
+        $jsonStrategy->render($array);
         $this->assertInstanceOf(ResponseInterface ::class,
             $jsonStrategy->to($response));
+
+        try {
+            $resource = fopen('phpunit.xml.dist', 'r');
+            $jsonStrategy->render($resource);
+            $this->assertInstanceOf(ResponseInterface::class,
+                $jsonStrategy->to($response));
+        } catch (InvalidArgumentException $e) {
+            $this->assertInstanceOf(InvalidArgumentException::class, $e);
+            $this->assertEquals('Cannot JSON encode resources', $e->getMessage());
+        }
+
+        try {
+            $text = "\xB1\x31";
+            $jsonStrategy->render($text);
+            $this->assertInstanceOf(ResponseInterface ::class,
+                $jsonStrategy->to($response));
+        } catch (InvalidArgumentException $e) {
+            $this->assertInstanceOf(InvalidArgumentException::class, $e);
+            $this->assertEquals('Unable to encode data to JSON in ' .
+                'Wiring\Strategy\JsonStrategy: Malformed UTF-8 characters, ' .
+                'possibly incorrectly encoded', $e->getMessage());
+        }
     }
 
     private function createResponseMock()
