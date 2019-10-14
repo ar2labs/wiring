@@ -9,14 +9,16 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Wiring\Http\Exception\ErrorHandler;
 use Wiring\Interfaces\ApplicationInterface;
 
 final class ApplicationTest extends TestCase
 {
     /**
-     * @throws \Exception
+     * @throws \BadMethodCallException
      */
     public function testInstanceCreated()
     {
@@ -47,6 +49,25 @@ final class ApplicationTest extends TestCase
         $this->assertIsBool($app->isAfterMiddleware());
         $this->assertNull($app->getMiddleware('test2'));
         $this->assertInstanceOf(ResponseInterface::class, $app->handle($request));
+
+        try {
+            // Test error handler
+            $stream = $this->createStreamMock();
+            $stream->method('write')
+                ->with('Bad Request')
+                ->willReturn(13);
+
+            $response = $this->createResponseMock();
+            $response->method('getBody')
+                ->willReturn($stream);
+
+            $app = new Application($container, $request, $response, true);
+
+            $this->assertInstanceOf(ResponseInterface::class, $app->handle($request));
+        } catch (\Throwable $e) {
+            $this->assertInstanceOf(\Exception::class, $e);
+            $this->assertEquals('Bad Request', $e->getMessage());
+        }
     }
 
     private function createContainerMock()
@@ -67,5 +88,19 @@ final class ApplicationTest extends TestCase
     private function createMiddlewareMock()
     {
         return $this->createMock(MiddlewareInterface::class);
+    }
+
+    private function createStreamMock()
+    {
+        return $this->createMock(StreamInterface::class);
+    }
+
+    private function createErrorHandlerMockCallback($request, $response, $exception)
+    {
+        return $this
+            ->getMockBuilder(ErrorHandler::class)
+            ->setConstructorArgs([$request, $response, $exception])
+            ->setMethods(['__invoke'])
+            ->getMock();
     }
 }

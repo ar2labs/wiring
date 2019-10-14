@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Wiring\Interfaces\ApplicationInterface;
+use Wiring\Http\Exception\BadRequestException;
 use Wiring\Interfaces\ErrorHandlerInterface;
 use Wiring\Http\Exception\ErrorHandler;
 
@@ -68,6 +68,11 @@ class RequestHandler implements RequestHandlerInterface
     protected $finished = false;
 
     /**
+     * @var bool
+     */
+    protected $isErrorHandler = false;
+
+    /**
      * RequestHandler constructor.
      *
      * @param ContainerInterface $container
@@ -77,17 +82,13 @@ class RequestHandler implements RequestHandlerInterface
     public function __construct(
         ContainerInterface $container,
         ServerRequestInterface $request,
-        ResponseInterface $response
+        ResponseInterface $response,
+        bool $errorHandler = false
     ) {
         $this->container = $container;
         $this->request = $request;
         $this->response = $response;
-
-        // Check container set exist
-        if (method_exists($this->container, 'set')) {
-            // Inject self application for middlewares freedom
-            $this->container->set(ApplicationInterface::class, $this);
-        }
+        $this->isErrorHandler = $errorHandler;
     }
 
     /**
@@ -116,6 +117,12 @@ class RequestHandler implements RequestHandlerInterface
         try {
             // Get request and increment current middleware
             $this->request = $request;
+
+            // Check error handler
+            if ($this->isErrorHandler) {
+                throw new BadRequestException();
+            }
+
             $this->currentMiddleware++;
 
             // Stop if there isn't any executable middleware remaining
@@ -328,17 +335,18 @@ class RequestHandler implements RequestHandlerInterface
      * @return mixed
      */
     protected function errorHandler(
-        $error,
+        Throwable $error,
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
-        // Check has handler
+        // Checks if error handler is implemented
         if (!$this->container->has(ErrorHandlerInterface::class)) {
-            // Create new error handler
-            $errorHandler = new ErrorHandler($request, $response, $error);
-            $error = $errorHandler->error();
+            // Check the body of the message
+            if (method_exists($response->getBody(), 'write')) {
+                $response->getBody()->write($error->getMessage());
+            }
 
-            return  $response->getBody()->write($error['message']);
+            return $response;
         }
 
         /** @var callable $errorHandler */

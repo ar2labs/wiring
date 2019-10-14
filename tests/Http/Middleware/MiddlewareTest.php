@@ -25,7 +25,9 @@ final class MiddlewareTest extends TestCase
     public function testEmitterMiddleware()
     {
         $stream = $this->createStreamMock();
-        $handler = $this->createRequestHandlerMock();
+        $stream->method('write')
+            ->with('test')
+            ->willReturn(4);
 
         $request = $this->createRequestMock();
         $request->method('getBody')
@@ -34,6 +36,8 @@ final class MiddlewareTest extends TestCase
         $emitter = $this->createEmitterMock();
 
         $emitterMiddleware = new EmitterMiddleware($emitter);
+
+        $handler = $this->createRequestHandlerMock();
 
         $this->assertInstanceOf(EmitterInterface::class, $emitterMiddleware);
         $this->assertInstanceOf(MiddlewareInterface::class, $emitterMiddleware);
@@ -65,6 +69,20 @@ final class MiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertInstanceOf(ResponseInterface::class,
             $emitterMiddleware->emit($response));
+
+        // Without emitter
+        $emitterMiddleware = new EmitterMiddleware();
+
+        $handler = $this->createRequestHandlerMock();
+        $handler->method('handle')
+            ->willReturn($response);
+
+        $this->assertInstanceOf(EmitterInterface::class, $emitterMiddleware);
+        $this->assertInstanceOf(MiddlewareInterface::class, $emitterMiddleware);
+        $this->assertInstanceOf(
+            ResponseInterface::class,
+            $emitterMiddleware->process($request, $handler)
+        );
     }
 
     /**
