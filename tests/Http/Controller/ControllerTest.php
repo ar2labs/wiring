@@ -17,6 +17,7 @@ use Wiring\Http\Controller\AbstractJsonController;
 use Wiring\Http\Controller\AbstractJsonViewController;
 use Wiring\Http\Controller\AbstractRestfulController;
 use Wiring\Http\Controller\AbstractViewController;
+use Wiring\Http\Exception\MethodNotAllowedException;
 use Wiring\Http\Exception\NotFoundException;
 use Wiring\Interfaces\JsonStrategyInterface;
 use Wiring\Interfaces\ViewStrategyInterface;
@@ -49,6 +50,20 @@ final class ControllerTest extends TestCase
         $this->assertInstanceOf(ViewStrategyInterface::class, $controller->view());
         $this->assertInstanceOf(ResponseInterface::class, $controller->indexAction());
         $this->assertInstanceOf(MiddlewareInterface::class, $controller->getNotFoundDecorator($notFound));
+
+        try {
+            $request = $this->createRequestMock();
+            $requestHandler = $this->createRequestHandlerMock();
+
+            $notAllowed = new MethodNotAllowedException();
+
+            $this->assertInstanceOf(MiddlewareInterface::class,
+                $controller->getMethodNotAllowedDecorator($notAllowed)
+                    ->process($request, $requestHandler));
+        } catch (MethodNotAllowedException $e) {
+            $this->assertInstanceOf(MethodNotAllowedException::class, $e);
+            $this->assertEquals('Method Not Allowed', $e->getMessage());
+        }
     }
 
     /**
