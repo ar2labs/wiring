@@ -12,13 +12,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Wiring\Http\Exception\ErrorHandler;
 use Wiring\Interfaces\ApplicationInterface;
+use Wiring\Interfaces\ErrorHandlerInterface;
 
 final class ApplicationTest extends TestCase
 {
     /**
-     * @throws \BadMethodCallException
+     * @throws \Exception
      */
     public function testInstanceCreated()
     {
@@ -55,18 +55,35 @@ final class ApplicationTest extends TestCase
             $stream = $this->createStreamMock();
             $stream->method('write')
                 ->with('Bad Request')
-                ->willReturn(13);
+                ->willReturn(11);
 
             $response = $this->createResponseMock();
             $response->method('getBody')
                 ->willReturn($stream);
 
             $app = new Application($container, $request, $response, true);
-
+            $app->run();
             $this->assertInstanceOf(ResponseInterface::class, $app->handle($request));
         } catch (\Throwable $e) {
             $this->assertInstanceOf(\Exception::class, $e);
             $this->assertEquals('Bad Request', $e->getMessage());
+        }
+
+        try {
+            // Test error handler callable
+            $errorHandler = $this->createErrorHandlerMock();
+
+            $container->method('has')
+                ->with(ErrorHandlerInterface::class)
+                ->willReturn(true);
+
+            $container->method('get')
+                ->with(ErrorHandlerInterface::class)
+                ->willReturn($errorHandler);
+
+            $app = new Application($container, $request, $response);
+        } catch (\Throwable $e) {
+            $this->assertEquals('Function name must be a string', $e->getMessage());
         }
     }
 
@@ -95,12 +112,8 @@ final class ApplicationTest extends TestCase
         return $this->createMock(StreamInterface::class);
     }
 
-    private function createErrorHandlerMockCallback($request, $response, $exception)
+    private function createErrorHandlerMock()
     {
-        return $this
-            ->getMockBuilder(ErrorHandler::class)
-            ->setConstructorArgs([$request, $response, $exception])
-            ->setMethods(['__invoke'])
-            ->getMock();
+        return $this->createMock(ErrorHandlerInterface::class);
     }
 }

@@ -102,13 +102,17 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
 
             // Get stream lenght
             $streamLenght = (!$response->getHeaderLine('Content-Length')) ?
-                $stream->getSize() : $response->getHeaderLine('Content-Length');
+                (int) $stream->getSize() :
+                (int) $response->getHeaderLine('Content-Length');
 
             // While the stream is not the end of the stream and lenght > 0
-            while ((!$stream->eof()) && ($streamLenght > 0)) {
+            while (!$stream->eof()) {
                 // Output one or more strings
-                echo $stream->read(is_int($streamLenght) ?
-                    $streamLenght : (int) $streamLenght);
+                echo $stream->read($streamLenght);
+                // Check stream lenght
+                if ($streamLenght <= 0) {
+                    break;
+                }
             }
         }
 
