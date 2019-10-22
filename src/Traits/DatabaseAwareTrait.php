@@ -9,45 +9,23 @@ use Wiring\Interfaces\DatabaseInterface;
 trait DatabaseAwareTrait
 {
     /**
-     * @var DatabaseInterface|null
-     */
-    protected $database;
-
-    /**
-     * Get the current database.
+     * Get database instance.
      *
-     * @return DatabaseInterface|null
-     */
-    public function getDatabase(): ?DatabaseInterface
-    {
-        return $this->database;
-    }
-
-    /**
-     * Set the database implementation.
-     *
-     * @param DatabaseInterface $database
-     *
-     * @return self
-     */
-    public function setDatabase(DatabaseInterface $database): self
-    {
-        $this->database = $database;
-
-        return $this;
-    }
-
-    /**
-     * Get container database instance.
-     *
+     * @param string $connection
      * @throws \Exception
      *
-     * @return DatabaseInterface
+     * @return mixed
      */
-    public function database(): DatabaseInterface
+    public function database(string $connection = 'default')
     {
         if (!$this->has(DatabaseInterface::class)) {
             throw new \BadFunctionCallException('Database interface not implemented.');
+        }
+
+        // Check connection method exist
+        if (method_exists($this->get(DatabaseInterface::class), 'connection')) {
+            return $this->get(DatabaseInterface::class)
+                ->connection($connection);
         }
 
         return $this->get(DatabaseInterface::class);

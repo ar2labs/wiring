@@ -27,7 +27,7 @@ interface ControllerInterface
      *
      * @throws \Exception
      *
-     * @return DatabaseInterface
+     * @return mixed
      */
-    public function database(): DatabaseInterface;
+    public function database();
 }
