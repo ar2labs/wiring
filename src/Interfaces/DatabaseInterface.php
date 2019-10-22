@@ -7,18 +7,12 @@ namespace Wiring\Interfaces;
 interface DatabaseInterface
 {
     /**
-     * Database connection method.
+     * Get database instance.
      *
-     * @return void
+     * @param string $connection
+     * @throws \Exception
+     *
+     * @return mixed
      */
-    public function connect();
-
-    /**
-     * Data query method.
-     *
-     * @param QueryInterface $query
-     *
-     * @return array
-     */
-    public function query(QueryInterface $query);
+    public function database(string $connection = 'default');
 }

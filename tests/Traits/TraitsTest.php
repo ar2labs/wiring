@@ -242,10 +242,6 @@ final class TraitsTest extends TestCase
 
         $simpleDatabaseAware->setContainer($container);
 
-        $this->assertInstanceOf(SimpleDatabaseAware::class,
-            $simpleDatabaseAware->setDatabase($database));
-        $this->assertInstanceOf(DatabaseInterface::class,
-            $simpleDatabaseAware->getDatabase());
         $this->assertInstanceOf(DatabaseInterface::class,
             $simpleDatabaseAware->database());
 
