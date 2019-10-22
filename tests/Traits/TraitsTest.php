@@ -245,6 +245,32 @@ final class TraitsTest extends TestCase
         $this->assertInstanceOf(DatabaseInterface::class,
             $simpleDatabaseAware->database());
 
+        $database = $this->createDatabaseMockBuilder();
+        $database->method('database')
+            ->willReturn(DatabaseInterface::class);
+
+        $container = $this->createContainerMock();
+        $container->method('has')
+            ->with(DatabaseInterface::class)
+            ->willReturn(true);
+
+        $container->method('get')
+            ->with(DatabaseInterface::class)
+            ->willReturn($database);
+
+        $simpleDatabaseAware->setContainer($container);
+
+        $database->method('connection')
+            ->with('default')
+            ->willReturnSelf();
+
+        $container->method('get')
+            ->with(DatabaseInterface::class)
+            ->willReturn($database);
+
+        $this->assertInstanceOf(DatabaseInterface::class,
+            $simpleDatabaseAware->database());
+
         // States that database interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
@@ -461,6 +487,16 @@ final class TraitsTest extends TestCase
     private function createCookieMock()
     {
         return $this->createMock(CookieInterface::class);
+    }
+
+    private function createDatabaseMockBuilder()
+    {
+        return $this->getMockBuilder(DatabaseInterface::class)
+            ->setMethods([
+                'database',
+                'connection',
+            ])
+            ->getMock();
     }
 
     private function createDatabaseMock()
