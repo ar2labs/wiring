@@ -14,7 +14,6 @@ cache:
 env:
   global:
     - COMPOSER_ARGS="--dev"
-    - COVERAGE_DEPS="php-coveralls/php-coveralls"
 
 addons:
   # sonarcloud analysis with the travis plugin, see https://docs.travis-ci.com/user/sonarcloud/
@@ -25,7 +24,10 @@ addons:
 
 before_script:
   - composer self-update
-  - composer require --dev php-coveralls/php-coveralls:^2.1.0 --no-interaction --no-suggest --no-progress
+    composer require --dev phpunit/phpunit:^7.5 --no-interaction --no-suggest --no-progress
+  - composer require --dev phpstan/phpstan-shim:^0.11 --no-interaction --no-suggest --no-progress
+  - composer require --dev friendsofphp/php-cs-fixer:^2.15 --no-interaction --no-suggest --no-progress
+  - composer require --dev php-coveralls/php-coveralls:^2.1 --no-interaction --no-suggest --no-progress
   - composer install --no-interaction --no-suggest --no-progress
 
 script:
