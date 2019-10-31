@@ -40,9 +40,9 @@ trait ConfigAwareTrait
      *
      * @throws \Exception
      *
-     * @return ConfigInterface
+     * @return mixed
      */
-    public function config(): ConfigInterface
+    public function config()
     {
         if (!$this->has(ConfigInterface::class)) {
             throw new \BadFunctionCallException('Config interface not implemented.');
