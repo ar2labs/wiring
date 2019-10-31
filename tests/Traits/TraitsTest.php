@@ -39,9 +39,8 @@ final class TraitsTest extends TestCase
             ->willReturn($auth);
 
         $simpleAuthAware->setContainer($container);
+        $simpleAuthAware->setAuth($auth);
 
-        $this->assertInstanceOf(SimpleAuthAware::class,
-            $simpleAuthAware->setAuth($auth));
         $this->assertInstanceOf(AuthInterface::class,
             $simpleAuthAware->getAuth());
         $this->assertInstanceOf(AuthInterface::class,
@@ -83,9 +82,8 @@ final class TraitsTest extends TestCase
             ->willReturn($config);
 
         $simpleConfigAware->setContainer($container);
+        $simpleConfigAware->setConfig($config);
 
-        $this->assertInstanceOf(SimpleConfigAware::class,
-            $simpleConfigAware->setConfig($config));
         $this->assertInstanceOf(ConfigInterface::class,
             $simpleConfigAware->getConfig());
         $this->assertInstanceOf(ConfigInterface::class,
@@ -128,9 +126,8 @@ final class TraitsTest extends TestCase
             ->willReturn($console);
 
         $simpleConsoleAware->setContainer($container);
+        $simpleConsoleAware->setConsole($console);
 
-        $this->assertInstanceOf(SimpleConsoleAware::class,
-            $simpleConsoleAware->setConsole($console));
         $this->assertInstanceOf(ConsoleInterface::class,
             $simpleConsoleAware->getConsole());
         $this->assertInstanceOf(ConsoleInterface::class,
@@ -197,9 +194,8 @@ final class TraitsTest extends TestCase
             ->willReturn($cookie);
 
         $simpleCookieAware->setContainer($container);
+        $simpleCookieAware->setCookie($cookie);
 
-        $this->assertInstanceOf(SimpleCookieAware::class,
-            $simpleCookieAware->setCookie($cookie));
         $this->assertInstanceOf(CookieInterface::class,
             $simpleCookieAware->getCookie());
         $this->assertInstanceOf(CookieInterface::class,
@@ -269,7 +265,7 @@ final class TraitsTest extends TestCase
             ->willReturn($database);
 
         $this->assertInstanceOf(DatabaseInterface::class,
-            $simpleDatabaseAware->database());
+            $simpleDatabaseAware->database('default'));
 
         // States that database interface has not been implemented
         $container = $this->createContainerMock();
@@ -307,9 +303,8 @@ final class TraitsTest extends TestCase
             ->willReturn($flash);
 
         $simpleFlashAware->setContainer($container);
+        $simpleFlashAware->setFlash($flash);
 
-        $this->assertInstanceOf(SimpleFlashAware::class,
-            $simpleFlashAware->setFlash($flash));
         $this->assertInstanceOf(FlashInterface::class,
             $simpleFlashAware->getFlash());
         $this->assertInstanceOf(FlashInterface::class,
@@ -351,9 +346,8 @@ final class TraitsTest extends TestCase
             ->willReturn($hash);
 
         $simpleHashAware->setContainer($container);
+        $simpleHashAware->setHash($hash);
 
-        $this->assertInstanceOf(SimpleHashAware::class,
-            $simpleHashAware->setHash($hash));
         $this->assertInstanceOf(HashInterface::class,
             $simpleHashAware->getHash());
         $this->assertInstanceOf(HashInterface::class,
@@ -395,9 +389,8 @@ final class TraitsTest extends TestCase
             ->willReturn($logger);
 
         $simpleLoggerAware->setContainer($container);
+        $simpleLoggerAware->setLogger($logger);
 
-        $this->assertInstanceOf(SimpleLoggerAware::class,
-            $simpleLoggerAware->setLogger($logger));
         $this->assertInstanceOf(LoggerInterface::class,
             $simpleLoggerAware->getLogger());
         $this->assertInstanceOf(LoggerInterface::class,
@@ -439,9 +432,8 @@ final class TraitsTest extends TestCase
             ->willReturn($session);
 
         $simpleSessionAware->setContainer($container);
+        $simpleSessionAware->setSession($session);
 
-        $this->assertInstanceOf(SimpleSessionAware::class,
-            $simpleSessionAware->setSession($session));
         $this->assertInstanceOf(SessionInterface::class,
             $simpleSessionAware->getSession());
         $this->assertInstanceOf(SessionInterface::class,

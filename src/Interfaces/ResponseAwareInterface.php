@@ -20,9 +20,9 @@ interface ResponseAwareInterface
      *
      * @param ResponseInterface $response
      *
-     * @return ResponseAwareInterface
+     * @return void
      */
     public function setResponse(
         ResponseInterface $response
-    ): ResponseAwareInterface;
+    );
 }

@@ -6,7 +6,6 @@ namespace Wiring\Traits;
 
 use BadMethodCallException;
 use Psr\Container\ContainerInterface;
-use Wiring\Interfaces\ContainerAwareInterface;
 
 trait ContainerAwareTrait
 {
@@ -30,13 +29,11 @@ trait ContainerAwareTrait
      *
      * @param ContainerInterface $container
      *
-     * @return ContainerAwareInterface
+     * @return void
      */
-    public function setContainer(ContainerInterface $container): ContainerAwareInterface
+    public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
-
-        return $this;
     }
 
     /**

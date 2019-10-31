@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Wiring\Traits;
 
 use Psr\Http\Message\ResponseInterface;
-use Wiring\Interfaces\ResponseAwareInterface;
 
 trait ResponseAwareTrait
 {
@@ -29,12 +28,10 @@ trait ResponseAwareTrait
      *
      * @param ResponseInterface $response
      *
-     * @return ResponseAwareInterface
+     * @return void
      */
-    public function setResponse(ResponseInterface $response): ResponseAwareInterface
+    public function setResponse(ResponseInterface $response)
     {
         $this->response = $response;
-
-        return $this;
     }
 }

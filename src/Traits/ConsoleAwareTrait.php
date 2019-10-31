@@ -28,13 +28,11 @@ trait ConsoleAwareTrait
      *
      * @param ConsoleInterface $console
      *
-     * @return self
+     * @return void
      */
-    public function setConsole(ConsoleInterface $console): self
+    public function setConsole(ConsoleInterface $console)
     {
         $this->console = $console;
-
-        return $this;
     }
 
     /**

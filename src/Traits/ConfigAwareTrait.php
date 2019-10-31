@@ -28,13 +28,11 @@ trait ConfigAwareTrait
      *
      * @param ConfigInterface $config
      *
-     * @return self
+     * @return void
      */
-    public function setConfig(ConfigInterface $config): self
+    public function setConfig(ConfigInterface $config)
     {
         $this->config = $config;
-
-        return $this;
     }
 
     /**

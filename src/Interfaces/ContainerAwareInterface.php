@@ -20,9 +20,9 @@ interface ContainerAwareInterface
      *
      * @param ContainerInterface $container
      *
-     * @return ContainerAwareInterface
+     * @return void
      */
     public function setContainer(
         ContainerInterface $container
-    ): ContainerAwareInterface;
+    );
 }

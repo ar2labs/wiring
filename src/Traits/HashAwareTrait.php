@@ -28,13 +28,11 @@ trait HashAwareTrait
      *
      * @param HashInterface $hash
      *
-     * @return self
+     * @return void
      */
-    public function setHash(HashInterface $hash): self
+    public function setHash(HashInterface $hash)
     {
         $this->hash = $hash;
-
-        return $this;
     }
 
     /**

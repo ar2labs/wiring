@@ -28,13 +28,11 @@ trait LoggerAwareTrait
      *
      * @param LoggerInterface $logger
      *
-     * @return self
+     * @return void
      */
-    public function setLogger(LoggerInterface $logger): self
+    public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
-
-        return $this;
     }
 
     /**
