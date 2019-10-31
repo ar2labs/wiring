@@ -28,13 +28,11 @@ trait SessionAwareTrait
      *
      * @param SessionInterface $session
      *
-     * @return self
+     * @return void
      */
-    public function setSession(SessionInterface $session): self
+    public function setSession(SessionInterface $session)
     {
         $this->session = $session;
-
-        return $this;
     }
 
     /**

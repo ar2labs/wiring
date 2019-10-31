@@ -28,13 +28,11 @@ trait CookieAwareTrait
      *
      * @param CookieInterface $cookie
      *
-     * @return self
+     * @return void
      */
-    public function setCookie(CookieInterface $cookie): self
+    public function setCookie(CookieInterface $cookie)
     {
         $this->cookie = $cookie;
-
-        return $this;
     }
 
     /**

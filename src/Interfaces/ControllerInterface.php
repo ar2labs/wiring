@@ -21,13 +21,4 @@ interface ControllerInterface
      * @return bool
      */
     public function has(string $id): bool;
-
-    /**
-     * Return database connection.
-     *
-     * @throws \Exception
-     *
-     * @return mixed
-     */
-    public function database();
 }

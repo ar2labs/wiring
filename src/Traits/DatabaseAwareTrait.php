@@ -16,14 +16,15 @@ trait DatabaseAwareTrait
      *
      * @return mixed
      */
-    public function database(string $connection = 'default')
+    public function database(string $connection = '')
     {
         if (!$this->has(DatabaseInterface::class)) {
             throw new \BadFunctionCallException('Database interface not implemented.');
         }
 
         // Check connection method exist
-        if (method_exists($this->get(DatabaseInterface::class), 'connection')) {
+        if ((!empty($connection)) &&
+            (method_exists($this->get(DatabaseInterface::class), 'connection'))) {
             return $this->get(DatabaseInterface::class)
                 ->connection($connection);
         }

@@ -28,13 +28,11 @@ trait AuthAwareTrait
      *
      * @param AuthInterface $auth
      *
-     * @return self
+     * @return void
      */
-    public function setAuth(AuthInterface $auth): self
+    public function setAuth(AuthInterface $auth)
     {
         $this->auth = $auth;
-
-        return $this;
     }
 
     /**

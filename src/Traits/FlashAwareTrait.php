@@ -28,13 +28,11 @@ trait FlashAwareTrait
      *
      * @param FlashInterface $flash
      *
-     * @return self
+     * @return void
      */
-    public function setFlash(FlashInterface $flash): self
+    public function setFlash(FlashInterface $flash)
     {
         $this->flash = $flash;
-
-        return $this;
     }
 
     /**

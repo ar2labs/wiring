@@ -7,12 +7,11 @@ namespace Wiring\Interfaces;
 interface DatabaseInterface
 {
     /**
-     * Get database instance.
+     * Get connection instance.
      *
-     * @param string $connection
-     * @throws \Exception
+     * @param string $dbname
      *
      * @return mixed
      */
-    public function database(string $connection = 'default');
+    public function connection(string $dbname = 'default');
 }
