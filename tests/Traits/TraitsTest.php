@@ -17,6 +17,7 @@ use Wiring\Interfaces\DatabaseInterface;
 use Wiring\Interfaces\FlashInterface;
 use Wiring\Interfaces\HashInterface;
 use Wiring\Interfaces\SessionInterface;
+use Wiring\Interfaces\ValidatorInterface;
 
 final class TraitsTest extends TestCase
 {
@@ -416,6 +417,49 @@ final class TraitsTest extends TestCase
     /**
      * @throws \Exception
      */
+    public function testValidatorAwareTrait()
+    {
+        $container = $this->createContainerMock();
+
+        $simpleValidatorAware = new SimpleValidatorAware();
+        $validator = $this->createValidatorMock();
+
+        $container->method('has')
+            ->with(ValidatorInterface::class)
+            ->willReturn(true);
+
+        $container->method('get')
+            ->with(ValidatorInterface::class)
+            ->willReturn($validator);
+
+        $simpleValidatorAware->setContainer($container);
+        $simpleValidatorAware->setValidator($validator);
+
+        $this->assertInstanceOf(ValidatorInterface::class,
+            $simpleValidatorAware->getValidator());
+        $this->assertInstanceOf(ValidatorInterface::class,
+            $simpleValidatorAware->validator());
+
+        // States that validator interface has not been implemented
+        $container = $this->createContainerMock();
+        $container->method('has')
+            ->with(ValidatorInterface::class)
+            ->willReturn(false);
+
+        $simpleValidatorAware->setContainer($container);
+
+        try {
+            $this->assertInstanceOf(Exception::class,
+                $simpleValidatorAware->validator());
+        } catch (Exception $e) {
+            $this->assertInstanceOf(Exception::class, $e);
+            $this->assertEquals('Validator interface not implemented.', $e->getMessage());
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function testSessionAwareTrait()
     {
         $container = $this->createContainerMock();
@@ -514,5 +558,10 @@ final class TraitsTest extends TestCase
     private function createSessionMock()
     {
         return $this->createMock(SessionInterface::class);
+    }
+
+    private function createValidatorMock()
+    {
+        return $this->createMock(ValidatorInterface::class);
     }
 }
