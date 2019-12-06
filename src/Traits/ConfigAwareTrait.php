@@ -38,17 +38,20 @@ trait ConfigAwareTrait
     /**
      * Get settings properties.
      *
+     * @param string $key
      * @throws \Exception
      *
      * @return mixed
      */
-    public function config()
+    public function config(string $key = '')
     {
         if (!$this->has(ConfigInterface::class)) {
             throw new \BadFunctionCallException('Config interface not implemented.');
         }
 
-        return $this->get(ConfigInterface::class);
+        return empty($key) ?
+            $this->get(ConfigInterface::class) :
+            $this->get(ConfigInterface::class)->get($key);
     }
 
     /**
