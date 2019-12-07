@@ -8,6 +8,8 @@ use BadMethodCallException;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 use Wiring\Interfaces\AuthInterface;
 use Wiring\Interfaces\ConfigInterface;
@@ -374,6 +376,61 @@ final class TraitsTest extends TestCase
     /**
      * @throws \Exception
      */
+    public function testInputAwareTrait()
+    {
+        $simpleInputAware = new SimpleInputAware();
+        $request = $this->createRequestMock();
+
+        $stream = $this->createStreamMock();
+        $stream->method('write')
+            ->with('{"code":200,"status":"success","message":"Ok","data":[]}')
+            ->willReturn(56);
+
+        $request->method('getBody')
+            ->willReturn($stream);
+
+        $this->assertNull($simpleInputAware->input($request));
+
+        $request->method('getHeader')
+            ->with('content-type')
+            ->willReturn(['multipart/form-data']);
+
+        $this->assertNull($simpleInputAware->input($request, true));
+
+        $request = $this->createRequestMock();
+
+        $stream = $this->createStreamMock();
+        $stream->method('getContents')
+            ->willReturn('{"code":200,"status":"success","message":"Ok","data":[]}');
+
+        $request->method('getBody')
+            ->willReturn($stream);
+
+        $request->method('getHeader')
+            ->with('content-type')
+            ->willReturn(['application/json']);
+
+        $this->assertInstanceOf(\stdClass::class, $simpleInputAware->input($request));
+
+        $request = $this->createRequestMock();
+
+        $stream = $this->createStreamMock();
+        $stream->method('getContents')
+            ->willReturn('<body><code>200</code><status>success</status></body>');
+
+        $request->method('getBody')
+            ->willReturn($stream);
+
+        $request->method('getHeader')
+            ->with('content-type')
+            ->willReturn(['application/xml']);
+
+        $this->assertInstanceOf(\stdClass::class, $simpleInputAware->input($request));
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function testLoggerAwareTrait()
     {
         $container = $this->createContainerMock();
@@ -555,9 +612,20 @@ final class TraitsTest extends TestCase
         return $this->createMock(LoggerInterface::class);
     }
 
+    private function createRequestMock()
+    {
+        return $this->getMockBuilder(ServerRequestInterface::class)
+            ->getMock();
+    }
+
     private function createSessionMock()
     {
         return $this->createMock(SessionInterface::class);
+    }
+
+    private function createStreamMock()
+    {
+        return $this->createMock(StreamInterface::class);
     }
 
     private function createValidatorMock()
