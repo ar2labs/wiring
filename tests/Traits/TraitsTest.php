@@ -426,6 +426,10 @@ final class TraitsTest extends TestCase
             ->willReturn(['application/xml']);
 
         $this->assertInstanceOf(\stdClass::class, $simpleInputAware->input($request));
+
+        $request = $this->createRequestMock();
+
+        $this->assertInstanceOf(\stdClass::class, $simpleInputAware->query($request));
     }
 
     /**
