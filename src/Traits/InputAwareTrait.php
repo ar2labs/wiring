@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 trait InputAwareTrait
 {
     /**
-     * Get container authentication instance.
+     * Get input params.
      *
      * @param ServerRequestInterface $request
      * @param bool $isArray
@@ -20,27 +20,42 @@ trait InputAwareTrait
     public function input(ServerRequestInterface $request, bool $isArray = false)
     {
         $header = $request->getHeader('content-type');
-        $content = (string) $header[0];
+        $type = (string) $header[0];
+        $content = $request->getBody()->getContents();
 
-        if (strpos($content, 'multipart/form-data') !== false) {
+        if (strpos($type, 'multipart/form-data') !== false) {
             // Convert Multipart
-            return $isArray ?
+            $content = $isArray ?
                 $request->getParsedBody() :
                 (object) $request->getParsedBody();
         }
 
-        if (strpos($content, 'application/json') !== false) {
+        if (strpos($type, 'application/json') !== false) {
             // Convert JSON
-            return json_decode($request->getBody()->getContents(), $isArray);
+            $content = json_decode($request->getBody()->getContents(), $isArray);
         }
 
-        if (strpos($content, 'application/xml') !== false) {
+        if (strpos($type, 'application/xml') !== false) {
             // Convert XML
             $xml = simplexml_load_string($request->getBody()->getContents());
-
-            return json_decode((string) json_encode($xml), $isArray);
+            $content = json_decode((string) json_encode($xml), $isArray);
         }
 
-        return $request->getBody()->getContents();
+        return $content;
+    }
+
+    /**
+     * Get query params.
+     *
+     * @param ServerRequestInterface $request
+     * @param bool $isArray
+     * @throws \Exception
+     *
+     * @return mixed
+     */
+    public function query(ServerRequestInterface $request, bool $isArray = false)
+    {
+        return $isArray ? $request->getQueryParams() :
+            (object) $request->getQueryParams();
     }
 }
