@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Controller;
 
-use Exception;
+use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -156,7 +156,7 @@ abstract class AbstractJsonController extends AbstractController
     public function getThrowableHandler(): MiddlewareInterface
     {
         if (! $this->container instanceof ContainerInterface) {
-            throw new \Exception('Container instance error');
+            throw new InvalidArgumentException('Container instance error');
         }
 
         // Return throwable handler

@@ -27,13 +27,13 @@ class Console
     /**
      * Write output to console browser.
      *
-     * @param mixed $obj
+     * @param mixed $debug
      *
      * @return self
      */
-    public function debug($obj)
+    public function debug($debug)
     {
-        $this->method(self::LOG, $obj);
+        $this->method(self::LOG, $debug);
 
         return $this;
     }
