@@ -54,11 +54,17 @@ class Session implements SessionInterface
      * Remove a session key.
      *
      * @param string $key
+     *
+     * @return bool
      */
     public static function forget(string $key)
     {
         if (self::has($key)) {
             unset($_SESSION[$key]);
+
+            return true;
         }
+
+        return false;
     }
 }

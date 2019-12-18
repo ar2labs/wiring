@@ -9,9 +9,9 @@ interface ConsoleInterface
     /**
      * Write output to console browser.
      *
-     * @var object|string $obj
+     * @param mixed $obj
      *
-     * @return void
+     * @return void|null
      */
-    public function log($obj): void;
+    public function log($obj);
 }

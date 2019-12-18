@@ -23,7 +23,8 @@ trait InputAwareTrait
         $type = (string) $header[0];
         $content = $request->getBody()->getContents();
 
-        if (strpos($type, 'multipart/form-data') !== false) {
+        if ((strpos($type, 'multipart/form-data') !== false) ||
+            (strpos($type, 'application/x-www-form-urlencoded') !== false)) {
             // Convert Multipart
             $content = $isArray ?
                 $request->getParsedBody() :

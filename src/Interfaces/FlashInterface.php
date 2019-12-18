@@ -11,6 +11,8 @@ interface FlashInterface
      *
      * @param string $key The key to store the message under
      * @param mixed  $message Message to show on next request
+     *
+     * @return self
      */
     public function addMessage(string $key, $message);
 
@@ -19,6 +21,8 @@ interface FlashInterface
      *
      * @param string $key The key to store the message under
      * @param string $message Message to show for the current request
+     *
+     * @return self
      */
     public function addMessageNow(string $key, string $message);
 

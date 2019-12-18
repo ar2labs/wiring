@@ -25,6 +25,8 @@ final class TraitsTest extends TestCase
 {
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testAuthAwareTrait()
     {
@@ -68,6 +70,8 @@ final class TraitsTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testConfigAwareTrait()
     {
@@ -112,6 +116,8 @@ final class TraitsTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testConsoleAwareTrait()
     {
@@ -154,7 +160,9 @@ final class TraitsTest extends TestCase
     }
 
     /**
-     * @throws \BadMethodCallException
+     * @throws \Exception
+     *
+     * @return void
      */
     public function testContainerAwareTrait()
     {
@@ -180,6 +188,8 @@ final class TraitsTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testCookieAwareTrait()
     {
@@ -223,6 +233,8 @@ final class TraitsTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testDatabaseAwareTrait()
     {
@@ -289,6 +301,8 @@ final class TraitsTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testFlashAwareTrait()
     {
@@ -332,6 +346,8 @@ final class TraitsTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testHashAwareTrait()
     {
@@ -375,6 +391,8 @@ final class TraitsTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testInputAwareTrait()
     {
@@ -434,6 +452,8 @@ final class TraitsTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testLoggerAwareTrait()
     {
@@ -477,6 +497,8 @@ final class TraitsTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testValidatorAwareTrait()
     {
@@ -520,6 +542,8 @@ final class TraitsTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testSessionAwareTrait()
     {
@@ -561,31 +585,49 @@ final class TraitsTest extends TestCase
         }
     }
 
+    /**
+     * @return mixed
+     */
     private function createContainerMock()
     {
         return $this->createMock(ContainerInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createAuthMock()
     {
         return $this->createMock(AuthInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createConfigMock()
     {
         return $this->createMock(ConfigInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createConsoleMock()
     {
         return $this->createMock(ConsoleInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createCookieMock()
     {
         return $this->createMock(CookieInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createDatabaseMockBuilder()
     {
         return $this->getMockBuilder(DatabaseInterface::class)
@@ -596,42 +638,66 @@ final class TraitsTest extends TestCase
             ->getMock();
     }
 
+    /**
+     * @return mixed
+     */
     private function createDatabaseMock()
     {
         return $this->createMock(DatabaseInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createFlashMock()
     {
         return $this->createMock(FlashInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createHashMock()
     {
         return $this->createMock(HashInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createLoggerMock()
     {
         return $this->createMock(LoggerInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createRequestMock()
     {
         return $this->getMockBuilder(ServerRequestInterface::class)
             ->getMock();
     }
 
+    /**
+     * @return mixed
+     */
     private function createSessionMock()
     {
         return $this->createMock(SessionInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createStreamMock()
     {
         return $this->createMock(StreamInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createValidatorMock()
     {
         return $this->createMock(ValidatorInterface::class);

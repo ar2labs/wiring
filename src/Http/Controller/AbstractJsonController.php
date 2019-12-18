@@ -124,7 +124,9 @@ abstract class AbstractJsonController extends AbstractController
         HttpException $exception
     ): MiddlewareInterface {
         return new class($this->response, $exception) implements MiddlewareInterface {
+            /** @var ResponseInterface $response */
             protected $response;
+            /** @var HttpException $exception */
             protected $exception;
 
             public function __construct(
@@ -153,60 +155,64 @@ abstract class AbstractJsonController extends AbstractController
      */
     public function getThrowableHandler(): MiddlewareInterface
     {
-        if ($this->container instanceof ContainerInterface) {
-            // Return throwable handler
-            return new class($this->container, $this->response) implements MiddlewareInterface {
-                protected $container;
-                protected $response;
-
-                public function __construct(ContainerInterface $container, ResponseInterface $response)
-                {
-                    $this->container = $container;
-                    $this->response = $response;
-                }
-
-                public function process(
-                    ServerRequestInterface $request,
-                    RequestHandlerInterface $handler
-                ): ResponseInterface {
-                    try {
-                        return $handler->handle($request);
-                    } catch (Throwable $e) {
-                        // Call error handler
-                        return $this->errorHandler($e, $request, $this->response);
-                    }
-                }
-
-                /**
-                 * Error handler.
-                 *
-                 * @param Throwable $error
-                 * @param ServerRequestInterface $request
-                 * @param ResponseInterface $response
-                 *
-                 * @throws ErrorHandler
-                 *
-                 * @return ResponseInterface
-                 */
-                protected function errorHandler(
-                    Throwable $error,
-                    ServerRequestInterface $request,
-                    ResponseInterface $response
-                ): ResponseInterface {
-                    // Create new error handler
-                    $errorHandler = new ErrorHandler($request, $response, $error);
-                    $error = $errorHandler->error();
-
-                    $response->getBody()->write((string) json_encode([
-                        'code' => 500,
-                        'status' => 'error',
-                        'message' => $error['message'],
-                        'data' => [],
-                    ]));
-
-                    return $response;
-                }
-            };
+        if (! $this->container instanceof ContainerInterface) {
+            throw new \Exception('Container instance error');
         }
+
+        // Return throwable handler
+        return new class($this->container, $this->response) implements MiddlewareInterface {
+            /** @var ContainerInterface $container */
+            protected $container;
+            /** @var ResponseInterface $response */
+            protected $response;
+
+            public function __construct(ContainerInterface $container, ResponseInterface $response)
+            {
+                $this->container = $container;
+                $this->response = $response;
+            }
+
+            public function process(
+                ServerRequestInterface $request,
+                RequestHandlerInterface $handler
+            ): ResponseInterface {
+                try {
+                    return $handler->handle($request);
+                } catch (Throwable $e) {
+                    // Call error handler
+                    return $this->errorHandler($e, $request, $this->response);
+                }
+            }
+
+            /**
+             * Error handler.
+             *
+             * @param Throwable $error
+             * @param ServerRequestInterface $request
+             * @param ResponseInterface $response
+             *
+             * @throws ErrorHandler
+             *
+             * @return ResponseInterface
+             */
+            protected function errorHandler(
+                Throwable $error,
+                ServerRequestInterface $request,
+                ResponseInterface $response
+            ): ResponseInterface {
+                // Create new error handler
+                $errorHandler = new ErrorHandler($request, $response, $error);
+                $error = $errorHandler->error();
+
+                $response->getBody()->write((string) json_encode([
+                    'code' => 500,
+                    'status' => 'error',
+                    'message' => $error['message'],
+                    'data' => [],
+                ]));
+
+                return $response;
+            }
+        };
     }
 }

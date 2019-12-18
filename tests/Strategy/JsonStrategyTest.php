@@ -13,6 +13,9 @@ use Psr\Http\Message\StreamInterface;
 
 final class JsonStrategyTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testRender()
     {
         $jsonStrategy = new JsonStrategy();
@@ -21,6 +24,9 @@ final class JsonStrategyTest extends TestCase
         $this->assertInstanceOf(JsonStrategy::class, $result);
     }
 
+    /**
+     * @return void
+     */
     public function testWrite()
     {
         $jsonStrategy = new JsonStrategy();
@@ -31,6 +37,8 @@ final class JsonStrategyTest extends TestCase
 
     /**
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function testTo()
     {
@@ -85,11 +93,17 @@ final class JsonStrategyTest extends TestCase
         }
     }
 
+    /**
+     * @return mixed
+     */
     private function createResponseMock()
     {
         return $this->createMock(ResponseInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createStreamMock()
     {
         return $this->createMock(StreamInterface::class);

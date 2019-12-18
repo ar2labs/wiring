@@ -13,98 +13,136 @@ class Console
     /**
      * Write output to console browser.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function log($obj)
     {
         $this->method(self::LOG, $obj);
+
+        return $this;
     }
 
     /**
      * Write output to console browser.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function debug($obj)
     {
         $this->method(self::LOG, $obj);
+
+        return $this;
     }
 
     /**
      * Write output to console browser in table format.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function table($obj)
     {
         $this->method('table', $obj);
+
+        return $this;
     }
 
     /**
      * Write output to console browser in info logging method.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function info($obj)
     {
         $this->method('info', $obj);
+
+        return $this;
     }
 
     /**
      * Write output to console browser in warning logging method.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function warn($obj)
     {
         $this->method('warn', $obj);
+
+        return $this;
     }
 
     /**
      * Write output to console browser in error logging method.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function error($obj)
     {
         $this->method('error', $obj);
+
+        return $this;
     }
 
     /**
      * Write output to console browser in stack trace.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function trace($obj)
     {
         $this->method('trace', $obj);
+
+        return $this;
     }
 
     /**
      * Write output to console browser in a nice formatted way.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function dir($obj)
     {
         $this->method('dir', $obj);
+
+        return $this;
     }
 
     /**
      * Write output to console browser in a DOM element’s markup.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function dirxml($obj)
     {
         $this->method('dirxml', $obj);
+
+        return $this;
     }
 
     /**
      * Write output to console browser in an easy way to
      * run simple assertion tests.
      *
-     * @var object[array]|string[array] $args
+     * @param array<int, mixed> $args
+     *
+     * @return self
      */
     public function assert(...$args)
     {
@@ -139,75 +177,103 @@ class Console
 
         // Stop buffering
         ob_end_clean();
+
+        return $this;
     }
 
     /**
      * Clear the console.
+     *
+     * @return self
      */
     public function clear()
     {
         unset($_SESSION[self::CONSOLE_LOG]);
+
+        return $this;
     }
 
     /**
      * This method is used to count the number of times it has been invoked
      * with the same provided label.
      *
-     * @var string|null $obj
+     * @param string|null $name
+     *
+     * @return self
      */
     public function count(?string $name = 'even')
     {
         $this->method('count', $name);
+
+        return $this;
     }
 
     /**
      * Start a timer with this method.
      * Optionally the time can have a label.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function time($obj)
     {
         $this->method('time', $obj);
+
+        return $this;
     }
 
     /**
      * Finish a timer with this method.
      * Optionally the time can have a label.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function timeend($obj)
     {
         $this->method('timeEnd', $obj);
+
+        return $this;
     }
 
     /**
      * Use this method to group console messages together
      * with an optional label.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function group($obj)
     {
         $this->method('group', $obj);
+
+        return $this;
     }
 
     /**
      * Use this method to end an group of the console messages.
      *
-     * @var object|string $obj
+     * @param mixed $obj
+     *
+     * @return self
      */
     public function groupend($obj = null)
     {
         $this->method('groupEnd', $obj);
+
+        return $this;
     }
 
     /**
      * Write output to console browser.
      *
-     * @var string        $method
-     * @var object|string $obj
+     * @param string        $method
+     * @param mixed $obj
+     *
+     * @return void
      */
     private function method(string $method, $obj)
     {

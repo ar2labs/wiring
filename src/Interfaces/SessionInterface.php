@@ -39,6 +39,8 @@ interface SessionInterface
      * Remove a session key.
      *
      * @param string $key
+     *
+     * @return bool
      */
     public static function forget(string $key);
 }

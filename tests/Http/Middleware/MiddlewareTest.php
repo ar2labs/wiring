@@ -21,6 +21,8 @@ final class MiddlewareTest extends TestCase
     /**
      * @runInSeparateProcess
      * @throws \Exception
+     *
+     * @return void
      */
     public function testEmitterMiddleware()
     {
@@ -87,6 +89,8 @@ final class MiddlewareTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testRouteMiddleware()
     {
@@ -109,11 +113,17 @@ final class MiddlewareTest extends TestCase
         );
     }
 
+    /**
+     * @return mixed
+     */
     private function createEmitterMock()
     {
         return $this->createMock(EmitterInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createRequestMock()
     {
         return $this->getMockBuilder(ServerRequestInterface::class)
@@ -124,33 +134,53 @@ final class MiddlewareTest extends TestCase
             ->getMock();
     }
 
+    /**
+     * @return mixed
+     */
     private function createResponseMock()
     {
         return $this->createMock(ResponseInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createStreamMock()
     {
         return $this->createMock(StreamInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createRequestHandlerMock()
     {
         return $this->createMock(RequestHandlerInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createRouteMock()
     {
         return $this->createMock(RouterInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createResponseFactoryMock()
     {
         return $this->createMock(ResponseFactoryInterface::class);
     }
 
-    protected function header($string)
+    /**
+     * @param string $header
+     *
+     * @return mixed
+     */
+    protected function header($header)
     {
-        header($string);
+        header($header);
     }
 }
