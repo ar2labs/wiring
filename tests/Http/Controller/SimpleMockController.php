@@ -9,6 +9,9 @@ use Wiring\Http\Controller\AbstractViewController;
 
 class SimpleMockController extends AbstractViewController
 {
+    /**
+     * @return ResponseInterface
+     */
     public function indexAction(): ResponseInterface
     {
         return $this->response;

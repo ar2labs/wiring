@@ -13,6 +13,9 @@ use Wiring\Http\Exception\UnauthorizedException;
 
 class ExceptionsTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testExceptions()
     {
         $exception = new BadRequestException();
@@ -59,11 +62,17 @@ class ExceptionsTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $exception->buildResponse($response));
     }
 
+    /**
+     * @return mixed
+     */
     private function createResponseMock()
     {
         return $this->createMock(ResponseInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createStreamMock()
     {
         return $this->createMock(StreamInterface::class);

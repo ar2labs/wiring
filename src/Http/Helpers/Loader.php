@@ -6,7 +6,10 @@ namespace Wiring\Http\Helpers;
 
 class Loader
 {
+    /** @var array $path */
     protected $path = [];
+
+    /** @var array filetypes */
     protected $filetypes;
 
     /**
@@ -23,10 +26,14 @@ class Loader
      * Add paths to load.
      *
      * @param string $path
+     *
+     * @return self
      */
     public function addPath(string $path)
     {
         $this->path[] = $path;
+
+        return $this;
     }
 
     /**

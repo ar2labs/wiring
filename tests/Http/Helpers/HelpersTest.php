@@ -20,34 +20,38 @@ final class HelpersTest extends TestCase
 {
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testConsole()
     {
         $console = new Console();
 
-        $this->assertNull($console->log('test'));
-        $this->assertNull($console->log(new \stdClass()));
-        $this->assertNull($console->debug('test'));
-        $this->assertNull($console->table('test'));
-        $this->assertNull($console->info('test'));
-        $this->assertNull($console->warn('test'));
-        $this->assertNull($console->error('test'));
-        $this->assertNull($console->trace('test'));
-        $this->assertNull($console->dir(['test' => '123']));
-        $this->assertNull($console->dirxml(['test' => '123']));
-        $this->assertNull($console->assert('test', '123'));
-        $this->assertNull($console->assert(true));
-        $this->assertNull($console->clear());
-        $this->assertNull($console->count());
-        $this->assertNull($console->time('test'));
-        $this->assertNull($console->timeend('test'));
-        $this->assertNull($console->group('test'));
-        $this->assertNull($console->groupend('test'));
+        $this->assertInstanceOf(Console::class, $console->log('test'));
+        $this->assertInstanceOf(Console::class, $console->log(new \stdClass()));
+        $this->assertInstanceOf(Console::class, $console->debug('test'));
+        $this->assertInstanceOf(Console::class, $console->table('test'));
+        $this->assertInstanceOf(Console::class, $console->info('test'));
+        $this->assertInstanceOf(Console::class, $console->warn('test'));
+        $this->assertInstanceOf(Console::class, $console->error('test'));
+        $this->assertInstanceOf(Console::class, $console->trace('test'));
+        $this->assertInstanceOf(Console::class, $console->dir(['test' => '123']));
+        $this->assertInstanceOf(Console::class, $console->dirxml(['test' => '123']));
+        $this->assertInstanceOf(Console::class, $console->assert('test', '123'));
+        $this->assertInstanceOf(Console::class, $console->assert(true));
+        $this->assertInstanceOf(Console::class, $console->clear());
+        $this->assertInstanceOf(Console::class, $console->count());
+        $this->assertInstanceOf(Console::class, $console->time('test'));
+        $this->assertInstanceOf(Console::class, $console->timeend('test'));
+        $this->assertInstanceOf(Console::class, $console->group('test'));
+        $this->assertInstanceOf(Console::class, $console->groupend('test'));
     }
 
     /**
      * @runInSeparateProcess
      * @throws \Exception
+     *
+     * @return void
      */
     public function testCookie()
     {
@@ -62,6 +66,8 @@ final class HelpersTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testInfo()
     {
@@ -72,17 +78,21 @@ final class HelpersTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testLoader()
     {
         $loader = new Loader();
 
-        $this->assertNull($loader->addPath('test'));
+        $this->assertInstanceOf(Loader::class, $loader->addPath('test'));
         $this->assertIsArray($loader->load());
     }
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testMailer()
     {
@@ -101,8 +111,8 @@ final class HelpersTest extends TestCase
         $mailer = new Mailer($mailerMock, $container);
         $message = new Message($mailerMock);
 
-        $this->assertNull($message->to('test@gmail.com'));
-        $this->assertNull($message->subject('test'));
+        $this->assertInstanceOf(Message::class, $message->to('test@gmail.com'));
+        $this->assertInstanceOf(Message::class, $message->subject('test'));
 
         $this->assertIsBool($mailer->send('template', [
             'test' => '123',
@@ -111,25 +121,40 @@ final class HelpersTest extends TestCase
         }));
     }
 
+    /**
+     * @throws \Exception
+     *
+     * @return void
+     */
     public function testSession()
     {
         $this->assertIsString(Session::set('test', '123'));
         $this->assertIsBool(Session::has('test'));
         $this->assertIsString(Session::get('test'));
         $this->assertIsString(Session::get('test2'));
-        $this->assertNull(Session::forget('test'));
+        $this->assertIsBool(Session::forget('test'));
+        $this->assertIsBool(Session::forget('test2'));
     }
 
+    /**
+     * @return mixed
+     */
     private function createMailerMock()
     {
         return $this->createMock(MailerInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createContainerMock()
     {
         return $this->createMock(ContainerInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createViewStrategyMock()
     {
         return $this->createMock(ViewStrategyInterface::class);

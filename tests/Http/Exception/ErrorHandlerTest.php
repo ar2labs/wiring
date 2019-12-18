@@ -11,6 +11,9 @@ use Wiring\Http\Exception\ErrorHandler;
 
 class ErrorHandlerTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testErrorHandler()
     {
         // Debug mode test
@@ -37,6 +40,9 @@ class ErrorHandlerTest extends TestCase
         $this->assertIsBool($errorHandlerJSON->isJson());
     }
 
+    /**
+     * @return mixed
+     */
     private function createRequestMock()
     {
         return $this->getMockBuilder(ServerRequestInterface::class)
@@ -47,11 +53,17 @@ class ErrorHandlerTest extends TestCase
             ->getMock();
     }
 
+    /**
+     * @return mixed
+     */
     private function createResponseMock()
     {
         return $this->createMock(ResponseInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createLoggerMock()
     {
         return $this->createMock(LoggerInterface::class);

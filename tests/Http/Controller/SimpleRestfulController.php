@@ -9,6 +9,9 @@ use Wiring\Http\Controller\AbstractRestfulController;
 
 class SimpleRestfulController extends AbstractRestfulController
 {
+    /**
+     * @return ResponseInterface
+     */
     public function indexAction(): ResponseInterface
     {
         return $this->response;

@@ -9,6 +9,9 @@ use Wiring\Http\Controller\AbstractJsonController;
 
 class SimpleJsonController extends AbstractJsonController
 {
+    /**
+     * @return ResponseInterface
+     */
     public function indexAction(): ResponseInterface
     {
         return $this->response;

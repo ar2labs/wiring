@@ -26,6 +26,8 @@ final class ControllerTest extends TestCase
 {
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testSimpleController()
     {
@@ -68,6 +70,8 @@ final class ControllerTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testJsonViewController()
     {
@@ -106,6 +110,8 @@ final class ControllerTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testJsonController()
     {
@@ -165,6 +171,8 @@ final class ControllerTest extends TestCase
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testRestfulController()
     {
@@ -209,16 +217,25 @@ final class ControllerTest extends TestCase
         $this->assertIsArray($controller->fail());
     }
 
+    /**
+     * @return mixed
+     */
     private function createContainerMock()
     {
         return $this->createMock(ContainerInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createViewStrategyMock()
     {
         return $this->createMock(ViewStrategyInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createRequestMock()
     {
         return $this->getMockBuilder(ServerRequestInterface::class)
@@ -229,16 +246,25 @@ final class ControllerTest extends TestCase
             ->getMock();
     }
 
+    /**
+     * @return mixed
+     */
     private function createRequestHandlerMock()
     {
         return $this->createMock(RequestHandlerInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createResponseMock()
     {
         return $this->createMock(ResponseInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createJsonStrategyMock()
     {
         return $this->getMockBuilder(JsonStrategyInterface::class)
@@ -250,6 +276,9 @@ final class ControllerTest extends TestCase
             ->getMock();
     }
 
+    /**
+     * @return mixed
+     */
     private function createStreamMock()
     {
         return $this->createMock(StreamInterface::class);

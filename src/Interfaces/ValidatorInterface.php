@@ -42,6 +42,8 @@ interface ValidatorInterface
      *
      * @param string $rule
      * @param string $message
+     *
+     * @return void
      */
     public function addRuleMessage($rule, $message);
 
@@ -49,6 +51,8 @@ interface ValidatorInterface
      * Adds custom rule messages.
      *
      * @param array $messages
+     *
+     * @return void
      */
     public function addRuleMessages(array $messages);
 
@@ -58,6 +62,8 @@ interface ValidatorInterface
      * @param string $field
      * @param string $rule
      * @param string $message
+     *
+     * @return void
      */
     public function addFieldMessage($field, $rule, $message);
 
@@ -65,6 +71,8 @@ interface ValidatorInterface
      * Adds custom field messages
      *
      * @param array $messages
+     *
+     * @return void
      */
     public function addFieldMessages(array $messages);
 
@@ -73,6 +81,8 @@ interface ValidatorInterface
      *
      * @param string $name
      * @param \Closure $callback
+     *
+     * @return void
      */
     public function addRule($name, \Closure $callback);
 }

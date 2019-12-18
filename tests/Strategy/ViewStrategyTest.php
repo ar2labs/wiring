@@ -12,6 +12,9 @@ use Psr\Http\Message\StreamInterface;
 
 final class ViewStrategyTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testRender()
     {
         $viewStrategy = new ViewStrategy('test');
@@ -20,6 +23,9 @@ final class ViewStrategyTest extends TestCase
         $this->assertInstanceOf(ViewStrategyInterface::class, $result);
     }
 
+    /**
+     * @return void
+     */
     public function testWrite()
     {
         $viewStrategy = new ViewStrategy('test');
@@ -28,6 +34,9 @@ final class ViewStrategyTest extends TestCase
         $this->assertInstanceOf(ViewStrategyInterface::class, $result);
     }
 
+    /**
+     * @return void
+     */
     public function testEngine()
     {
         $engine = $this->createViewStrategyMock();
@@ -37,6 +46,9 @@ final class ViewStrategyTest extends TestCase
         $this->assertEquals($engine, $result);
     }
 
+    /**
+     * @return void
+     */
     public function testTo()
     {
         $stream = $this->createStreamMock();
@@ -68,16 +80,25 @@ final class ViewStrategyTest extends TestCase
             $viewStrategy->to($response));
     }
 
+    /**
+     * @return mixed
+     */
     private function createViewStrategyMock()
     {
         return $this->createMock(ViewStrategyInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createResponseMock()
     {
         return $this->createMock(ResponseInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createStreamMock()
     {
         return $this->createMock(StreamInterface::class);

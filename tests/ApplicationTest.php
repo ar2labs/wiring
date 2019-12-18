@@ -19,6 +19,8 @@ final class ApplicationTest extends TestCase
 {
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function testInstanceCreated()
     {
@@ -87,31 +89,49 @@ final class ApplicationTest extends TestCase
         }
     }
 
+    /**
+     * @return mixed
+     */
     private function createContainerMock()
     {
         return $this->createMock(ContainerInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createServerRequestMock()
     {
         return $this->createMock(ServerRequestInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createResponseMock()
     {
         return $this->createMock(ResponseInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createMiddlewareMock()
     {
         return $this->createMock(MiddlewareInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createStreamMock()
     {
         return $this->createMock(StreamInterface::class);
     }
 
+    /**
+     * @return mixed
+     */
     private function createErrorHandlerMock()
     {
         return $this->createMock(ErrorHandlerInterface::class);
