@@ -72,6 +72,31 @@ final class MiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class,
             $emitterMiddleware->emit($response));
 
+        // Status Code != 200
+        $response = $this->createResponseMock();
+        $response->method('getHeaders')
+            ->willReturn(['Set-Cookie' => ['0']]);
+
+        $response->method('getProtocolVersion')
+            ->willReturn('1.1');
+
+        $response->method('getStatusCode')
+            ->willReturn(401);
+
+        $response->method('getReasonPhrase')
+            ->willReturn('OK');
+
+        $stream = $this->createStreamMock();
+        $stream->method('isSeekable')
+            ->willReturn(true);
+
+        $response->method('getBody')
+            ->willReturn($stream);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf(ResponseInterface::class,
+                $emitterMiddleware->emit($response));
+
         // Without emitter
         $emitterMiddleware = new EmitterMiddleware();
 

@@ -129,9 +129,12 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
             $this->logger->error($this->exception->getMessage(), $this->loggerContext);
         }
 
-        $this->isJson = isset($type[0]) && $type[0] == self::APP_JSON;
+        if ($this->response->getStatusCode()) {
+            // Set the HTTP response code
+            http_response_code($this->response->getStatusCode());
+        }
 
-        $this->response->withStatus($this->getStatusCode());
+        $this->isJson = isset($type[0]) && $type[0] == self::APP_JSON;
 
         if ($this->isJson) {
             // Return error message to JSON
@@ -163,25 +166,6 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
     }
 
     /**
-     * Get status code.
-     *
-     * @return int
-     */
-    private function getStatusCode(int $statusCode = 400): int
-    {
-        // Get exception code
-        $code = $this->exception->getCode() ?? 0;
-
-        // Check default interval code
-        if (($code >= 100) && ($code <= 500)) {
-            $statusCode = $code;
-        }
-
-        return method_exists($this->exception, 'getStatusCode') ?
-            $this->exception->getStatusCode() : $statusCode;
-    }
-
-    /**
      * Return error message to HTML params.
      *
      * @param string $message
@@ -194,10 +178,8 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         $this->response->withHeader(self::CONTENT_TYPE, self::APP_HTML);
 
         $message = sprintf('<span>%s</span>', htmlentities($message));
-        $statusCode = $this->getStatusCode();
 
         $error = [
-            self::ERROR_CODE => $statusCode,
             self::ERROR_TYPE => get_class($this->exception),
             self::ERROR_MESSAGE => $message,
         ];
@@ -209,7 +191,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
             $trace = sprintf('<pre>%s</pre>', htmlentities($trace));
 
             $error[self::ERROR_MESSAGE] = $message;
-            $error[self::ERROR_CODE] = $statusCode;
+            $error[self::ERROR_CODE] = $this->exception->getCode();
             $error[self::ERROR_FILE] = $this->exception->getFile();
             $error[self::ERROR_LINE] = $this->exception->getLine();
             $error[self::ERROR_TRACE] = $trace;
@@ -234,10 +216,8 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         $this->response->withHeader(self::CONTENT_TYPE, self::APP_JSON);
 
         $error = [
-            self::ERROR_CODE => $this->getStatusCode(),
-            self::ERROR_STATUS => 'error',
+            self::ERROR_STATUS => false,
             self::ERROR_MESSAGE => $message,
-            self::ERROR_DATA => [],
         ];
 
         // Debug mode
