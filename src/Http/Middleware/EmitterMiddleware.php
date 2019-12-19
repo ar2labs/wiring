@@ -81,16 +81,31 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
             }
         }
 
+        // Get Protocol Version
+        $protocolVersion = $response->getProtocolVersion() != '' ?
+            $response->getProtocolVersion() :
+            $_SERVER['SERVER_PROTOCOL'];
+
+        // Get Status Code
+        $statusCode = $response->getStatusCode() != 200 ?
+            $response->getStatusCode() :
+            (int) http_response_code();
+
+        // Get Reason Phrase
+        $reasonPhrase = $response->getReasonPhrase() != '' ?
+            $response->getReasonPhrase() :
+         'Internal Server Error';
+
         // Send a raw HTTP header
         header(sprintf(
             'HTTP/%s %s %s',
-            $response->getProtocolVersion(),
-            $response->getStatusCode(),
-            $response->getReasonPhrase()
-        ), true, $response->getStatusCode());
+            $protocolVersion,
+            $statusCode,
+            $reasonPhrase
+        ), true, $statusCode);
 
         // Checks no content is false
-        if (in_array($response->getStatusCode(), [204, 205, 304]) === false) {
+        if (in_array($statusCode, [204, 205, 304]) === false) {
             // Gets the body as a stream
             $stream = $response->getBody();
 

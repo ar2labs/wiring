@@ -22,6 +22,9 @@ class ErrorHandlerTest extends TestCase
             ->willReturn(['1']);
 
         $response = $this->createResponseMock();
+        $response->method('getStatusCode')
+            ->willReturn(200);
+
         $exception = new Exception('Not Found', 404);
         $logger = $this->createLoggerMock();
 
