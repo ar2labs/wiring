@@ -61,14 +61,55 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
     }
 
     /**
-     * Emits a response via the header() function, and the body content
-     * via the output buffer.
+     * Emits a response with the body content via the output buffer.
      *
      * @param ResponseInterface $response
      *
      * @return ResponseInterface
      */
     public function emit(ResponseInterface $response): ResponseInterface
+    {
+        // Emits a response via the header()
+        $statusCode = $this->emitHeader($response);
+
+        // Checks no content is false
+        if (in_array($statusCode, [204, 205, 304]) === false) {
+            // Gets the body as a stream
+            $stream = $response->getBody();
+
+            // Returns whether or not the stream is seekable
+            if ($stream->isSeekable()) {
+                // Seek to the beginning of the stream
+                $stream->rewind();
+            }
+
+            // Get stream lenght
+            $streamLenght = (!$response->getHeaderLine('Content-Length')) ?
+                (int) $stream->getSize() :
+                (int) $response->getHeaderLine('Content-Length');
+
+            // While the stream is not the end of the stream and lenght > 0
+            while (!$stream->eof()) {
+                // Output one or more strings
+                echo $stream->read($streamLenght);
+                // Check stream lenght
+                if ($streamLenght <= 0) {
+                    break;
+                }
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * Emits a response via the header() function.
+     *
+     * @param ResponseInterface $response
+     *
+     * @return int Status Code
+     */
+    private function emitHeader(ResponseInterface $response)
     {
         // Retrieves all message header values
         foreach ($response->getHeaders() as $name => $values) {
@@ -104,33 +145,6 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
             $reasonPhrase
         ), true, $statusCode);
 
-        // Checks no content is false
-        if (in_array($statusCode, [204, 205, 304]) === false) {
-            // Gets the body as a stream
-            $stream = $response->getBody();
-
-            // Returns whether or not the stream is seekable
-            if ($stream->isSeekable()) {
-                // Seek to the beginning of the stream
-                $stream->rewind();
-            }
-
-            // Get stream lenght
-            $streamLenght = (!$response->getHeaderLine('Content-Length')) ?
-                (int) $stream->getSize() :
-                (int) $response->getHeaderLine('Content-Length');
-
-            // While the stream is not the end of the stream and lenght > 0
-            while (!$stream->eof()) {
-                // Output one or more strings
-                echo $stream->read($streamLenght);
-                // Check stream lenght
-                if ($streamLenght <= 0) {
-                    break;
-                }
-            }
-        }
-
-        return $response;
+        return $statusCode;
     }
 }
