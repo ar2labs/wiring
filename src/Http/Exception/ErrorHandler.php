@@ -113,7 +113,8 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         $mode = $this->request->getHeader(self::DEBUG_MODE);
 
         // Get debug mode from header
-        if ((is_array($mode)) && ($mode[0] == '0' || $mode[0] == '1')) {
+        if ((is_array($mode)) && (array_key_exists('0', $mode)) &&
+            ($mode[0] == '0' || $mode[0] == '1')) {
             $this->debug = (bool) $mode[0];
         }
 
