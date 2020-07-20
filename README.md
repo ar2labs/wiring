@@ -70,7 +70,6 @@ This package is compliant with [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR
 
 The following versions of PHP are supported by this version.
 
-* PHP 7.1
 * PHP 7.2
 * PHP 7.3
 * PHP 7.4
