@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Wiring\Tests\Traits;
 
 use Wiring\Interfaces\ContainerAwareInterface;
-use Wiring\Traits\CookieAwareTrait;
 use Wiring\Traits\ContainerAwareTrait;
+use Wiring\Traits\CookieAwareTrait;
 
 class SimpleCookieAware implements ContainerAwareInterface
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Exception;
 
-use Wiring\Interfaces\HttpExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
+use Wiring\Interfaces\HttpExceptionInterface;
 
 class HttpException extends \Exception implements HttpExceptionInterface
 {

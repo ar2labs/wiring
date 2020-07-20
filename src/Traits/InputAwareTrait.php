@@ -20,8 +20,12 @@ trait InputAwareTrait
     public function input(ServerRequestInterface $request, bool $isArray = false)
     {
         $header = $request->getHeader('content-type');
-        $type = (string) $header[0];
+        $type = '';
         $content = $request->getBody()->getContents();
+
+        if (isset($header[0])) {
+            $type = (string) $header[0];
+        }
 
         if ((strpos($type, 'multipart/form-data') !== false) ||
             (strpos($type, 'application/x-www-form-urlencoded') !== false)) {

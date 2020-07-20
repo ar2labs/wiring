@@ -6,20 +6,20 @@ namespace Wiring\Http\Controller;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Wiring\Interfaces\RouteInterface;
+use Throwable;
 use Wiring\Http\Exception\MethodNotAllowedException;
 use Wiring\Http\Exception\NotFoundException;
 use Wiring\Interfaces\ContainerAwareInterface;
 use Wiring\Interfaces\ControllerInterface;
 use Wiring\Interfaces\ResponseAwareInterface;
+use Wiring\Interfaces\RouteInterface;
 use Wiring\Strategy\AbstractStrategy;
 use Wiring\Traits\ContainerAwareTrait;
 use Wiring\Traits\DatabaseAwareTrait;
 use Wiring\Traits\ResponseAwareTrait;
-use Throwable;
 
 abstract class AbstractController extends AbstractStrategy implements
     ContainerAwareInterface,
@@ -147,7 +147,7 @@ abstract class AbstractController extends AbstractStrategy implements
      */
     public function getThrowableHandler(): MiddlewareInterface
     {
-        return new class implements MiddlewareInterface {
+        return new class() implements MiddlewareInterface {
             /**
              * {@inheritdoc}
              *

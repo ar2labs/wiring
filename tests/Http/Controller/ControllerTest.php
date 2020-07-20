@@ -59,9 +59,11 @@ final class ControllerTest extends TestCase
 
             $notAllowed = new MethodNotAllowedException();
 
-            $this->assertInstanceOf(MiddlewareInterface::class,
+            $this->assertInstanceOf(
+                MiddlewareInterface::class,
                 $controller->getMethodNotAllowedDecorator($notAllowed)
-                    ->process($request, $requestHandler));
+                    ->process($request, $requestHandler)
+            );
         } catch (MethodNotAllowedException $e) {
             $this->assertInstanceOf(MethodNotAllowedException::class, $e);
             $this->assertEquals('Method Not Allowed', $e->getMessage());

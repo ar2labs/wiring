@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Wiring\Tests\Strategy;
 
-use Wiring\Strategy\ViewStrategy;
-use Wiring\Interfaces\ViewStrategyInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Wiring\Interfaces\ViewStrategyInterface;
+use Wiring\Strategy\ViewStrategy;
 
 final class ViewStrategyTest extends TestCase
 {
@@ -68,16 +68,20 @@ final class ViewStrategyTest extends TestCase
         $viewStrategy = new ViewStrategy($engine);
         $viewStrategy->write('test');
 
-        $this->assertInstanceOf(ResponseInterface::class,
-            $viewStrategy->to($response));
+        $this->assertInstanceOf(
+            ResponseInterface::class,
+            $viewStrategy->to($response)
+        );
 
         $engine->method('render')
             ->willReturn('test');
 
         $viewStrategy->render('test');
 
-        $this->assertInstanceOf(ResponseInterface::class,
-            $viewStrategy->to($response));
+        $this->assertInstanceOf(
+            ResponseInterface::class,
+            $viewStrategy->to($response)
+        );
     }
 
     /**

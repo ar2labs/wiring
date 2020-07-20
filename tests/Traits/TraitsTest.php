@@ -46,10 +46,14 @@ final class TraitsTest extends TestCase
         $simpleAuthAware->setContainer($container);
         $simpleAuthAware->setAuth($auth);
 
-        $this->assertInstanceOf(AuthInterface::class,
-            $simpleAuthAware->getAuth());
-        $this->assertInstanceOf(AuthInterface::class,
-            $simpleAuthAware->auth());
+        $this->assertInstanceOf(
+            AuthInterface::class,
+            $simpleAuthAware->getAuth()
+        );
+        $this->assertInstanceOf(
+            AuthInterface::class,
+            $simpleAuthAware->auth()
+        );
 
         // States that auth interface has not been implemented
         $container = $this->createContainerMock();
@@ -60,8 +64,10 @@ final class TraitsTest extends TestCase
         $simpleAuthAware->setContainer($container);
 
         try {
-            $this->assertInstanceOf(Exception::class,
-                $simpleAuthAware->auth());
+            $this->assertInstanceOf(
+                Exception::class,
+                $simpleAuthAware->auth()
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
             $this->assertEquals('Auth interface not implemented.', $e->getMessage());
@@ -91,10 +97,14 @@ final class TraitsTest extends TestCase
         $simpleConfigAware->setContainer($container);
         $simpleConfigAware->setConfig($config);
 
-        $this->assertInstanceOf(ConfigInterface::class,
-            $simpleConfigAware->getConfig());
-        $this->assertInstanceOf(ConfigInterface::class,
-            $simpleConfigAware->config());
+        $this->assertInstanceOf(
+            ConfigInterface::class,
+            $simpleConfigAware->getConfig()
+        );
+        $this->assertInstanceOf(
+            ConfigInterface::class,
+            $simpleConfigAware->config()
+        );
         $this->assertNull($simpleConfigAware->lang('test'));
 
         // States that config interface has not been implemented
@@ -106,8 +116,10 @@ final class TraitsTest extends TestCase
         $simpleConfigAware->setContainer($container);
 
         try {
-            $this->assertInstanceOf(Exception::class,
-                $simpleConfigAware->config());
+            $this->assertInstanceOf(
+                Exception::class,
+                $simpleConfigAware->config()
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
             $this->assertEquals('Config interface not implemented.', $e->getMessage());
@@ -137,10 +149,14 @@ final class TraitsTest extends TestCase
         $simpleConsoleAware->setContainer($container);
         $simpleConsoleAware->setConsole($console);
 
-        $this->assertInstanceOf(ConsoleInterface::class,
-            $simpleConsoleAware->getConsole());
-        $this->assertInstanceOf(ConsoleInterface::class,
-            $simpleConsoleAware->console());
+        $this->assertInstanceOf(
+            ConsoleInterface::class,
+            $simpleConsoleAware->getConsole()
+        );
+        $this->assertInstanceOf(
+            ConsoleInterface::class,
+            $simpleConsoleAware->console()
+        );
 
         // States that console interface has not been implemented
         $container = $this->createContainerMock();
@@ -151,8 +167,10 @@ final class TraitsTest extends TestCase
         $simpleConsoleAware->setContainer($container);
 
         try {
-            $this->assertInstanceOf(Exception::class,
-                $simpleConsoleAware->console());
+            $this->assertInstanceOf(
+                Exception::class,
+                $simpleConsoleAware->console()
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
             $this->assertEquals('Console interface not implemented.', $e->getMessage());
@@ -170,16 +188,20 @@ final class TraitsTest extends TestCase
         $simpleContainerAware->getContainer();
 
         try {
-            $this->assertInstanceOf(BadMethodCallException::class,
-                $simpleContainerAware->get('test'));
+            $this->assertInstanceOf(
+                BadMethodCallException::class,
+                $simpleContainerAware->get('test')
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(BadMethodCallException::class, $e);
             $this->assertEquals('Method get does not exist.', $e->getMessage());
         }
 
         try {
-            $this->assertInstanceOf(BadMethodCallException::class,
-                $simpleContainerAware->has('test'));
+            $this->assertInstanceOf(
+                BadMethodCallException::class,
+                $simpleContainerAware->has('test')
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(BadMethodCallException::class, $e);
             $this->assertEquals('Method has does not exist.', $e->getMessage());
@@ -209,10 +231,14 @@ final class TraitsTest extends TestCase
         $simpleCookieAware->setContainer($container);
         $simpleCookieAware->setCookie($cookie);
 
-        $this->assertInstanceOf(CookieInterface::class,
-            $simpleCookieAware->getCookie());
-        $this->assertInstanceOf(CookieInterface::class,
-            $simpleCookieAware->cookie());
+        $this->assertInstanceOf(
+            CookieInterface::class,
+            $simpleCookieAware->getCookie()
+        );
+        $this->assertInstanceOf(
+            CookieInterface::class,
+            $simpleCookieAware->cookie()
+        );
 
         // States that cookie interface has not been implemented
         $container = $this->createContainerMock();
@@ -223,8 +249,10 @@ final class TraitsTest extends TestCase
         $simpleCookieAware->setContainer($container);
 
         try {
-            $this->assertInstanceOf(Exception::class,
-                $simpleCookieAware->cookie());
+            $this->assertInstanceOf(
+                Exception::class,
+                $simpleCookieAware->cookie()
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
             $this->assertEquals('Cookie interface not implemented.', $e->getMessage());
@@ -253,8 +281,10 @@ final class TraitsTest extends TestCase
 
         $simpleDatabaseAware->setContainer($container);
 
-        $this->assertInstanceOf(DatabaseInterface::class,
-            $simpleDatabaseAware->database());
+        $this->assertInstanceOf(
+            DatabaseInterface::class,
+            $simpleDatabaseAware->database()
+        );
 
         $database = $this->createDatabaseMockBuilder();
         $database->method('database')
@@ -279,8 +309,10 @@ final class TraitsTest extends TestCase
             ->with(DatabaseInterface::class)
             ->willReturn($database);
 
-        $this->assertInstanceOf(DatabaseInterface::class,
-            $simpleDatabaseAware->database('default'));
+        $this->assertInstanceOf(
+            DatabaseInterface::class,
+            $simpleDatabaseAware->database('default')
+        );
 
         // States that database interface has not been implemented
         $container = $this->createContainerMock();
@@ -291,8 +323,10 @@ final class TraitsTest extends TestCase
         $simpleDatabaseAware->setContainer($container);
 
         try {
-            $this->assertInstanceOf(Exception::class,
-                $simpleDatabaseAware->database());
+            $this->assertInstanceOf(
+                Exception::class,
+                $simpleDatabaseAware->database()
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
             $this->assertEquals('Database interface not implemented.', $e->getMessage());
@@ -322,10 +356,14 @@ final class TraitsTest extends TestCase
         $simpleFlashAware->setContainer($container);
         $simpleFlashAware->setFlash($flash);
 
-        $this->assertInstanceOf(FlashInterface::class,
-            $simpleFlashAware->getFlash());
-        $this->assertInstanceOf(FlashInterface::class,
-            $simpleFlashAware->flash());
+        $this->assertInstanceOf(
+            FlashInterface::class,
+            $simpleFlashAware->getFlash()
+        );
+        $this->assertInstanceOf(
+            FlashInterface::class,
+            $simpleFlashAware->flash()
+        );
 
         // States that flash interface has not been implemented
         $container = $this->createContainerMock();
@@ -336,8 +374,10 @@ final class TraitsTest extends TestCase
         $simpleFlashAware->setContainer($container);
 
         try {
-            $this->assertInstanceOf(Exception::class,
-                $simpleFlashAware->flash());
+            $this->assertInstanceOf(
+                Exception::class,
+                $simpleFlashAware->flash()
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
             $this->assertEquals('Flash interface not implemented.', $e->getMessage());
@@ -367,10 +407,14 @@ final class TraitsTest extends TestCase
         $simpleHashAware->setContainer($container);
         $simpleHashAware->setHash($hash);
 
-        $this->assertInstanceOf(HashInterface::class,
-            $simpleHashAware->getHash());
-        $this->assertInstanceOf(HashInterface::class,
-            $simpleHashAware->hash());
+        $this->assertInstanceOf(
+            HashInterface::class,
+            $simpleHashAware->getHash()
+        );
+        $this->assertInstanceOf(
+            HashInterface::class,
+            $simpleHashAware->hash()
+        );
 
         // States that hash interface has not been implemented
         $container = $this->createContainerMock();
@@ -381,8 +425,10 @@ final class TraitsTest extends TestCase
         $simpleHashAware->setContainer($container);
 
         try {
-            $this->assertInstanceOf(Exception::class,
-                $simpleHashAware->hash());
+            $this->assertInstanceOf(
+                Exception::class,
+                $simpleHashAware->hash()
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
             $this->assertEquals('Hash interface not implemented.', $e->getMessage());
@@ -473,10 +519,14 @@ final class TraitsTest extends TestCase
         $simpleLoggerAware->setContainer($container);
         $simpleLoggerAware->setLogger($logger);
 
-        $this->assertInstanceOf(LoggerInterface::class,
-            $simpleLoggerAware->getLogger());
-        $this->assertInstanceOf(LoggerInterface::class,
-            $simpleLoggerAware->logger());
+        $this->assertInstanceOf(
+            LoggerInterface::class,
+            $simpleLoggerAware->getLogger()
+        );
+        $this->assertInstanceOf(
+            LoggerInterface::class,
+            $simpleLoggerAware->logger()
+        );
 
         // States that logger interface has not been implemented
         $container = $this->createContainerMock();
@@ -487,8 +537,10 @@ final class TraitsTest extends TestCase
         $simpleLoggerAware->setContainer($container);
 
         try {
-            $this->assertInstanceOf(Exception::class,
-                $simpleLoggerAware->logger());
+            $this->assertInstanceOf(
+                Exception::class,
+                $simpleLoggerAware->logger()
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
             $this->assertEquals('Logger interface not implemented.', $e->getMessage());
@@ -518,10 +570,14 @@ final class TraitsTest extends TestCase
         $simpleValidatorAware->setContainer($container);
         $simpleValidatorAware->setValidator($validator);
 
-        $this->assertInstanceOf(ValidatorInterface::class,
-            $simpleValidatorAware->getValidator());
-        $this->assertInstanceOf(ValidatorInterface::class,
-            $simpleValidatorAware->validator());
+        $this->assertInstanceOf(
+            ValidatorInterface::class,
+            $simpleValidatorAware->getValidator()
+        );
+        $this->assertInstanceOf(
+            ValidatorInterface::class,
+            $simpleValidatorAware->validator()
+        );
 
         // States that validator interface has not been implemented
         $container = $this->createContainerMock();
@@ -532,8 +588,10 @@ final class TraitsTest extends TestCase
         $simpleValidatorAware->setContainer($container);
 
         try {
-            $this->assertInstanceOf(Exception::class,
-                $simpleValidatorAware->validator());
+            $this->assertInstanceOf(
+                Exception::class,
+                $simpleValidatorAware->validator()
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
             $this->assertEquals('Validator interface not implemented.', $e->getMessage());
@@ -563,10 +621,14 @@ final class TraitsTest extends TestCase
         $simpleSessionAware->setContainer($container);
         $simpleSessionAware->setSession($session);
 
-        $this->assertInstanceOf(SessionInterface::class,
-            $simpleSessionAware->getSession());
-        $this->assertInstanceOf(SessionInterface::class,
-            $simpleSessionAware->session());
+        $this->assertInstanceOf(
+            SessionInterface::class,
+            $simpleSessionAware->getSession()
+        );
+        $this->assertInstanceOf(
+            SessionInterface::class,
+            $simpleSessionAware->session()
+        );
 
         // States that session interface has not been implemented
         $container = $this->createContainerMock();
@@ -577,8 +639,10 @@ final class TraitsTest extends TestCase
         $simpleSessionAware->setContainer($container);
 
         try {
-            $this->assertInstanceOf(Exception::class,
-                $simpleSessionAware->session());
+            $this->assertInstanceOf(
+                Exception::class,
+                $simpleSessionAware->session()
+            );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
             $this->assertEquals('Session interface not implemented.', $e->getMessage());

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Wiring;
 
-use Wiring\Interfaces\ApplicationInterface;
-use Wiring\Http\RequestHandler;
 use Psr\Http\Message\ResponseInterface;
+use Wiring\Http\RequestHandler;
+use Wiring\Interfaces\ApplicationInterface;
 
 class Application extends RequestHandler implements ApplicationInterface
 {

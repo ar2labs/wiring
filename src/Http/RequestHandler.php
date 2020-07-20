@@ -8,12 +8,12 @@ use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Throwable;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
 use Wiring\Http\Exception\BadRequestException;
-use Wiring\Interfaces\ErrorHandlerInterface;
 use Wiring\Http\Exception\ErrorHandler;
+use Wiring\Interfaces\ErrorHandlerInterface;
 
 /**
  * Handles a server request and produces a response.
@@ -23,9 +23,9 @@ use Wiring\Http\Exception\ErrorHandler;
  */
 class RequestHandler implements RequestHandlerInterface
 {
-    const KEY = 'key';
-    const AFTER = 'after';
-    const MIDDLEWARE = 'middleware';
+    public const KEY = 'key';
+    public const AFTER = 'after';
+    public const MIDDLEWARE = 'middleware';
 
     /**
      * @var ContainerInterface
