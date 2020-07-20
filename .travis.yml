@@ -34,8 +34,6 @@ script:
   - vendor/bin/php-cs-fixer fix --config=php_cs.dist --no-interaction
   - vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover=coverage-report.clover --log-junit=test-report.xml --colors
   - vendor/bin/phpstan analyse src tests --level=max --no-progress
-  # sonar only on non-PRs & branch master
-  - 'if [[ ${TRAVIS_PULL_REQUEST} == "false" && ${TRAVIS_BRANCH} == "master" ]]; then sonar-scanner; fi'
 
 after_success:
   - vendor/bin/php-coveralls --coverage_clover=coverage-report.clover -v
