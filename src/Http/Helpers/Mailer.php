@@ -2,9 +2,9 @@
 
 namespace Wiring\Http\Helpers;
 
+use Psr\Container\ContainerInterface;
 use Wiring\Http\Helpers\Mailtrap\Message;
 use Wiring\Interfaces\ViewStrategyInterface;
-use Psr\Container\ContainerInterface;
 
 class Mailer
 {

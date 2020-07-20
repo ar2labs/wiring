@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Middleware;
 
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Wiring\Interfaces\EmitterInterface;
 
 class EmitterMiddleware implements EmitterInterface, MiddlewareInterface

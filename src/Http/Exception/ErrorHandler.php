@@ -13,25 +13,25 @@ use Wiring\Interfaces\ErrorHandlerInterface;
 class ErrorHandler extends \Exception implements ErrorHandlerInterface
 {
     // Define constants error
-    const ERROR_CODE = 'code';
-    const ERROR_TYPE = 'type';
-    const ERROR_STATUS = 'status';
-    const ERROR_TITLE = 'title';
-    const ERROR_MESSAGE = 'message';
-    const ERROR_DATA = 'data';
-    const ERROR_FILE = 'file';
-    const ERROR_LINE = 'line';
-    const ERROR_TRACE = 'trace';
-    const ERROR_DEBUG = 'debug';
+    public const ERROR_CODE = 'code';
+    public const ERROR_TYPE = 'type';
+    public const ERROR_STATUS = 'status';
+    public const ERROR_TITLE = 'title';
+    public const ERROR_MESSAGE = 'message';
+    public const ERROR_DATA = 'data';
+    public const ERROR_FILE = 'file';
+    public const ERROR_LINE = 'line';
+    public const ERROR_TRACE = 'trace';
+    public const ERROR_DEBUG = 'debug';
 
     // Define types & messages
-    const CONTENT_TYPE = 'Content-Type';
-    const APP_JSON = 'application/json';
-    const APP_HTML = 'text/html';
-    const DEBUG_MODE = 'Debug-Mode';
-    const UNDEFINED_MESSAGE = 'Undefined error message.';
-    const DEFAULT_MESSAGE = 'A website error has occurred. Sorry for the temporary inconvenience.';
-    const DEBUG_MESSAGE = 'The application could not run because of the following error:';
+    public const CONTENT_TYPE = 'Content-Type';
+    public const APP_JSON = 'application/json';
+    public const APP_HTML = 'text/html';
+    public const DEBUG_MODE = 'Debug-Mode';
+    public const UNDEFINED_MESSAGE = 'Undefined error message.';
+    public const DEFAULT_MESSAGE = 'A website error has occurred. Sorry for the temporary inconvenience.';
+    public const DEBUG_MESSAGE = 'The application could not run because of the following error:';
 
     /**
      * @var ServerRequestInterface

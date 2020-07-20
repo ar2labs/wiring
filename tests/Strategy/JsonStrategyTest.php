@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Wiring\Tests\Strategy;
 
 use InvalidArgumentException;
-use Wiring\Strategy\JsonStrategy;
-use Wiring\Interfaces\JsonStrategyInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Wiring\Interfaces\JsonStrategyInterface;
+use Wiring\Strategy\JsonStrategy;
 
 final class JsonStrategyTest extends TestCase
 {
@@ -61,20 +61,26 @@ final class JsonStrategyTest extends TestCase
         $jsonStrategy = new JsonStrategy();
         $jsonStrategy->write('test');
 
-        $this->assertInstanceOf(ResponseInterface ::class,
-            $jsonStrategy->to($response));
+        $this->assertInstanceOf(
+            ResponseInterface ::class,
+            $jsonStrategy->to($response)
+        );
 
         $array = ['key1' => 'value1', 'key2' => 'value2'];
 
         $jsonStrategy->render($array);
-        $this->assertInstanceOf(ResponseInterface ::class,
-            $jsonStrategy->to($response));
+        $this->assertInstanceOf(
+            ResponseInterface ::class,
+            $jsonStrategy->to($response)
+        );
 
         try {
             $resource = fopen('phpunit.xml.dist', 'r');
             $jsonStrategy->render($resource);
-            $this->assertInstanceOf(ResponseInterface::class,
-                $jsonStrategy->to($response));
+            $this->assertInstanceOf(
+                ResponseInterface::class,
+                $jsonStrategy->to($response)
+            );
         } catch (InvalidArgumentException $e) {
             $this->assertInstanceOf(InvalidArgumentException::class, $e);
             $this->assertEquals('Cannot JSON encode resources', $e->getMessage());
@@ -83,8 +89,10 @@ final class JsonStrategyTest extends TestCase
         try {
             $text = "\xB1\x31";
             $jsonStrategy->render($text);
-            $this->assertInstanceOf(ResponseInterface ::class,
-                $jsonStrategy->to($response));
+            $this->assertInstanceOf(
+                ResponseInterface ::class,
+                $jsonStrategy->to($response)
+            );
         } catch (InvalidArgumentException $e) {
             $this->assertInstanceOf(InvalidArgumentException::class, $e);
             $this->assertEquals('Unable to encode data to JSON in ' .

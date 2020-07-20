@@ -69,8 +69,10 @@ final class MiddlewareTest extends TestCase
             ->willReturn($stream);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertInstanceOf(ResponseInterface::class,
-            $emitterMiddleware->emit($response));
+        $this->assertInstanceOf(
+            ResponseInterface::class,
+            $emitterMiddleware->emit($response)
+        );
 
         // Status Code != 200
         $response = $this->createResponseMock();
@@ -94,8 +96,10 @@ final class MiddlewareTest extends TestCase
             ->willReturn($stream);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertInstanceOf(ResponseInterface::class,
-                $emitterMiddleware->emit($response));
+        $this->assertInstanceOf(
+            ResponseInterface::class,
+            $emitterMiddleware->emit($response)
+        );
 
         // Without emitter
         $emitterMiddleware = new EmitterMiddleware();

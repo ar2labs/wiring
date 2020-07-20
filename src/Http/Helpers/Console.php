@@ -7,8 +7,8 @@ namespace Wiring\Http\Helpers;
 class Console
 {
     // Define constants
-    const LOG = 'log';
-    const CONSOLE_LOG = 'console.log';
+    public const LOG = 'log';
+    public const CONSOLE_LOG = 'console.log';
 
     /**
      * Write output to console browser.
@@ -155,11 +155,8 @@ class Console
         // Convert elements array
         foreach ($args as $key => $arg) {
             // Check first argument
-            if (($key == 0) && (is_bool($arg))) {
-                array_push($data, (int) $arg);
-            } // String args...
-            else {
-                array_push($data, "'$arg'");
+            if (($key == 0) && ($arg)) {
+                array_push($data, $arg);
             }
         }
 
