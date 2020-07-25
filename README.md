@@ -24,10 +24,10 @@ This package is compliant with [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR
 
 ## Quick start project
 
-1. Clone the repo:
+1. Create a start project:
 
     ```bash
-    git clone https://github.com/ar2labs/wiring-start.git
+    composer create-project ar2labs/wiring-start
     ```
 
 2. Change to the directory created
@@ -36,19 +36,13 @@ This package is compliant with [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR
     cd wiring-start/
     ```
 
-3. Composer Install
-
-    ```bash
-    composer install
-    ```
-
-4. Create `.env`
+3. Create `.env`
 
     ```bash
     cp .env.example .env
     ```
 
-5. Start PHP Built-in web server:
+4. Start PHP Built-in web server:
 
     ```bash
     php maker serve
@@ -60,7 +54,7 @@ This package is compliant with [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR
     php -S 127.0.0.1:8000 -t public/
     ```
 
-6. Open your browser at:
+5. Open your browser at:
 
     ```bash
     http://127.0.0.1:8000
