@@ -82,7 +82,7 @@ final class ApplicationTest extends TestCase
             $this->assertInstanceOf(ResponseInterface::class, $app->handle($request));
         } catch (\Throwable $e) {
             $this->assertInstanceOf(\Exception::class, $e);
-            $this->assertEquals('Bad Request', $e->getMessage());
+            $this->assertSame('Bad Request', $e->getMessage());
         }
 
         try {
@@ -99,7 +99,7 @@ final class ApplicationTest extends TestCase
 
             $app = new Application($container, $request, $response);
         } catch (\Throwable $e) {
-            $this->assertEquals('Function name must be a string', $e->getMessage());
+            $this->assertSame('Function name must be a string', $e->getMessage());
         }
     }
 
