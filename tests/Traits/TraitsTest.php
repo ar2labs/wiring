@@ -70,7 +70,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
-            $this->assertEquals('Auth interface not implemented.', $e->getMessage());
+            $this->assertSame('Auth interface not implemented.', $e->getMessage());
         }
     }
 
@@ -122,7 +122,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
-            $this->assertEquals('Config interface not implemented.', $e->getMessage());
+            $this->assertSame('Config interface not implemented.', $e->getMessage());
         }
     }
 
@@ -173,7 +173,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
-            $this->assertEquals('Console interface not implemented.', $e->getMessage());
+            $this->assertSame('Console interface not implemented.', $e->getMessage());
         }
     }
 
@@ -194,7 +194,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(BadMethodCallException::class, $e);
-            $this->assertEquals('Method get does not exist.', $e->getMessage());
+            $this->assertSame('Method get does not exist.', $e->getMessage());
         }
 
         try {
@@ -204,7 +204,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(BadMethodCallException::class, $e);
-            $this->assertEquals('Method has does not exist.', $e->getMessage());
+            $this->assertSame('Method has does not exist.', $e->getMessage());
         }
     }
 
@@ -255,7 +255,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
-            $this->assertEquals('Cookie interface not implemented.', $e->getMessage());
+            $this->assertSame('Cookie interface not implemented.', $e->getMessage());
         }
     }
 
@@ -329,7 +329,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
-            $this->assertEquals('Database interface not implemented.', $e->getMessage());
+            $this->assertSame('Database interface not implemented.', $e->getMessage());
         }
     }
 
@@ -380,7 +380,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
-            $this->assertEquals('Flash interface not implemented.', $e->getMessage());
+            $this->assertSame('Flash interface not implemented.', $e->getMessage());
         }
     }
 
@@ -431,7 +431,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
-            $this->assertEquals('Hash interface not implemented.', $e->getMessage());
+            $this->assertSame('Hash interface not implemented.', $e->getMessage());
         }
     }
 
@@ -543,7 +543,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
-            $this->assertEquals('Logger interface not implemented.', $e->getMessage());
+            $this->assertSame('Logger interface not implemented.', $e->getMessage());
         }
     }
 
@@ -594,7 +594,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
-            $this->assertEquals('Validator interface not implemented.', $e->getMessage());
+            $this->assertSame('Validator interface not implemented.', $e->getMessage());
         }
     }
 
@@ -645,7 +645,7 @@ final class TraitsTest extends TestCase
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
-            $this->assertEquals('Session interface not implemented.', $e->getMessage());
+            $this->assertSame('Session interface not implemented.', $e->getMessage());
         }
     }
 

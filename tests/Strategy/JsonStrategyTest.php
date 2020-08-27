@@ -83,7 +83,7 @@ final class JsonStrategyTest extends TestCase
             );
         } catch (InvalidArgumentException $e) {
             $this->assertInstanceOf(InvalidArgumentException::class, $e);
-            $this->assertEquals('Cannot JSON encode resources', $e->getMessage());
+            $this->assertSame('Cannot JSON encode resources', $e->getMessage());
         }
 
         try {
@@ -95,7 +95,7 @@ final class JsonStrategyTest extends TestCase
             );
         } catch (InvalidArgumentException $e) {
             $this->assertInstanceOf(InvalidArgumentException::class, $e);
-            $this->assertEquals('Unable to encode data to JSON in ' .
+            $this->assertSame('Unable to encode data to JSON in ' .
                 'Wiring\Strategy\JsonStrategy: Malformed UTF-8 characters, ' .
                 'possibly incorrectly encoded', $e->getMessage());
         }
