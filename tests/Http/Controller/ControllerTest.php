@@ -66,7 +66,7 @@ final class ControllerTest extends TestCase
             );
         } catch (MethodNotAllowedException $e) {
             $this->assertInstanceOf(MethodNotAllowedException::class, $e);
-            $this->assertEquals('Method Not Allowed', $e->getMessage());
+            $this->assertSame('Method Not Allowed', $e->getMessage());
         }
     }
 
