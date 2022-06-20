@@ -1,0 +1,55 @@
+name: build
+
+on: [ push, pull_request ]
+
+jobs:
+  run:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-latest ]
+        php-versions: [ '7.2', '7.3', '7.4']
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, intl, zip
+          coverage: none
+
+      - name: Check PHP Version
+        run: php -v
+
+      - name: Check Composer Version
+        run: composer -V
+
+      - name: Check PHP Extensions
+        run: php -m
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install phpunit/phpunit
+        run: composer require --dev phpunit/phpunit:^8.5 --no-interaction --no-progress
+
+      - name: Install phpstan/phpstan
+        run: composer require --dev phpstan/phpstan:^0.12 --no-interaction --no-progress
+
+      - name: Install friendsofphp/php-cs-fixer
+        run: composer require --dev friendsofphp/php-cs-fixer:^2.16 --no-interaction --no-progress
+
+      - name: Install php-coveralls/php-coveralls
+        run: composer require --dev php-coveralls/php-coveralls:^2.2 --no-interaction --no-progress
+
+      - name: Install required dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: Run all
+        run: vendor/bin/phpunit
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: 1
