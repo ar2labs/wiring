@@ -23,7 +23,7 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('vendor')
     ->in(__DIR__);
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR2' => true,
         'binary_operator_spaces' => true,
@@ -50,7 +50,7 @@ return PhpCsFixer\Config::create()
             'order' => ['use_trait']
         ],
         'ordered_imports' => [
-            'importsOrder' => [
+            'imports_order' => [
                 OrderedImportsFixer::IMPORT_TYPE_CLASS,
                 OrderedImportsFixer::IMPORT_TYPE_CONST,
                 OrderedImportsFixer::IMPORT_TYPE_FUNCTION,

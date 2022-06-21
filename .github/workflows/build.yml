@@ -41,13 +41,16 @@ jobs:
         run: composer require --dev phpstan/phpstan:^0.12 --no-interaction --no-progress
 
       - name: Install friendsofphp/php-cs-fixer
-        run: composer require --dev friendsofphp/php-cs-fixer:^2.16 --no-interaction --no-progress
+        run: composer require --dev friendsofphp/php-cs-fixer:^3 --no-interaction --no-progress
 
       - name: Install php-coveralls/php-coveralls
         run: composer require --dev php-coveralls/php-coveralls:^2.2 --no-interaction --no-progress
 
       - name: Install required dependencies
         run: composer install --no-interaction --no-progress
+
+      - name: Run PHP-CS-Fixer
+        run: composer run php-cs-fixer
 
       - name: Run all
         run: vendor/bin/phpunit
