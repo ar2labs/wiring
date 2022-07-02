@@ -62,7 +62,7 @@ final class JsonStrategyTest extends TestCase
         $jsonStrategy->write('test');
 
         $this->assertInstanceOf(
-            ResponseInterface ::class,
+            ResponseInterface::class,
             $jsonStrategy->to($response)
         );
 
@@ -70,7 +70,7 @@ final class JsonStrategyTest extends TestCase
 
         $jsonStrategy->render($array);
         $this->assertInstanceOf(
-            ResponseInterface ::class,
+            ResponseInterface::class,
             $jsonStrategy->to($response)
         );
 
@@ -90,7 +90,7 @@ final class JsonStrategyTest extends TestCase
             $text = "\xB1\x31";
             $jsonStrategy->render($text);
             $this->assertInstanceOf(
-                ResponseInterface ::class,
+                ResponseInterface::class,
                 $jsonStrategy->to($response)
             );
         } catch (InvalidArgumentException $e) {
