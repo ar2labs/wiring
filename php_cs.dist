@@ -1,42 +1,20 @@
 <?php
 
-/**
- * Rules we follow are from PSR-12.
- *
- * - https://github.com/FriendsOfPHP/PHP-CS-Fixer
- * - https://www.php-fig.org/psr/psr-12/
- * - https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-12-extended-coding-style-guide.md
- *
- * If something isn't addressed in either of those, some other common community rules are
- * used that might not be addressed explicitly in PSR-12 in order to improve code quality
- * (so that devs don't need to comment on them in Code Reviews).
- *
- * For instance: removing trailing white space, removing extra line breaks where
- * they're not needed (back to back, beginning or end of function/class, etc.),
- * adding trailing commas in the last line of an array, etc.
- */
-
-use PhpCsFixer\Fixer\Basic\BracesFixer;
-use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude('vendor')
+    ->exclude(['build', 'coverage', 'vendor'])
     ->in(__DIR__);
 
 return (new PhpCsFixer\Config())
+    ->setParallelConfig(ParallelConfigFactory::sequential())
     ->setRules([
-        '@PSR2' => true,
+        '@PSR12' => true,
         'binary_operator_spaces' => true,
         'blank_line_after_opening_tag' => true,
-        'braces' => [
-            'allow_single_line_closure' => false,
-            'position_after_anonymous_constructs' => BracesFixer::LINE_SAME,
-            'position_after_control_structures' => BracesFixer::LINE_SAME,
-            'position_after_functions_and_oop_constructs' => BracesFixer::LINE_NEXT,
-        ],
         'concat_space' => ['spacing' => 'one'],
         'declare_equal_normalize' => [
-            'space' => 'none'
+            'space' => 'none',
         ],
         'lowercase_cast' => true,
         'new_with_braces' => true,
@@ -46,15 +24,12 @@ return (new PhpCsFixer\Config())
         'no_singleline_whitespace_before_semicolons' => true,
         'no_trailing_whitespace' => true,
         'no_whitespace_before_comma_in_array' => true,
-        'ordered_class_elements' => [
-            'order' => ['use_trait']
-        ],
         'ordered_imports' => [
             'imports_order' => [
-                OrderedImportsFixer::IMPORT_TYPE_CLASS,
-                OrderedImportsFixer::IMPORT_TYPE_CONST,
-                OrderedImportsFixer::IMPORT_TYPE_FUNCTION,
-            ]
+                'class',
+                'const',
+                'function',
+            ],
         ],
         'return_type_declaration' => true,
         'short_scalar_cast' => true,
