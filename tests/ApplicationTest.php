@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Tests;
 
+use ArrayObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -123,6 +124,102 @@ final class ApplicationTest extends TestCase
         unset($handler);
 
         $this->addToAssertionCount(1);
+    }
+
+    /**
+     * @return void
+     */
+    public function testAfterMiddlewareRunsOnlyAfterStop()
+    {
+        /** @var ArrayObject<int, string> $events */
+        $events = new ArrayObject();
+        $request = $this->createServerRequestMock();
+        $response = $this->createResponseMock();
+
+        $app = new Application($this->createContainerMock(), $request, $response);
+        $app->addMiddleware(new class ($events) implements MiddlewareInterface {
+            /** @var ArrayObject<int, string> */
+            private $events;
+
+            /** @param ArrayObject<int, string> $events */
+            public function __construct(ArrayObject $events)
+            {
+                $this->events = $events;
+            }
+
+            public function process(
+                ServerRequestInterface $request,
+                RequestHandlerInterface $handler
+            ): ResponseInterface {
+                $this->events->append('normal-before');
+                $response = $handler->handle($request);
+                $this->events->append('normal-after');
+
+                return $response;
+            }
+        });
+        $app->addAfterMiddleware(new class ($events) implements MiddlewareInterface {
+            /** @var ArrayObject<int, string> */
+            private $events;
+
+            /** @param ArrayObject<int, string> $events */
+            public function __construct(ArrayObject $events)
+            {
+                $this->events = $events;
+            }
+
+            public function process(
+                ServerRequestInterface $request,
+                RequestHandlerInterface $handler
+            ): ResponseInterface {
+                $this->events->append('after');
+
+                return $handler->handle($request);
+            }
+        }, 'after');
+
+        $this->assertSame($response, $app->run());
+        $this->assertSame(['normal-before', 'normal-after'], $events->getArrayCopy());
+
+        $this->assertSame($response, $app->stop());
+        $this->assertSame(['normal-before', 'normal-after', 'after'], $events->getArrayCopy());
+    }
+
+    /**
+     * @return void
+     */
+    public function testRequestHandlerDestructorDoesNotRunPipelineImplicitly()
+    {
+        /** @var ArrayObject<int, string> $events */
+        $events = new ArrayObject();
+        $handler = new RequestHandler(
+            $this->createContainerMock(),
+            $this->createServerRequestMock(),
+            $this->createResponseMock()
+        );
+        $handler->addMiddleware(new class ($events) implements MiddlewareInterface {
+            /** @var ArrayObject<int, string> */
+            private $events;
+
+            /** @param ArrayObject<int, string> $events */
+            public function __construct(ArrayObject $events)
+            {
+                $this->events = $events;
+            }
+
+            public function process(
+                ServerRequestInterface $request,
+                RequestHandlerInterface $handler
+            ): ResponseInterface {
+                $this->events->append('normal');
+
+                return $handler->handle($request);
+            }
+        });
+
+        unset($handler);
+
+        $this->assertSame([], $events->getArrayCopy());
     }
 
     /**

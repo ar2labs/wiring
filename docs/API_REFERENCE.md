@@ -12,8 +12,8 @@ Main application entry point. It extends `Wiring\Http\RequestHandler` and implem
 
 Methods:
 
-* `run(): ResponseInterface` - Handles the current request through the middleware pipeline and returns the final response.
-* `stop(): ResponseInterface` - Switches the handler into after-middleware mode and handles the current request again.
+* `run(): ResponseInterface` - Handles the current request through the normal middleware pipeline and returns the final response.
+* `stop(): ResponseInterface` - Switches the handler into after-middleware mode and handles the current request through the after pipeline.
 
 ### `Wiring\Http\RequestHandler`
 
@@ -24,8 +24,8 @@ PSR-15 request handler that stores and executes the middleware pipeline.
 Methods:
 
 * `__construct(ContainerInterface $container, ServerRequestInterface $request, ResponseInterface $response, bool $errorHandler = false)` - Stores the container, request, response, and error-handler mode flag.
-* `__destruct()` - Marks after-middleware mode and attempts to finish handling if the pipeline was not marked finished.
-* `handle(ServerRequestInterface $request): ResponseInterface` - Executes the next middleware and returns the current response; exceptions are delegated to `errorHandler()`.
+* `__destruct()` - Performs no request handling; applications should call `run()` and `stop()` explicitly.
+* `handle(ServerRequestInterface $request): ResponseInterface` - Executes the next middleware registered for the active phase and returns the current response; exceptions are delegated to `errorHandler()`.
 * `getMiddleware(string $key): ?MiddlewareInterface` - Returns middleware registered with the given key, or `null` when not found.
 * `addMiddleware(MiddlewareInterface $middleware, ?string $key = null): RequestHandler` - Adds middleware to the pipeline with an optional key.
 * `addRouterMiddleware(MiddlewareInterface $router): RequestHandler` - Adds router middleware using the `router` key.
@@ -37,6 +37,7 @@ Methods:
 * `setIsAfterMiddleware(bool $isAfterMiddleware = true): RequestHandler` - Sets after-middleware mode and returns the handler.
 * `isFinished(): bool` - Returns whether the handler has finished processing.
 * `findMiddleware(string $key): ?int` - Protected helper that returns the numeric position of middleware by key.
+* `nextMiddlewarePosition(bool $after): ?int` - Protected helper that returns the next middleware position for the normal or after phase.
 * `executeMiddleware(array $middlewareArray): void` - Protected helper that runs one middleware entry and stores its response.
 * `errorHandler(Throwable $error, ServerRequestInterface $request, ResponseInterface $response): ResponseInterface` - Protected helper that calls the configured `ErrorHandlerInterface` service or writes the exception message when no service is registered.
 

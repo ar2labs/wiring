@@ -91,17 +91,10 @@ class RequestHandler implements RequestHandlerInterface
     }
 
     /**
-     * Response destructor.
-     *
-     * @return null|ResponseInterface
+     * Request handling is explicit through handle(), run(), and stop().
      */
     public function __destruct()
     {
-        $this->setIsAfterMiddleware();
-
-        if (!$this->isFinished()) {
-            $this->handle($this->request);
-        }
     }
 
     /**
@@ -114,7 +107,7 @@ class RequestHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            // Get request and increment current middleware
+            // Get request and select the next middleware for the active phase.
             $this->request = $request;
 
             // Check error handler
@@ -122,16 +115,15 @@ class RequestHandler implements RequestHandlerInterface
                 throw new BadRequestException();
             }
 
-            $this->currentMiddleware++;
+            $middlewarePosition = $this->nextMiddlewarePosition($this->isAfterMiddleware);
 
-            // Stop if there isn't any executable middleware remaining
-            if (isset($this->middleware[$this->currentMiddleware]) === false) {
-                // Return response
+            // Stop if there isn't any executable middleware remaining.
+            if ($middlewarePosition === null) {
                 return $this->response;
             }
 
             // Get and execute the next middleware
-            $middlewareArray = $this->middleware[$this->currentMiddleware];
+            $middlewareArray = $this->middleware[$middlewarePosition];
             $this->executeMiddleware($middlewareArray);
         } catch (Throwable $e) {
             // Call error handler
@@ -202,9 +194,33 @@ class RequestHandler implements RequestHandlerInterface
     }
 
     /**
+     * Find the next middleware registered for the active phase.
+     */
+    protected function nextMiddlewarePosition(bool $after): ?int
+    {
+        $position = $after ? $this->afterMiddleware : $this->currentMiddleware;
+
+        do {
+            $position++;
+        } while (isset($this->middleware[$position]) && $this->middleware[$position][self::AFTER] !== $after);
+
+        if (isset($this->middleware[$position]) === false) {
+            return null;
+        }
+
+        if ($after) {
+            $this->afterMiddleware = $position;
+        } else {
+            $this->currentMiddleware = $position;
+        }
+
+        return $position;
+    }
+
+    /**
      * Execute a middleware.
      *
-    * @param array{key: string|null, middleware: MiddlewareInterface, after: bool} $middlewareArray
+     * @param array{key: string|null, middleware: MiddlewareInterface, after: bool} $middlewareArray
      */
     protected function executeMiddleware(array $middlewareArray): void
     {

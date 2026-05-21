@@ -11,11 +11,11 @@ The framework is not a full-stack application runtime. It provides the structure
 1. An application creates `Wiring\Application` with a PSR-11 container, PSR-7 server request, and PSR-7 response.
 2. Middleware is registered on the inherited `RequestHandler` pipeline.
 3. `Application::run()` calls `RequestHandler::handle($request)`.
-4. `RequestHandler` executes the next middleware in registration order.
+4. `RequestHandler` executes the next non-after middleware in registration order.
 5. Middleware returns a `ResponseInterface` directly or calls `$handler->handle($request)` to continue.
 6. Router middleware dispatches the request to a route implementation.
 7. Controller strategies execute route callables and convert results into PSR-7 responses.
-8. Emitter middleware sends headers and body output when configured.
+8. `Application::stop()` switches to the after phase and executes after middleware such as emitters.
 9. Exceptions are converted by the configured error handler service or by controller throwable handlers.
 
 ## Middleware Pipeline
@@ -28,7 +28,7 @@ The framework is not a full-stack application runtime. It provides the structure
 * `addEmitterMiddleware()` for response emission middleware.
 * `addAfterMiddleware()` for after-phase middleware.
 
-Middleware can be looked up by key, removed by key, and executed through the PSR-15 `handle()` method.
+Normal middleware is executed during `Application::run()`. After middleware is skipped during the normal phase and executed only after `Application::stop()` enables the after phase. Middleware can be looked up by key, removed by key, and executed through the PSR-15 `handle()` method.
 
 ## Controllers And Strategies
 
