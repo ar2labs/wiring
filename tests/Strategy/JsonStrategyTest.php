@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Wiring\Tests\Strategy;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -44,22 +45,27 @@ final class JsonStrategyTest extends TestCase
     {
         $stream = $this->createStreamMock();
         $stream->method('write')
-            ->willReturn('{"status": "ok"}');
+            ->willReturn(16);
 
         $response = $this->createResponseMock();
         $response->method('getBody')
             ->willReturn($stream);
 
         $response->method('withStatus')
-            ->with(200)
             ->willReturnSelf();
 
         $response->method('withHeader')
-            ->with('Content-Type', 'application/json;charset=utf-8')
             ->willReturnSelf();
 
         $jsonStrategy = new JsonStrategy();
         $jsonStrategy->write('test');
+
+        $this->assertInstanceOf(
+            ResponseInterface::class,
+            $jsonStrategy->to($response)
+        );
+
+        $jsonStrategy->write(['key1' => 'value1']);
 
         $this->assertInstanceOf(
             ResponseInterface::class,
@@ -101,19 +107,13 @@ final class JsonStrategyTest extends TestCase
         }
     }
 
-    /**
-     * @return mixed
-     */
-    private function createResponseMock()
+    private function createResponseMock(): ResponseInterface&Stub
     {
-        return $this->createMock(ResponseInterface::class);
+        return $this->createStub(ResponseInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createStreamMock()
+    private function createStreamMock(): StreamInterface&Stub
     {
-        return $this->createMock(StreamInterface::class);
+        return $this->createStub(StreamInterface::class);
     }
 }

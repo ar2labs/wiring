@@ -6,14 +6,18 @@ namespace Wiring\Tests\Traits;
 
 use BadMethodCallException;
 use Exception;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
+use stdClass;
+use UnexpectedValueException;
 use Wiring\Interfaces\AuthInterface;
 use Wiring\Interfaces\ConfigInterface;
 use Wiring\Interfaces\ConsoleInterface;
+use Wiring\Interfaces\ContainerAwareInterface;
 use Wiring\Interfaces\CookieInterface;
 use Wiring\Interfaces\DatabaseInterface;
 use Wiring\Interfaces\FlashInterface;
@@ -36,11 +40,9 @@ final class TraitsTest extends TestCase
         $auth = $this->createAuthMock();
 
         $container->method('has')
-            ->with(AuthInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(AuthInterface::class)
             ->willReturn($auth);
 
         $simpleAuthAware->setContainer($container);
@@ -58,7 +60,6 @@ final class TraitsTest extends TestCase
         // States that auth interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(AuthInterface::class)
             ->willReturn(false);
 
         $simpleAuthAware->setContainer($container);
@@ -87,11 +88,9 @@ final class TraitsTest extends TestCase
         $config = $this->createConfigMock();
 
         $container->method('has')
-            ->with(ConfigInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(ConfigInterface::class)
             ->willReturn($config);
 
         $simpleConfigAware->setContainer($container);
@@ -110,7 +109,6 @@ final class TraitsTest extends TestCase
         // States that config interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(ConfigInterface::class)
             ->willReturn(false);
 
         $simpleConfigAware->setContainer($container);
@@ -139,11 +137,9 @@ final class TraitsTest extends TestCase
         $console = $this->createConsoleMock();
 
         $container->method('has')
-            ->with(ConsoleInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(ConsoleInterface::class)
             ->willReturn($console);
 
         $simpleConsoleAware->setContainer($container);
@@ -161,7 +157,6 @@ final class TraitsTest extends TestCase
         // States that console interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(ConsoleInterface::class)
             ->willReturn(false);
 
         $simpleConsoleAware->setContainer($container);
@@ -221,11 +216,9 @@ final class TraitsTest extends TestCase
         $cookie = $this->createCookieMock();
 
         $container->method('has')
-            ->with(CookieInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(CookieInterface::class)
             ->willReturn($cookie);
 
         $simpleCookieAware->setContainer($container);
@@ -243,7 +236,6 @@ final class TraitsTest extends TestCase
         // States that cookie interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(CookieInterface::class)
             ->willReturn(false);
 
         $simpleCookieAware->setContainer($container);
@@ -272,11 +264,9 @@ final class TraitsTest extends TestCase
         $database = $this->createDatabaseMock();
 
         $container->method('has')
-            ->with(DatabaseInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(DatabaseInterface::class)
             ->willReturn($database);
 
         $simpleDatabaseAware->setContainer($container);
@@ -286,27 +276,21 @@ final class TraitsTest extends TestCase
             $simpleDatabaseAware->database()
         );
 
-        $database = $this->createDatabaseMockBuilder();
-        $database->method('database')
-            ->willReturn(DatabaseInterface::class);
+        $database = $this->createDatabaseMock();
 
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(DatabaseInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(DatabaseInterface::class)
             ->willReturn($database);
 
         $simpleDatabaseAware->setContainer($container);
 
         $database->method('connection')
-            ->with('default')
             ->willReturnSelf();
 
         $container->method('get')
-            ->with(DatabaseInterface::class)
             ->willReturn($database);
 
         $this->assertInstanceOf(
@@ -317,7 +301,6 @@ final class TraitsTest extends TestCase
         // States that database interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(DatabaseInterface::class)
             ->willReturn(false);
 
         $simpleDatabaseAware->setContainer($container);
@@ -346,11 +329,9 @@ final class TraitsTest extends TestCase
         $flash = $this->createFlashMock();
 
         $container->method('has')
-            ->with(FlashInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(FlashInterface::class)
             ->willReturn($flash);
 
         $simpleFlashAware->setContainer($container);
@@ -368,7 +349,6 @@ final class TraitsTest extends TestCase
         // States that flash interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(FlashInterface::class)
             ->willReturn(false);
 
         $simpleFlashAware->setContainer($container);
@@ -397,11 +377,9 @@ final class TraitsTest extends TestCase
         $hash = $this->createHashMock();
 
         $container->method('has')
-            ->with(HashInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(HashInterface::class)
             ->willReturn($hash);
 
         $simpleHashAware->setContainer($container);
@@ -419,7 +397,6 @@ final class TraitsTest extends TestCase
         // States that hash interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(HashInterface::class)
             ->willReturn(false);
 
         $simpleHashAware->setContainer($container);
@@ -447,16 +424,14 @@ final class TraitsTest extends TestCase
 
         $stream = $this->createStreamMock();
         $stream->method('write')
-            ->with('{"code":200,"status":"success","message":"Ok","data":[]}')
             ->willReturn(56);
 
         $request->method('getBody')
             ->willReturn($stream);
 
-        $this->assertNull($simpleInputAware->input($request));
+        $this->assertSame('', $simpleInputAware->input($request));
 
         $request->method('getHeader')
-            ->with('content-type')
             ->willReturn(['multipart/form-data']);
 
         $this->assertNull($simpleInputAware->input($request, true));
@@ -471,7 +446,6 @@ final class TraitsTest extends TestCase
             ->willReturn($stream);
 
         $request->method('getHeader')
-            ->with('content-type')
             ->willReturn(['application/json']);
 
         $this->assertInstanceOf(\stdClass::class, $simpleInputAware->input($request));
@@ -486,7 +460,6 @@ final class TraitsTest extends TestCase
             ->willReturn($stream);
 
         $request->method('getHeader')
-            ->with('content-type')
             ->willReturn(['application/xml']);
 
         $this->assertInstanceOf(\stdClass::class, $simpleInputAware->input($request));
@@ -494,6 +467,88 @@ final class TraitsTest extends TestCase
         $request = $this->createRequestMock();
 
         $this->assertInstanceOf(\stdClass::class, $simpleInputAware->query($request));
+
+        $request = $this->createRequestMock();
+        $request->method('getHeader')
+            ->willReturn(['application/x-www-form-urlencoded']);
+        $request->method('getParsedBody')
+            ->willReturn(['name' => 'value']);
+        $request->method('getBody')
+            ->willReturn($this->createStreamMock());
+
+        $this->assertEquals((object) ['name' => 'value'], $simpleInputAware->input($request));
+    }
+
+    /**
+     * @return void
+     */
+    public function testInputAwareTraitDoesNotExpandExternalXmlEntities()
+    {
+        $secretFile = tempnam(sys_get_temp_dir(), 'wiring-xxe-');
+        $this->assertIsString($secretFile);
+        file_put_contents($secretFile, 'TOP_SECRET_XXE_VALUE');
+
+        $fileUri = str_replace('\\', '/', $secretFile);
+        $fileUri = DIRECTORY_SEPARATOR === '\\' ? 'file:///' . $fileUri : 'file://' . $fileUri;
+
+        $xml = '<!DOCTYPE body [<!ENTITY xxe SYSTEM "' . $fileUri . '">]>' .
+            '<body><value>&xxe;</value></body>';
+
+        $request = $this->createRequestMock();
+        $stream = $this->createStreamMock();
+        $stream->method('getContents')
+            ->willReturn($xml);
+
+        $request->method('getBody')
+            ->willReturn($stream);
+        $request->method('getHeader')
+            ->willReturn(['application/xml']);
+
+        try {
+            $result = (new SimpleInputAware())->input($request, true);
+            $encodedResult = json_encode($result);
+
+            $this->assertIsString($encodedResult);
+            $this->assertStringNotContainsString('TOP_SECRET_XXE_VALUE', $encodedResult);
+        } finally {
+            unlink($secretFile);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testAwareTraitsValidateContainerServiceTypes()
+    {
+        $authAware = new SimpleAuthAware();
+        $this->assertInvalidAwareService($authAware, static fn () => $authAware->auth(), 'Auth interface not implemented.');
+
+        $configAware = new SimpleConfigAware();
+        $this->assertInvalidAwareService($configAware, static fn () => $configAware->config(), 'Config interface not implemented.');
+
+        $consoleAware = new SimpleConsoleAware();
+        $this->assertInvalidAwareService($consoleAware, static fn () => $consoleAware->console(), 'Console interface not implemented.');
+
+        $cookieAware = new SimpleCookieAware();
+        $this->assertInvalidAwareService($cookieAware, static fn () => $cookieAware->cookie(), 'Cookie interface not implemented.');
+
+        $databaseAware = new SimpleDatabaseAware();
+        $this->assertInvalidAwareService($databaseAware, static fn () => $databaseAware->database(), 'Database interface not implemented.');
+
+        $flashAware = new SimpleFlashAware();
+        $this->assertInvalidAwareService($flashAware, static fn () => $flashAware->flash(), 'Flash interface not implemented.');
+
+        $hashAware = new SimpleHashAware();
+        $this->assertInvalidAwareService($hashAware, static fn () => $hashAware->hash(), 'Hash interface not implemented.');
+
+        $loggerAware = new SimpleLoggerAware();
+        $this->assertInvalidAwareService($loggerAware, static fn () => $loggerAware->logger(), 'Logger interface not implemented.');
+
+        $sessionAware = new SimpleSessionAware();
+        $this->assertInvalidAwareService($sessionAware, static fn () => $sessionAware->session(), 'Session interface not implemented.');
+
+        $validatorAware = new SimpleValidatorAware();
+        $this->assertInvalidAwareService($validatorAware, static fn () => $validatorAware->validator(), 'Validator interface not implemented.');
     }
 
     /**
@@ -509,11 +564,9 @@ final class TraitsTest extends TestCase
         $logger = $this->createLoggerMock();
 
         $container->method('has')
-            ->with(LoggerInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(LoggerInterface::class)
             ->willReturn($logger);
 
         $simpleLoggerAware->setContainer($container);
@@ -531,7 +584,6 @@ final class TraitsTest extends TestCase
         // States that logger interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(LoggerInterface::class)
             ->willReturn(false);
 
         $simpleLoggerAware->setContainer($container);
@@ -560,11 +612,9 @@ final class TraitsTest extends TestCase
         $validator = $this->createValidatorMock();
 
         $container->method('has')
-            ->with(ValidatorInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(ValidatorInterface::class)
             ->willReturn($validator);
 
         $simpleValidatorAware->setContainer($container);
@@ -582,7 +632,6 @@ final class TraitsTest extends TestCase
         // States that validator interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(ValidatorInterface::class)
             ->willReturn(false);
 
         $simpleValidatorAware->setContainer($container);
@@ -611,11 +660,9 @@ final class TraitsTest extends TestCase
         $session = $this->createSessionMock();
 
         $container->method('has')
-            ->with(SessionInterface::class)
             ->willReturn(true);
 
         $container->method('get')
-            ->with(SessionInterface::class)
             ->willReturn($session);
 
         $simpleSessionAware->setContainer($container);
@@ -633,7 +680,6 @@ final class TraitsTest extends TestCase
         // States that session interface has not been implemented
         $container = $this->createContainerMock();
         $container->method('has')
-            ->with(SessionInterface::class)
             ->willReturn(false);
 
         $simpleSessionAware->setContainer($container);
@@ -649,121 +695,89 @@ final class TraitsTest extends TestCase
         }
     }
 
-    /**
-     * @return mixed
-     */
-    private function createContainerMock()
+    private function createContainerMock(): ContainerInterface&Stub
     {
-        return $this->createMock(ContainerInterface::class);
+        return $this->createStub(ContainerInterface::class);
+    }
+
+    private function createAuthMock(): AuthInterface&Stub
+    {
+        return $this->createStub(AuthInterface::class);
+    }
+
+    private function createConfigMock(): ConfigInterface&Stub
+    {
+        return $this->createStub(ConfigInterface::class);
+    }
+
+    private function createConsoleMock(): ConsoleInterface&Stub
+    {
+        return $this->createStub(ConsoleInterface::class);
+    }
+
+    private function createCookieMock(): CookieInterface&Stub
+    {
+        return $this->createStub(CookieInterface::class);
+    }
+
+    private function createDatabaseMock(): DatabaseInterface&Stub
+    {
+        return $this->createStub(DatabaseInterface::class);
+    }
+
+    private function createFlashMock(): FlashInterface&Stub
+    {
+        return $this->createStub(FlashInterface::class);
+    }
+
+    private function createHashMock(): HashInterface&Stub
+    {
+        return $this->createStub(HashInterface::class);
+    }
+
+    private function createLoggerMock(): LoggerInterface&Stub
+    {
+        return $this->createStub(LoggerInterface::class);
+    }
+
+    private function createRequestMock(): ServerRequestInterface&Stub
+    {
+        return $this->createStub(ServerRequestInterface::class);
+    }
+
+    private function createSessionMock(): SessionInterface&Stub
+    {
+        return $this->createStub(SessionInterface::class);
+    }
+
+    private function createStreamMock(): StreamInterface&Stub
+    {
+        return $this->createStub(StreamInterface::class);
+    }
+
+    private function createValidatorMock(): ValidatorInterface&Stub
+    {
+        return $this->createStub(ValidatorInterface::class);
     }
 
     /**
-     * @return mixed
+     * @param callable(): mixed $call
      */
-    private function createAuthMock()
+    private function assertInvalidAwareService(ContainerAwareInterface $aware, callable $call, string $message): void
     {
-        return $this->createMock(AuthInterface::class);
-    }
+        $container = $this->createContainerMock();
+        $container->method('has')
+            ->willReturn(true);
+        $container->method('get')
+            ->willReturn(new stdClass());
 
-    /**
-     * @return mixed
-     */
-    private function createConfigMock()
-    {
-        return $this->createMock(ConfigInterface::class);
-    }
+        $aware->setContainer($container);
 
-    /**
-     * @return mixed
-     */
-    private function createConsoleMock()
-    {
-        return $this->createMock(ConsoleInterface::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    private function createCookieMock()
-    {
-        return $this->createMock(CookieInterface::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    private function createDatabaseMockBuilder()
-    {
-        return $this->getMockBuilder(DatabaseInterface::class)
-            ->setMethods([
-                'database',
-                'connection',
-            ])
-            ->getMock();
-    }
-
-    /**
-     * @return mixed
-     */
-    private function createDatabaseMock()
-    {
-        return $this->createMock(DatabaseInterface::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    private function createFlashMock()
-    {
-        return $this->createMock(FlashInterface::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    private function createHashMock()
-    {
-        return $this->createMock(HashInterface::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    private function createLoggerMock()
-    {
-        return $this->createMock(LoggerInterface::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    private function createRequestMock()
-    {
-        return $this->getMockBuilder(ServerRequestInterface::class)
-            ->getMock();
-    }
-
-    /**
-     * @return mixed
-     */
-    private function createSessionMock()
-    {
-        return $this->createMock(SessionInterface::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    private function createStreamMock()
-    {
-        return $this->createMock(StreamInterface::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    private function createValidatorMock()
-    {
-        return $this->createMock(ValidatorInterface::class);
+        try {
+            $call();
+            $this->fail('Expected invalid service type to fail.');
+        } catch (UnexpectedValueException $e) {
+            $this->assertSame($message, $e->getMessage());
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Wiring\Tests\Http\Exception;
 
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -56,25 +57,19 @@ class ExceptionsTest extends TestCase
         $response->method('getBody')
             ->willReturn($stream);
 
-        $this->assertIsArray($exception->getHeaders());
-        $this->assertIsArray($exception->getData());
+        $this->assertSame([], $exception->getHeaders());
+        $this->assertSame([], $exception->getData());
         $this->assertInstanceOf(ResponseInterface::class, $exception->buildJsonResponse($response));
         $this->assertInstanceOf(ResponseInterface::class, $exception->buildResponse($response));
     }
 
-    /**
-     * @return mixed
-     */
-    private function createResponseMock()
+    private function createResponseMock(): ResponseInterface&Stub
     {
-        return $this->createMock(ResponseInterface::class);
+        return $this->createStub(ResponseInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createStreamMock()
+    private function createStreamMock(): StreamInterface&Stub
     {
-        return $this->createMock(StreamInterface::class);
+        return $this->createStub(StreamInterface::class);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Tests\Http\Middleware;
 
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -11,6 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use UnexpectedValueException;
 use Wiring\Http\Middleware\EmitterMiddleware;
 use Wiring\Http\Middleware\RouterMiddleware;
 use Wiring\Interfaces\EmitterInterface;
@@ -28,7 +30,6 @@ final class MiddlewareTest extends TestCase
     {
         $stream = $this->createStreamMock();
         $stream->method('write')
-            ->with('test')
             ->willReturn(4);
 
         $request = $this->createRequestMock();
@@ -101,6 +102,39 @@ final class MiddlewareTest extends TestCase
             $emitterMiddleware->emit($response)
         );
 
+        // Content-Length, protocol, and reason-phrase fallbacks
+        $response = $this->createResponseMock();
+        $response->method('getHeaders')
+            ->willReturn(['X-Test' => ['1']]);
+        $response->method('getHeaderLine')
+            ->willReturn('4');
+        $response->method('getProtocolVersion')
+            ->willReturn('');
+        $response->method('getStatusCode')
+            ->willReturn(200);
+        $response->method('getReasonPhrase')
+            ->willReturn('');
+
+        $stream = $this->createStreamMock();
+        $stream->method('isSeekable')
+            ->willReturn(false);
+        $stream->method('eof')
+            ->willReturnOnConsecutiveCalls(false, true, true);
+        $stream->method('read')
+            ->willReturn('test');
+
+        $response->method('getBody')
+            ->willReturn($stream);
+
+        ob_start();
+
+        $this->assertInstanceOf(
+            ResponseInterface::class,
+            $emitterMiddleware->emit($response)
+        );
+
+        ob_end_clean();
+
         // Without emitter
         $emitterMiddleware = new EmitterMiddleware();
 
@@ -114,6 +148,21 @@ final class MiddlewareTest extends TestCase
             ResponseInterface::class,
             $emitterMiddleware->process($request, $handler)
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function testEmitterRejectsHeadersWithLineBreaks()
+    {
+        $response = $this->createResponseMock();
+        $response->method('getHeaders')
+            ->willReturn(['X-Test' => ["ok\r\nX-Injected: yes"]]);
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Header values must not contain line breaks.');
+
+        (new EmitterMiddleware())->emit($response);
     }
 
     /**
@@ -140,75 +189,45 @@ final class MiddlewareTest extends TestCase
             RouterMiddleware::class,
             $routeMiddleware->responseFactory($responseFactory)
         );
+        $this->assertSame($responseFactory, $routeMiddleware->getResponseFactory());
     }
 
-    /**
-     * @return mixed
-     */
-    private function createEmitterMock()
+    private function createEmitterMock(): EmitterInterface&Stub
     {
-        return $this->createMock(EmitterInterface::class);
+        return $this->createStub(EmitterInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createRequestMock()
+    private function createRequestMock(): ServerRequestInterface&Stub
     {
-        return $this->getMockBuilder(ServerRequestInterface::class)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->getMock();
+        return $this->createStub(ServerRequestInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createResponseMock()
+    private function createResponseMock(): ResponseInterface&Stub
     {
-        return $this->createMock(ResponseInterface::class);
+        return $this->createStub(ResponseInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createStreamMock()
+    private function createStreamMock(): StreamInterface&Stub
     {
-        return $this->createMock(StreamInterface::class);
+        return $this->createStub(StreamInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createRequestHandlerMock()
+    private function createRequestHandlerMock(): RequestHandlerInterface&Stub
     {
-        return $this->createMock(RequestHandlerInterface::class);
+        return $this->createStub(RequestHandlerInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createRouteMock()
+    private function createRouteMock(): RouterInterface&Stub
     {
-        return $this->createMock(RouterInterface::class);
+        return $this->createStub(RouterInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createResponseFactoryMock()
+    private function createResponseFactoryMock(): ResponseFactoryInterface&Stub
     {
-        return $this->createMock(ResponseFactoryInterface::class);
+        return $this->createStub(ResponseFactoryInterface::class);
     }
 
-    /**
-     * @param string $header
-     *
-     * @return mixed
-     */
-    protected function header($header)
+    protected function header(string $header): void
     {
         header($header);
     }

@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Wiring\Tests\Strategy;
 
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use stdClass;
+use UnexpectedValueException;
 use Wiring\Interfaces\ViewStrategyInterface;
 use Wiring\Strategy\ViewStrategy;
 
@@ -53,14 +56,13 @@ final class ViewStrategyTest extends TestCase
     {
         $stream = $this->createStreamMock();
         $stream->method('write')
-            ->willReturn('test');
+            ->willReturn(4);
 
         $response = $this->createResponseMock();
         $response->method('getBody')
             ->willReturn($stream);
 
         $response->method('withStatus')
-            ->with(200)
             ->willReturnSelf();
 
         $engine = $this->createViewStrategyMock();
@@ -85,26 +87,57 @@ final class ViewStrategyTest extends TestCase
     }
 
     /**
-     * @return mixed
+     * @return void
      */
-    private function createViewStrategyMock()
+    public function testToRequiresRenderableEngine()
     {
-        return $this->createMock(ViewStrategyInterface::class);
+        $viewStrategy = new ViewStrategy(new stdClass());
+        $viewStrategy->render('test');
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Template engine must provide a render method.');
+
+        $viewStrategy->to($this->createResponseMock());
     }
 
     /**
-     * @return mixed
+     * @return void
      */
-    private function createResponseMock()
+    public function testToRequiresStringRenderResult()
     {
-        return $this->createMock(ResponseInterface::class);
+        $engine = new class () {
+            /**
+             * @param array<string, mixed> $params
+             *
+             * @return array<string, mixed>
+             */
+            public function render(string $view, array $params): array
+            {
+                return $params;
+            }
+        };
+
+        $viewStrategy = new ViewStrategy($engine);
+        $viewStrategy->render('test');
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Template render must return a string.');
+
+        $viewStrategy->to($this->createResponseMock());
     }
 
-    /**
-     * @return mixed
-     */
-    private function createStreamMock()
+    private function createViewStrategyMock(): ViewStrategyInterface&Stub
     {
-        return $this->createMock(StreamInterface::class);
+        return $this->createStub(ViewStrategyInterface::class);
+    }
+
+    private function createResponseMock(): ResponseInterface&Stub
+    {
+        return $this->createStub(ResponseInterface::class);
+    }
+
+    private function createStreamMock(): StreamInterface&Stub
+    {
+        return $this->createStub(StreamInterface::class);
     }
 }

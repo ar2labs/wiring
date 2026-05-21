@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Wiring\Tests\Http\Helpers;
 
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use stdClass;
+use UnexpectedValueException;
 use Wiring\Http\Helpers\Console;
 use Wiring\Http\Helpers\Cookie;
 use Wiring\Http\Helpers\Info;
@@ -48,6 +51,43 @@ final class HelpersTest extends TestCase
     }
 
     /**
+     * @return void
+     */
+    public function testConsoleHandlesUnencodableValues()
+    {
+        $resource = fopen('phpunit.xml.dist', 'r');
+        $this->assertIsResource($resource);
+
+        try {
+            $this->assertInstanceOf(Console::class, (new Console())->log($resource));
+        } finally {
+            fclose($resource);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testConsoleEscapesJavaScriptStringContext()
+    {
+        $_SESSION = [];
+
+        (new Console())->log("';alert(1);//<script>");
+
+        /** @var array<string, mixed> $session */
+        $session = $_SESSION;
+        $consoleLog = $session[Console::CONSOLE_LOG] ?? null;
+
+        $this->assertIsArray($consoleLog);
+        $output = $consoleLog[0] ?? '';
+
+        $this->assertIsString($output);
+        $this->assertStringContainsString('\\u0027', $output);
+        $this->assertStringContainsString('\\u003Cscript\\u003E', $output);
+        $this->assertStringNotContainsString("';alert(1);//<script>", $output);
+    }
+
+    /**
      * @runInSeparateProcess
      * @throws \Exception
      *
@@ -57,11 +97,59 @@ final class HelpersTest extends TestCase
     {
         $_COOKIE['test'] = '123';
 
-        $this->assertIsBool(Cookie::set('test', '123'));
-        $this->assertIsBool(Cookie::has('test'));
+        $this->assertTrue(Cookie::set('test', '123'));
+        $this->assertTrue(Cookie::has('test'));
         $this->assertIsString(Cookie::get('test'));
-        $this->assertIsBool(Cookie::forget('test'));
-        $this->assertIsBool(Cookie::forget('test2'));
+        $this->assertTrue(Cookie::forget('test'));
+        $this->assertFalse(Cookie::forget('test2'));
+    }
+
+    /**
+     * @runInSeparateProcess
+     *
+     * @return void
+     */
+    public function testCookieReturnsEmptyStringForUnsupportedValues()
+    {
+        $_COOKIE['unsupported'] = 123;
+
+        $this->assertSame('', Cookie::get('unsupported'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testCookieOptionsUseHardenedDefaults()
+    {
+        $cookie = new class () extends Cookie {
+            /**
+             * @return array{expires: int, path: string, domain?: string, secure: bool, httponly: bool, samesite: 'Lax'}
+             */
+            public static function options(
+                int $expiry,
+                string $path,
+                string $domain,
+                bool $secure,
+                bool $httponly
+            ): array {
+                return self::createCookieOptions($expiry, $path, $domain, $secure, $httponly);
+            }
+        };
+
+        unset($_SERVER['HTTPS'], $_SERVER['SERVER_PORT']);
+
+        $options = $cookie::options(0, '/', '', false, true);
+
+        $this->assertFalse($options['secure']);
+        $this->assertTrue($options['httponly']);
+        $this->assertSame('Lax', $options['samesite']);
+        $this->assertArrayNotHasKey('domain', $options);
+
+        $_SERVER['HTTPS'] = 'on';
+        $httpsOptions = $cookie::options(0, '/', 'example.com', false, true);
+
+        $this->assertTrue($httpsOptions['secure']);
+        $this->assertSame('example.com', $httpsOptions['domain'] ?? null);
     }
 
     /**
@@ -77,6 +165,18 @@ final class HelpersTest extends TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     *
+     * @return void
+     */
+    public function testInfoUsesDefinedApplicationVersion()
+    {
+        define('APP_VERSION', '9.9.9');
+
+        $this->assertIsString((new Info())->phpinfo());
+    }
+
+    /**
      * @throws \Exception
      *
      * @return void
@@ -86,7 +186,7 @@ final class HelpersTest extends TestCase
         $loader = new Loader();
 
         $this->assertInstanceOf(Loader::class, $loader->addPath('test'));
-        $this->assertIsArray($loader->load());
+        $this->assertSame([], $loader->load());
     }
 
     /**
@@ -96,16 +196,31 @@ final class HelpersTest extends TestCase
      */
     public function testMailer()
     {
-        $mailerMock = $this->createMailerMock();
-        $container = $this->createContainerMock();
+        $mailerMock = new class () implements MailerInterface {
+            public string $Subject = '';
+            public string $Body = '';
+            /** @var array<int, string> */
+            public array $addresses = [];
+
+            public function addAddress(string $email): void
+            {
+                $this->addresses[] = $email;
+            }
+
+            public function send(): bool
+            {
+                return true;
+            }
+        };
 
         $view = $this->createViewStrategyMock();
         $view->method('engine')
             ->willReturn($view);
+        $view->method('render')
+            ->willReturn('<p>test</p>');
 
         $container = $this->createContainerMock();
         $container->method('get')
-            ->with(ViewStrategyInterface::class)
             ->willReturn($view);
 
         $mailer = new Mailer($mailerMock, $container);
@@ -113,12 +228,105 @@ final class HelpersTest extends TestCase
 
         $this->assertInstanceOf(Message::class, $message->to('test@gmail.com'));
         $this->assertInstanceOf(Message::class, $message->subject('test'));
+        $this->assertSame(['test@gmail.com'], $mailerMock->addresses);
+        $this->assertSame('test', $mailerMock->Subject);
 
-        $this->assertIsBool($mailer->send('template', [
+        $this->assertTrue($mailer->send('template', [
             'test' => '123',
         ], function () {
             // Callback
         }));
+        $this->assertSame('<p>test</p>', $mailerMock->Body);
+    }
+
+    /**
+     * @return void
+     */
+    public function testMailerRequiresMailerInterface()
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Mailer interface not implemented.');
+
+        new Mailer(new stdClass(), $this->createContainerMock());
+    }
+
+    /**
+     * @return void
+     */
+    public function testMailtrapMessageRequiresMailerInterface()
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Mailer interface not implemented.');
+
+        new Message(new stdClass());
+    }
+
+    /**
+     * @return void
+     */
+    public function testMailerRequiresViewStrategy()
+    {
+        $container = $this->createContainerMock();
+        $container->method('get')
+            ->willReturn(new stdClass());
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('View strategy interface not implemented.');
+
+        (new Mailer($this->createMailer(), $container))->send('template', [], static function (): void {
+        });
+    }
+
+    /**
+     * @return void
+     */
+    public function testMailerRequiresRenderableEngine()
+    {
+        $view = $this->createViewStrategyMock();
+        $view->method('engine')
+            ->willReturn(new stdClass());
+
+        $container = $this->createContainerMock();
+        $container->method('get')
+            ->willReturn($view);
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Template engine must provide a render method.');
+
+        (new Mailer($this->createMailer(), $container))->send('template', [], static function (): void {
+        });
+    }
+
+    /**
+     * @return void
+     */
+    public function testMailerRequiresStringRenderResult()
+    {
+        $engine = new class () {
+            /**
+             * @param array<string, mixed> $data
+             *
+             * @return array<string, mixed>
+             */
+            public function render(string $template, array $data): array
+            {
+                return $data;
+            }
+        };
+
+        $view = $this->createViewStrategyMock();
+        $view->method('engine')
+            ->willReturn($engine);
+
+        $container = $this->createContainerMock();
+        $container->method('get')
+            ->willReturn($view);
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Template render must return a string.');
+
+        (new Mailer($this->createMailer(), $container))->send('template', [], static function (): void {
+        });
     }
 
     /**
@@ -129,34 +337,37 @@ final class HelpersTest extends TestCase
     public function testSession()
     {
         $this->assertIsString(Session::set('test', '123'));
-        $this->assertIsBool(Session::has('test'));
+        $this->assertTrue(Session::has('test'));
         $this->assertIsString(Session::get('test'));
         $this->assertIsString(Session::get('test2'));
-        $this->assertIsBool(Session::forget('test'));
-        $this->assertIsBool(Session::forget('test2'));
+        $this->assertTrue(Session::forget('test'));
+        $this->assertFalse(Session::forget('test2'));
     }
 
-    /**
-     * @return mixed
-     */
-    private function createMailerMock()
+    private function createContainerMock(): ContainerInterface&Stub
     {
-        return $this->createMock(MailerInterface::class);
+        return $this->createStub(ContainerInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createContainerMock()
+    private function createViewStrategyMock(): ViewStrategyInterface&Stub
     {
-        return $this->createMock(ContainerInterface::class);
+        return $this->createStub(ViewStrategyInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createViewStrategyMock()
+    private function createMailer(): MailerInterface
     {
-        return $this->createMock(ViewStrategyInterface::class);
+        return new class () implements MailerInterface {
+            public string $Subject = '';
+            public string $Body = '';
+
+            public function addAddress(string $email): void
+            {
+            }
+
+            public function send(): bool
+            {
+                return true;
+            }
+        };
     }
 }

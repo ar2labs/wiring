@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Tests;
 
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -11,7 +12,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
+use UnexpectedValueException;
 use Wiring\Application;
+use Wiring\Http\RequestHandler;
 use Wiring\Interfaces\ApplicationInterface;
 use Wiring\Interfaces\ErrorHandlerInterface;
 
@@ -62,7 +66,7 @@ final class ApplicationTest extends TestCase
             RequestHandlerInterface::class,
             $app->addEmitterMiddleware($middleware)
         );
-        $this->assertIsBool($app->isAfterMiddleware());
+        $this->assertTrue($app->isAfterMiddleware());
         $this->assertNull($app->getMiddleware('test2'));
         $this->assertInstanceOf(ResponseInterface::class, $app->handle($request));
 
@@ -70,7 +74,6 @@ final class ApplicationTest extends TestCase
             // Test error handler
             $stream = $this->createStreamMock();
             $stream->method('write')
-                ->with('Bad Request')
                 ->willReturn(11);
 
             $response = $this->createResponseMock();
@@ -88,66 +91,125 @@ final class ApplicationTest extends TestCase
         try {
             // Test error handler callable
             $errorHandler = $this->createErrorHandlerMock();
+            $container = $this->createContainerMock();
 
             $container->method('has')
-                ->with(ErrorHandlerInterface::class)
                 ->willReturn(true);
 
             $container->method('get')
-                ->with(ErrorHandlerInterface::class)
                 ->willReturn($errorHandler);
 
-            $app = new Application($container, $request, $response);
-        } catch (\Throwable $e) {
-            $this->assertSame('Function name must be a string', $e->getMessage());
+            $app = new Application($container, $request, $response, true);
+            $app->run();
+            $this->fail('Expected non-callable error handler service to fail.');
+        } catch (UnexpectedValueException $e) {
+            $this->assertSame('Error handler service must be callable.', $e->getMessage());
         }
     }
 
     /**
-     * @return mixed
+     * @throws \Exception
+     *
+     * @return void
      */
-    private function createContainerMock()
+    public function testRequestHandlerDestructorHandlesUnfinishedRequests()
     {
-        return $this->createMock(ContainerInterface::class);
+        $handler = new RequestHandler(
+            $this->createContainerMock(),
+            $this->createServerRequestMock(),
+            $this->createResponseMock()
+        );
+
+        unset($handler);
+
+        $this->addToAssertionCount(1);
     }
 
     /**
-     * @return mixed
+     * @throws \Exception
+     *
+     * @return void
      */
-    private function createServerRequestMock()
+    public function testCallableErrorHandlerMustReturnResponse()
     {
-        return $this->createMock(ServerRequestInterface::class);
+        $container = $this->createContainerMock();
+        $container->method('has')
+            ->willReturn(true);
+        $container->method('get')
+            ->willReturn(static fn (
+                ServerRequestInterface $request,
+                ResponseInterface $response,
+                Throwable $error
+            ): null => null);
+
+        $app = new Application(
+            $container,
+            $this->createServerRequestMock(),
+            $this->createResponseMock(),
+            true
+        );
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Error handler service must return a response.');
+
+        $app->run();
     }
 
     /**
-     * @return mixed
+     * @throws \Exception
+     *
+     * @return void
      */
-    private function createResponseMock()
+    public function testCallableErrorHandlerCanReturnResponse()
     {
-        return $this->createMock(ResponseInterface::class);
+        $response = $this->createResponseMock();
+        $container = $this->createContainerMock();
+        $container->method('has')
+            ->willReturn(true);
+        $container->method('get')
+            ->willReturn(static fn (
+                ServerRequestInterface $request,
+                ResponseInterface $response,
+                Throwable $error
+            ): ResponseInterface => $response);
+
+        $app = new Application(
+            $container,
+            $this->createServerRequestMock(),
+            $response,
+            true
+        );
+
+        $this->assertSame($response, $app->run());
     }
 
-    /**
-     * @return mixed
-     */
-    private function createMiddlewareMock()
+    private function createContainerMock(): ContainerInterface&Stub
     {
-        return $this->createMock(MiddlewareInterface::class);
+        return $this->createStub(ContainerInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createStreamMock()
+    private function createServerRequestMock(): ServerRequestInterface&Stub
     {
-        return $this->createMock(StreamInterface::class);
+        return $this->createStub(ServerRequestInterface::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function createErrorHandlerMock()
+    private function createResponseMock(): ResponseInterface&Stub
     {
-        return $this->createMock(ErrorHandlerInterface::class);
+        return $this->createStub(ResponseInterface::class);
+    }
+
+    private function createMiddlewareMock(): MiddlewareInterface&Stub
+    {
+        return $this->createStub(MiddlewareInterface::class);
+    }
+
+    private function createStreamMock(): StreamInterface&Stub
+    {
+        return $this->createStub(StreamInterface::class);
+    }
+
+    private function createErrorHandlerMock(): ErrorHandlerInterface&Stub
+    {
+        return $this->createStub(ErrorHandlerInterface::class);
     }
 }
