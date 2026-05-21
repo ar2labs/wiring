@@ -14,15 +14,9 @@ use Wiring\Interfaces\RouterInterface;
 
 class RouterMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private RouterInterface $router;
 
-    /**
-     * @var ResponseFactoryInterface|null
-     */
-    private $responseFactory;
+    private ?ResponseFactoryInterface $responseFactory;
 
     /**
      * Set the Router instance and optionally the response

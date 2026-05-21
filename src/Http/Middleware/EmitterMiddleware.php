@@ -13,10 +13,7 @@ use Wiring\Interfaces\EmitterInterface;
 
 class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
 {
-    /**
-     * @var EmitterInterface|null
-     */
-    private $emitter;
+    private ?EmitterInterface $emitter;
 
     /**
      * Set your preferred emitter, this is optional.

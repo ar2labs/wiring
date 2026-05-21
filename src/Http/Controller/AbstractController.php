@@ -211,8 +211,7 @@ abstract class AbstractController extends AbstractStrategy implements
         Throwable $error
     ): MiddlewareInterface {
         return new class ($error) implements MiddlewareInterface {
-            /** @var Throwable $error */
-            protected $error;
+            private Throwable $error;
 
             public function __construct(Throwable $error)
             {
