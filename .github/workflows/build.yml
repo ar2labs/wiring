@@ -22,7 +22,7 @@ jobs:
           - operating-system: ubuntu-latest
             php: '8.5'
             dependencies: lowest
-          name: PHP ${{ matrix.php }} ${{ matrix.dependencies }} on ${{ matrix.operating-system }}
+    name: PHP ${{ matrix.php }} ${{ matrix.dependencies }} on ${{ matrix.operating-system }}
 
     steps:
       - name: Checkout
