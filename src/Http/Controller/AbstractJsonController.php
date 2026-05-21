@@ -222,13 +222,21 @@ abstract class AbstractJsonController extends AbstractController
                 // Create new error handler
                 $errorHandler = new ErrorHandler($request, $response, $error);
                 $error = $errorHandler->error();
-
-                $response->getBody()->write((string) json_encode([
+                $body = json_encode([
                     'code' => 500,
                     'status' => 'error',
                     'message' => $error['message'],
                     'data' => [],
-                ]));
+                ]);
+
+                if (!is_string($body)) {
+                    throw new UnexpectedValueException('Unable to encode JSON error response.');
+                }
+
+                $response = $response
+                    ->withStatus(500)
+                    ->withHeader(ErrorHandler::CONTENT_TYPE, ErrorHandler::APP_JSON);
+                $response->getBody()->write($body);
 
                 return $response;
             }

@@ -39,7 +39,7 @@ Methods:
 * `findMiddleware(string $key): ?int` - Protected helper that returns the numeric position of middleware by key.
 * `nextMiddlewarePosition(bool $after): ?int` - Protected helper that returns the next middleware position for the normal or after phase.
 * `executeMiddleware(array $middlewareArray): void` - Protected helper that runs one middleware entry and stores its response.
-* `errorHandler(Throwable $error, ServerRequestInterface $request, ResponseInterface $response): ResponseInterface` - Protected helper that calls the configured `ErrorHandlerInterface` service or writes the exception message when no service is registered.
+* `errorHandler(Throwable $error, ServerRequestInterface $request, ResponseInterface $response): ResponseInterface` - Protected helper that calls the configured `ErrorHandlerInterface` service or writes a generic 500 response when no service is registered.
 
 ## Controllers
 

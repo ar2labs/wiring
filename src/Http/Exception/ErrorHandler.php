@@ -179,7 +179,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
     private function errorHtml(string $message): array
     {
         // Define Content-Type to HTML
-        $this->response->withHeader(self::CONTENT_TYPE, self::APP_HTML);
+        $this->response = $this->response->withHeader(self::CONTENT_TYPE, self::APP_HTML);
 
         $message = sprintf('<span>%s</span>', htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
 
@@ -217,7 +217,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
     private function errorJson(string $message): array
     {
         // Define Content-Type to JSON
-        $this->response->withHeader(self::CONTENT_TYPE, self::APP_JSON);
+        $this->response = $this->response->withHeader(self::CONTENT_TYPE, self::APP_JSON);
 
         $error = [
             self::ERROR_STATUS => false,

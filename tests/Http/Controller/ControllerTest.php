@@ -266,6 +266,8 @@ final class ControllerTest extends TestCase
         $response = $this->createResponseMock();
         $response->method('withStatus')
             ->willReturnSelf();
+        $response->method('withHeader')
+            ->willReturnSelf();
 
         $stream = $this->createStreamMock();
         $stream->method('write')

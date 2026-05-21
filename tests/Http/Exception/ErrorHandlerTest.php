@@ -129,6 +129,46 @@ class ErrorHandlerTest extends TestCase
         $this->assertSame(ErrorHandler::DEFAULT_MESSAGE, $error[ErrorHandler::ERROR_MESSAGE]);
     }
 
+    /**
+     * @return void
+     */
+    public function testErrorHandlerAppliesImmutableContentTypeHeaders()
+    {
+        $htmlRequest = $this->createRequestMock();
+        $htmlRequest->method('getHeader')
+            ->willReturnMap([
+                [ErrorHandler::CONTENT_TYPE, []],
+                [ErrorHandler::DEBUG_MODE, ['0']],
+            ]);
+
+        $htmlResponse = $this->createMock(ResponseInterface::class);
+        $htmlResponse->method('getStatusCode')
+            ->willReturn(500);
+        $htmlResponse->expects($this->once())
+            ->method('withHeader')
+            ->with(ErrorHandler::CONTENT_TYPE, ErrorHandler::APP_HTML)
+            ->willReturnSelf();
+
+        (new ErrorHandler($htmlRequest, $htmlResponse, new Exception('Hidden')))->error();
+
+        $jsonRequest = $this->createRequestMock();
+        $jsonRequest->method('getHeader')
+            ->willReturnMap([
+                [ErrorHandler::CONTENT_TYPE, [ErrorHandler::APP_JSON]],
+                [ErrorHandler::DEBUG_MODE, ['0']],
+            ]);
+
+        $jsonResponse = $this->createMock(ResponseInterface::class);
+        $jsonResponse->method('getStatusCode')
+            ->willReturn(500);
+        $jsonResponse->expects($this->once())
+            ->method('withHeader')
+            ->with(ErrorHandler::CONTENT_TYPE, ErrorHandler::APP_JSON)
+            ->willReturnSelf();
+
+        (new ErrorHandler($jsonRequest, $jsonResponse, new Exception('Hidden')))->error();
+    }
+
     private function createRequestMock(): ServerRequestInterface&Stub
     {
         return $this->createStub(ServerRequestInterface::class);

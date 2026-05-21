@@ -359,10 +359,9 @@ class RequestHandler implements RequestHandlerInterface
     ): ResponseInterface {
         // Checks if error handler is implemented
         if (!$this->container->has(ErrorHandlerInterface::class)) {
-            // Check the body of the message
-            $response->getBody()->write($error->getMessage());
+            $response->getBody()->write(ErrorHandler::DEFAULT_MESSAGE);
 
-            return $response;
+            return $response->withStatus(500);
         }
 
         $errorHandler = $this->container->get(ErrorHandlerInterface::class);

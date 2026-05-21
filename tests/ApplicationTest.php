@@ -16,6 +16,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 use UnexpectedValueException;
 use Wiring\Application;
+use Wiring\Http\Exception\ErrorHandler;
 use Wiring\Http\RequestHandler;
 use Wiring\Interfaces\ApplicationInterface;
 use Wiring\Interfaces\ErrorHandlerInterface;
@@ -272,6 +273,35 @@ final class ApplicationTest extends TestCase
 
         $app = new Application(
             $container,
+            $this->createServerRequestMock(),
+            $response,
+            true
+        );
+
+        $this->assertSame($response, $app->run());
+    }
+
+    /**
+     * @return void
+     */
+    public function testFallbackErrorHandlerUsesGenericMessage()
+    {
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->expects($this->once())
+            ->method('write')
+            ->with(ErrorHandler::DEFAULT_MESSAGE)
+            ->willReturn(strlen(ErrorHandler::DEFAULT_MESSAGE));
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getBody')
+            ->willReturn($stream);
+        $response->expects($this->once())
+            ->method('withStatus')
+            ->with(500)
+            ->willReturnSelf();
+
+        $app = new Application(
+            $this->createContainerMock(),
             $this->createServerRequestMock(),
             $response,
             true
