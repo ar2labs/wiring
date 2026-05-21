@@ -49,9 +49,13 @@ trait ConfigAwareTrait
             throw new \BadFunctionCallException('Config interface not implemented.');
         }
 
-        return empty($key) ?
-            $this->get(ConfigInterface::class) :
-            $this->get(ConfigInterface::class)->get($key);
+        $config = $this->get(ConfigInterface::class);
+
+        if (!$config instanceof ConfigInterface) {
+            throw new \UnexpectedValueException('Config interface not implemented.');
+        }
+
+        return empty($key) ? $config : $config->get($key);
     }
 
     /**
@@ -64,6 +68,9 @@ trait ConfigAwareTrait
      */
     public function lang(string $key, $default = null)
     {
-        return $this->config()->get('lang.' . $key, $default);
+        /** @var ConfigInterface $config */
+        $config = $this->config();
+
+        return $config->get('lang.' . $key, $default);
     }
 }

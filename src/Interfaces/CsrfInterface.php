@@ -33,7 +33,7 @@ interface CsrfInterface
     /**
      * Generates a new CSRF token
      *
-     * @return array
+    * @return array<string, string>
      */
     public function generateToken(): array;
 

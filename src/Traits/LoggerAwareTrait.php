@@ -48,6 +48,12 @@ trait LoggerAwareTrait
             throw new \BadFunctionCallException('Logger interface not implemented.');
         }
 
-        return $this->get(LoggerInterface::class);
+        $logger = $this->get(LoggerInterface::class);
+
+        if (!$logger instanceof LoggerInterface) {
+            throw new \UnexpectedValueException('Logger interface not implemented.');
+        }
+
+        return $logger;
     }
 }

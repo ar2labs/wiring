@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
+use UnexpectedValueException;
 use Wiring\Http\Exception\ErrorHandler;
 use Wiring\Http\Exception\HttpException;
 use Wiring\Http\Exception\MethodNotAllowedException;
@@ -48,14 +49,26 @@ abstract class AbstractJsonController extends AbstractController
         ServerRequestInterface $request
     ): ResponseInterface {
         $controller = $route->getCallable($this->getContainer());
-        $response = $controller($request, $route->getVars());
+        $result = $controller($request, $route->getVars());
 
-        if ($this->isJsonEncodable($response)) {
-            $body = json_encode($response);
+        if ($this->isJsonEncodable($result)) {
+            $body = json_encode($result);
+
+            if (!is_string($body)) {
+                throw new UnexpectedValueException('Route callable result must be JSON encodable.');
+            }
+
+            $response = $this->getResponse();
             $response->getBody()->write($body);
+
+            return $this->applyDefaultResponseHeaders($response);
         }
 
-        return $this->applyDefaultResponseHeaders($response);
+        if (!$result instanceof ResponseInterface) {
+            throw new UnexpectedValueException('Route callable must return a response.');
+        }
+
+        return $this->applyDefaultResponseHeaders($result);
     }
 
     /**
@@ -84,7 +97,13 @@ abstract class AbstractJsonController extends AbstractController
      */
     public function json(): JsonStrategyInterface
     {
-        return $this->get(JsonStrategyInterface::class);
+        $json = $this->get(JsonStrategyInterface::class);
+
+        if (!$json instanceof JsonStrategyInterface) {
+            throw new UnexpectedValueException('JSON strategy interface not implemented.');
+        }
+
+        return $json;
     }
 
     /**
@@ -123,7 +142,7 @@ abstract class AbstractJsonController extends AbstractController
     protected function buildJsonResponseMiddleware(
         HttpException $exception
     ): MiddlewareInterface {
-        return new class($this->response, $exception) implements MiddlewareInterface {
+        return new class ($this->response, $exception) implements MiddlewareInterface {
             /** @var ResponseInterface $response */
             protected $response;
             /** @var HttpException $exception */
@@ -160,7 +179,7 @@ abstract class AbstractJsonController extends AbstractController
         }
 
         // Return throwable handler
-        return new class($this->container, $this->response) implements MiddlewareInterface {
+        return new class ($this->container, $this->response) implements MiddlewareInterface {
             /** @var ContainerInterface $container */
             protected $container;
             /** @var ResponseInterface $response */

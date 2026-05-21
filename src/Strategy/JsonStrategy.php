@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Strategy;
 
 use InvalidArgumentException;
@@ -75,6 +77,10 @@ class JsonStrategy implements JsonStrategyInterface
                 ->getBody()
                 ->write($this->encode($this->data, $this->encodingOptions));
         } else {
+            if (!is_string($this->data)) {
+                $this->data = $this->encode($this->data, 0);
+            }
+
             $response
                 ->getBody()
                 ->write($this->data);

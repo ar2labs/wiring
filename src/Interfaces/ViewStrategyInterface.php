@@ -26,7 +26,7 @@ interface ViewStrategyInterface
      * Render a new template view.
      *
      * @param string $view   Template view name
-     * @param array  $params View params
+    * @param array<string, mixed> $params View params
      *
      * @return self
      */

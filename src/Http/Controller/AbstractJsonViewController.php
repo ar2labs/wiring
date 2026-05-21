@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Controller;
 
+use UnexpectedValueException;
 use Wiring\Interfaces\JsonStrategyInterface;
 use Wiring\Interfaces\ViewStrategyInterface;
 
@@ -15,7 +16,13 @@ abstract class AbstractJsonViewController extends AbstractController
      */
     public function json(): JsonStrategyInterface
     {
-        return $this->get(JsonStrategyInterface::class);
+        $json = $this->get(JsonStrategyInterface::class);
+
+        if (!$json instanceof JsonStrategyInterface) {
+            throw new UnexpectedValueException('JSON strategy interface not implemented.');
+        }
+
+        return $json;
     }
 
     /**
@@ -24,6 +31,12 @@ abstract class AbstractJsonViewController extends AbstractController
      */
     public function view(): ViewStrategyInterface
     {
-        return $this->get(ViewStrategyInterface::class);
+        $view = $this->get(ViewStrategyInterface::class);
+
+        if (!$view instanceof ViewStrategyInterface) {
+            throw new UnexpectedValueException('View strategy interface not implemented.');
+        }
+
+        return $view;
     }
 }

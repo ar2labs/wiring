@@ -65,7 +65,7 @@ trait ContainerAwareTrait
      */
     public function has(string $id): bool
     {
-        if ((!$this->container) || (!method_exists($this->container, 'has'))) {
+        if (!$this->container) {
             throw new BadMethodCallException('Method has does not exist.');
         }
 

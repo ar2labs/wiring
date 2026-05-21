@@ -18,7 +18,7 @@ interface HttpExceptionInterface
     /**
      * Return an array of headers provided when the exception was thrown.
      *
-     * @return array
+    * @return array<string, string|array<string>>
      */
     public function getHeaders(): array;
 

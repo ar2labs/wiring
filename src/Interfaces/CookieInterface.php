@@ -11,7 +11,7 @@ interface CookieInterface
      *
      * @param string $name
      *
-     * @return string|array|object
+    * @return string|array<mixed>|object
      */
     public static function get(string $name);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Controller;
 
+use UnexpectedValueException;
 use Wiring\Interfaces\ViewStrategyInterface;
 
 abstract class AbstractViewController extends AbstractController
@@ -16,6 +17,12 @@ abstract class AbstractViewController extends AbstractController
      */
     public function view(): ViewStrategyInterface
     {
-        return $this->get(ViewStrategyInterface::class);
+        $view = $this->get(ViewStrategyInterface::class);
+
+        if (!$view instanceof ViewStrategyInterface) {
+            throw new UnexpectedValueException('View strategy interface not implemented.');
+        }
+
+        return $view;
     }
 }

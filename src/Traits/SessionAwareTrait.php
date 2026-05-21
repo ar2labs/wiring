@@ -48,6 +48,12 @@ trait SessionAwareTrait
             throw new \BadFunctionCallException('Session interface not implemented.');
         }
 
-        return $this->get(SessionInterface::class);
+        $session = $this->get(SessionInterface::class);
+
+        if (!$session instanceof SessionInterface) {
+            throw new \UnexpectedValueException('Session interface not implemented.');
+        }
+
+        return $session;
     }
 }

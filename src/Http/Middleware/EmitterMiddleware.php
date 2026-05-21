@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use UnexpectedValueException;
 use Wiring\Interfaces\EmitterInterface;
 
 class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
@@ -48,7 +49,7 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
         // Checks if or where headers not have been sent
         if (headers_sent() === false) {
             // Check if emitter is set and emit method exist
-            if ($this->emitter != null && method_exists($this->emitter, 'emit')) {
+            if ($this->emitter !== null) {
                 // Emits for a emitter environment
                 $this->emitter->emit($response);
             } else {
@@ -109,33 +110,38 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
      *
      * @return int Status Code
      */
-    private function emitHeader(ResponseInterface $response)
+    private function emitHeader(ResponseInterface $response): int
     {
         // Retrieves all message header values
         foreach ($response->getHeaders() as $name => $values) {
+            $this->assertHeaderLineSafe((string) $name);
             // Set cookie status
             $cookie = stripos($name, 'Set-Cookie') !== 0;
             // Get header value
             foreach ($values as $value) {
+                $this->assertHeaderLineSafe($value);
                 header(sprintf('%s: %s', $name, $value), $cookie);
                 $cookie = false;
             }
         }
 
         // Get Protocol Version
-        $protocolVersion = $response->getProtocolVersion() != '' ?
+        $protocolVersion = $response->getProtocolVersion() !== '' ?
             $response->getProtocolVersion() :
-            $_SERVER['SERVER_PROTOCOL'];
+            (isset($_SERVER['SERVER_PROTOCOL']) && is_string($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : '1.1');
 
         // Get Status Code
-        $statusCode = $response->getStatusCode() != 200 ?
+        $statusCode = $response->getStatusCode() !== 200 ?
             $response->getStatusCode() :
             (int) http_response_code();
 
         // Get Reason Phrase
-        $reasonPhrase = $response->getReasonPhrase() != '' ?
+        $reasonPhrase = $response->getReasonPhrase() !== '' ?
             $response->getReasonPhrase() :
          'Internal Server Error';
+
+        $this->assertHeaderLineSafe($protocolVersion);
+        $this->assertHeaderLineSafe($reasonPhrase);
 
         // Send a raw HTTP header
         header(sprintf(
@@ -146,5 +152,12 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
         ), true, $statusCode);
 
         return $statusCode;
+    }
+
+    private function assertHeaderLineSafe(string $value): void
+    {
+        if (preg_match('/[\r\n]/', $value) === 1) {
+            throw new UnexpectedValueException('Header values must not contain line breaks.');
+        }
     }
 }

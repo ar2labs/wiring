@@ -9,13 +9,13 @@ use Wiring\Interfaces\StrategyInterface;
 
 abstract class AbstractStrategy implements StrategyInterface
 {
-    /** @var array */
+    /** @var array<string, string> */
     protected $defaultResponseHeaders = [];
 
     /**
      * Get current default response headers.
      *
-     * @return array
+    * @return array<string, string>
      */
     public function getDefaultResponseHeaders(): array
     {
@@ -40,7 +40,7 @@ abstract class AbstractStrategy implements StrategyInterface
     /**
      * Add multiple default response headers.
      *
-     * @param array $headers
+    * @param array<string, string> $headers
      *
      * @return self
      */

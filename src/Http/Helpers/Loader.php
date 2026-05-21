@@ -6,16 +6,16 @@ namespace Wiring\Http\Helpers;
 
 class Loader
 {
-    /** @var array $path */
+    /** @var list<string> */
     protected $path = [];
 
-    /** @var array filetypes */
+    /** @var list<string> */
     protected $filetypes;
 
     /**
      * Loader constructor.
      *
-     * @param array $filetypes
+    * @param list<string> $filetypes
      */
     public function __construct(array $filetypes = ['php'])
     {
@@ -40,7 +40,7 @@ class Loader
      * Get files in an array for a single value through an
      * iterative process via callback function.
      *
-     * @return array
+     * @return list<string>
      */
     public function load(): array
     {
@@ -49,10 +49,14 @@ class Loader
         foreach ($this->path as $path) {
             // Get files
             foreach ($this->filetypes as $filetype) {
-                $scripts[] = glob($path . "/*.{$filetype}");
+                $files = glob($path . "/*.{$filetype}");
+
+                if (is_array($files)) {
+                    $scripts = array_merge($scripts, $files);
+                }
             }
         }
 
-        return array_reduce($scripts, 'array_merge', []);
+        return $scripts;
     }
 }

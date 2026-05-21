@@ -48,6 +48,12 @@ trait FlashAwareTrait
             throw new \BadFunctionCallException('Flash interface not implemented.');
         }
 
-        return $this->get(FlashInterface::class);
+        $flash = $this->get(FlashInterface::class);
+
+        if (!$flash instanceof FlashInterface) {
+            throw new \UnexpectedValueException('Flash interface not implemented.');
+        }
+
+        return $flash;
     }
 }

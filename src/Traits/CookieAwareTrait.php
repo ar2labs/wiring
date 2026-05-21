@@ -48,6 +48,12 @@ trait CookieAwareTrait
             throw new \BadFunctionCallException('Cookie interface not implemented.');
         }
 
-        return $this->get(CookieInterface::class);
+        $cookie = $this->get(CookieInterface::class);
+
+        if (!$cookie instanceof CookieInterface) {
+            throw new \UnexpectedValueException('Cookie interface not implemented.');
+        }
+
+        return $cookie;
     }
 }

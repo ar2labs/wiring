@@ -48,6 +48,12 @@ trait HashAwareTrait
             throw new \LogicException('Hash interface not implemented.');
         }
 
-        return $this->get(HashInterface::class);
+        $hash = $this->get(HashInterface::class);
+
+        if (!$hash instanceof HashInterface) {
+            throw new \UnexpectedValueException('Hash interface not implemented.');
+        }
+
+        return $hash;
     }
 }

@@ -25,11 +25,18 @@ class Info
         // Stop buffering
         ob_end_clean();
 
+        $appVersion = '2.0.0';
+
+        if (defined('APP_VERSION')) {
+            $version = constant('APP_VERSION');
+            $appVersion = is_scalar($version) || $version === null ? (string) $version : $appVersion;
+        }
+
         // Set custom version info
         $ver = sprintf(
             'PHP Version %s / Wiring Version %s',
             phpversion(),
-            defined('APP_VERSION') ? APP_VERSION : '2.0.0'
+            $appVersion
         );
 
         // Regex replacements

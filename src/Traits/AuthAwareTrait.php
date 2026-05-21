@@ -48,6 +48,12 @@ trait AuthAwareTrait
             throw new \BadFunctionCallException('Auth interface not implemented.');
         }
 
-        return $this->get(AuthInterface::class);
+        $auth = $this->get(AuthInterface::class);
+
+        if (!$auth instanceof AuthInterface) {
+            throw new \UnexpectedValueException('Auth interface not implemented.');
+        }
+
+        return $auth;
     }
 }

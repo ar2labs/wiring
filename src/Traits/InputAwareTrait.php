@@ -21,28 +21,35 @@ trait InputAwareTrait
     {
         $header = $request->getHeader('content-type');
         $type = '';
-        $content = $request->getBody()->getContents();
+        $body = $request->getBody()->getContents();
+        $content = $body;
 
         if (isset($header[0])) {
             $type = (string) $header[0];
         }
 
-        if ((strpos($type, 'multipart/form-data') !== false) ||
-            (strpos($type, 'application/x-www-form-urlencoded') !== false)) {
+        $type = strtolower($type);
+
+        if ((str_contains($type, 'multipart/form-data')) ||
+            (str_contains($type, 'application/x-www-form-urlencoded'))) {
             // Convert Multipart
             $content = $isArray ?
                 $request->getParsedBody() :
                 (object) $request->getParsedBody();
         }
 
-        if (strpos($type, 'application/json') !== false) {
+        if (str_contains($type, 'application/json')) {
             // Convert JSON
-            $content = json_decode($request->getBody()->getContents(), $isArray);
+            $content = json_decode($body, $isArray);
         }
 
-        if (strpos($type, 'application/xml') !== false) {
+        if (str_contains($type, 'application/xml')) {
             // Convert XML
-            $xml = simplexml_load_string($request->getBody()->getContents());
+            $previousUseInternalErrors = libxml_use_internal_errors(true);
+            $xml = simplexml_load_string($body, 'SimpleXMLElement', LIBXML_NONET);
+            libxml_clear_errors();
+            libxml_use_internal_errors($previousUseInternalErrors);
+
             $content = json_decode((string) json_encode($xml), $isArray);
         }
 

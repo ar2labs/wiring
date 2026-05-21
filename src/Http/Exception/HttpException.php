@@ -24,14 +24,10 @@ class HttpException extends \Exception implements HttpExceptionInterface
      */
     protected $previous;
 
-    /**
-     * @var array
-     */
+    /** @var array<string, string|array<string>> */
     protected $headers = [];
 
-    /**
-     * @var array
-     */
+    /** @var array<string, mixed> */
     protected $data = [];
 
     /**
@@ -39,14 +35,14 @@ class HttpException extends \Exception implements HttpExceptionInterface
      *
      * @param int        $status
      * @param string     $message
-     * @param \Exception $previous
-     * @param array      $headers
+    * @param \Exception|null $previous
+    * @param array<string, string|array<string>> $headers
      * @param int        $code
      */
     public function __construct(
         int        $status,
         string     $message = '',
-        \Exception $previous = null,
+        ?\Exception $previous = null,
         array      $headers = [],
         int        $code = 0
     ) {
@@ -71,7 +67,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
     /**
      * Return an array of headers provided when the exception was thrown.
      *
-     * @return array
+    * @return array<string, string|array<string>>
      */
     public function getHeaders(): array
     {
@@ -81,7 +77,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
     /**
      * Return an array of data provided when the exception was thrown.
      *
-     * @return array
+    * @return array<string, mixed>
      */
     public function getData(): array
     {
@@ -107,12 +103,12 @@ class HttpException extends \Exception implements HttpExceptionInterface
         }
 
         $statusCode = ($this->previous instanceof \Exception) ?
-            $this->previous->getCode() : null;
+            $this->previous->getCode() : $this->getCode();
 
-        // Check status code is null
-        if ($statusCode == null) {
-            $statusCode = $this->code >= 100 && $this->code <= 500 ?
-                $this->code : 400;
+        // Check status code is valid
+        if ($statusCode < 100 || $statusCode > 599) {
+            $statusCode = $this->getCode() >= 100 && $this->getCode() <= 599 ?
+                $this->getCode() : 400;
         }
 
         $this->data = [
@@ -120,8 +116,6 @@ class HttpException extends \Exception implements HttpExceptionInterface
             'code' => $statusCode,
             'message' => $this->message,
         ];
-
-        $response->withStatus($statusCode);
 
         return $response->withStatus($this->status, $this->message);
     }

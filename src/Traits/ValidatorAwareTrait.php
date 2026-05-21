@@ -48,6 +48,12 @@ trait ValidatorAwareTrait
             throw new \BadFunctionCallException('Validator interface not implemented.');
         }
 
-        return $this->get(ValidatorInterface::class);
+        $validator = $this->get(ValidatorInterface::class);
+
+        if (!$validator instanceof ValidatorInterface) {
+            throw new \UnexpectedValueException('Validator interface not implemented.');
+        }
+
+        return $validator;
     }
 }

@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
+use UnexpectedValueException;
 use Wiring\Http\Exception\BadRequestException;
 use Wiring\Http\Exception\ErrorHandler;
 use Wiring\Interfaces\ErrorHandlerInterface;
@@ -42,9 +43,7 @@ class RequestHandler implements RequestHandlerInterface
      */
     protected $response;
 
-    /**
-     * @var array
-     */
+    /** @var list<array{key: string|null, middleware: MiddlewareInterface, after: bool}> */
     protected $middleware = [];
 
     /**
@@ -132,10 +131,13 @@ class RequestHandler implements RequestHandlerInterface
             }
 
             // Get and execute the next middleware
-            $this->executeMiddleware($this->middleware[$this->currentMiddleware]);
+            $middlewareArray = $this->middleware[$this->currentMiddleware];
+            $this->executeMiddleware($middlewareArray);
         } catch (Throwable $e) {
             // Call error handler
             return $this->errorHandler($e, $this->request, $this->response);
+        } finally {
+            $this->finished = true;
         }
 
         return $this->response;
@@ -155,7 +157,9 @@ class RequestHandler implements RequestHandlerInterface
             return null;
         }
 
-        return $this->middleware[$position][self::MIDDLEWARE];
+        $middleware = $this->middleware[$position][self::MIDDLEWARE];
+
+        return $middleware;
     }
 
     /**
@@ -200,14 +204,12 @@ class RequestHandler implements RequestHandlerInterface
     /**
      * Execute a middleware.
      *
-     * @param array $middlewareArray
+    * @param array{key: string|null, middleware: MiddlewareInterface, after: bool} $middlewareArray
      */
     protected function executeMiddleware(array $middlewareArray): void
     {
-        if ($middlewareArray[self::MIDDLEWARE] instanceof MiddlewareInterface) {
-            $this->response = ($middlewareArray[self::MIDDLEWARE])
-                ->process($this->request, $this);
-        }
+        $this->response = ($middlewareArray[self::MIDDLEWARE])
+            ->process($this->request, $this);
     }
 
     /**
@@ -289,7 +291,7 @@ class RequestHandler implements RequestHandlerInterface
         $key = $this->findMiddleware($key);
 
         if ($key !== null) {
-            unset($this->middleware[$key]);
+            array_splice($this->middleware, $key, 1);
         }
 
         return $this;
@@ -332,26 +334,33 @@ class RequestHandler implements RequestHandlerInterface
      *
      * @throws ErrorHandler
      *
-     * @return mixed
+     * @return ResponseInterface
      */
     protected function errorHandler(
         Throwable $error,
         ServerRequestInterface $request,
         ResponseInterface $response
-    ) {
+    ): ResponseInterface {
         // Checks if error handler is implemented
         if (!$this->container->has(ErrorHandlerInterface::class)) {
             // Check the body of the message
-            if (method_exists($response->getBody(), 'write')) {
-                $response->getBody()->write($error->getMessage());
-            }
+            $response->getBody()->write($error->getMessage());
 
             return $response;
         }
 
-        /** @var callable $errorHandler */
         $errorHandler = $this->container->get(ErrorHandlerInterface::class);
 
-        return $errorHandler($request, $response, $error);
+        if (!is_callable($errorHandler)) {
+            throw new UnexpectedValueException('Error handler service must be callable.');
+        }
+
+        $response = $errorHandler($request, $response, $error);
+
+        if (!$response instanceof ResponseInterface) {
+            throw new UnexpectedValueException('Error handler service must return a response.');
+        }
+
+        return $response;
     }
 }

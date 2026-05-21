@@ -11,7 +11,7 @@ interface ErrorHandlerInterface
      *
      * @param string|null $message
      *
-     * @return array
+    * @return array<string, mixed>
      */
     public function error(?string $message = null): array;
 

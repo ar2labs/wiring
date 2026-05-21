@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Strategy;
 
 use Psr\Http\Message\ResponseInterface;
+use UnexpectedValueException;
 use Wiring\Interfaces\ViewStrategyInterface;
 
 class ViewStrategy implements ViewStrategyInterface
@@ -22,9 +25,7 @@ class ViewStrategy implements ViewStrategyInterface
      */
     protected $view;
 
-    /**
-     * @var array
-     */
+    /** @var array<string, mixed> */
     protected $params;
 
     /**
@@ -56,7 +57,7 @@ class ViewStrategy implements ViewStrategyInterface
      * Render a new template view.
      *
      * @param string $view Template view name
-     * @param array  $params View params
+    * @param array<string, mixed> $params View params
      *
      * @return self
      */
@@ -95,7 +96,19 @@ class ViewStrategy implements ViewStrategyInterface
     public function to(ResponseInterface $response, int $status = 200): ResponseInterface
     {
         if ($this->view) {
-            $response->getBody()->write($this->engine()->render($this->view, $this->params));
+            $renderer = [$this->engine(), 'render'];
+
+            if (!is_callable($renderer)) {
+                throw new UnexpectedValueException('Template engine must provide a render method.');
+            }
+
+            $content = $renderer($this->view, $this->params);
+
+            if (!is_string($content)) {
+                throw new UnexpectedValueException('Template render must return a string.');
+            }
+
+            $response->getBody()->write($content);
         } elseif ($this->data) {
             $response->getBody()->write($this->data);
         }

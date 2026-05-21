@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Wiring\Http\Controller;
 
+use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
+use UnexpectedValueException;
 use Wiring\Http\Exception\MethodNotAllowedException;
 use Wiring\Http\Exception\NotFoundException;
 use Wiring\Interfaces\ContainerAwareInterface;
@@ -60,6 +62,10 @@ abstract class AbstractController extends AbstractStrategy implements
         $controller = $route->getCallable($this->getContainer());
         $response = $controller($request, $route->getVars());
 
+        if (!$response instanceof ResponseInterface) {
+            throw new UnexpectedValueException('Route callable must return a response.');
+        }
+
         return $this->applyDefaultResponseHeaders($response);
     }
 
@@ -91,6 +97,8 @@ abstract class AbstractController extends AbstractStrategy implements
         string $url,
         ?int $status = self::DEFAULT_STATUS_CODE_REDIRECT
     ): ResponseInterface {
+        $this->assertSafeRedirectUrl($url);
+
         $responseWithRedirect = $response->withHeader('Location', $url);
 
         if (!is_null($status)) {
@@ -98,6 +106,30 @@ abstract class AbstractController extends AbstractStrategy implements
         }
 
         return $responseWithRedirect;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    protected function assertSafeRedirectUrl(string $url): void
+    {
+        $decodedUrl = rawurldecode($url);
+
+        if ($url === '' || trim($url) !== $url) {
+            throw new InvalidArgumentException('Redirect URL must be a non-empty relative URL.');
+        }
+
+        if (preg_match('/[\x00-\x1F\x7F]/', $url . $decodedUrl) === 1) {
+            throw new InvalidArgumentException('Redirect URL must not contain control characters.');
+        }
+
+        if (str_contains($url, '\\') || str_starts_with($url, '//')) {
+            throw new InvalidArgumentException('Redirect URL must not contain a scheme or host.');
+        }
+
+        if (preg_match('/^[A-Za-z][A-Za-z0-9+.-]*:/', $url) === 1) {
+            throw new InvalidArgumentException('Redirect URL must not contain a scheme or host.');
+        }
     }
 
     /**
@@ -147,7 +179,7 @@ abstract class AbstractController extends AbstractStrategy implements
      */
     public function getThrowableHandler(): MiddlewareInterface
     {
-        return new class() implements MiddlewareInterface {
+        return new class () implements MiddlewareInterface {
             /**
              * {@inheritdoc}
              *
@@ -178,7 +210,7 @@ abstract class AbstractController extends AbstractStrategy implements
     protected function throwThrowableMiddleware(
         Throwable $error
     ): MiddlewareInterface {
-        return new class($error) implements MiddlewareInterface {
+        return new class ($error) implements MiddlewareInterface {
             /** @var Throwable $error */
             protected $error;
 

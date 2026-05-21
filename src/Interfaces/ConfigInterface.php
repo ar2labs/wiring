@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wiring\Interfaces;
 
 interface ConfigInterface
@@ -7,7 +9,7 @@ interface ConfigInterface
     /**
      * Loads a supported configuration file format.
      *
-     * @param array $path
+    * @param array<int, string> $path
      */
     public function __construct(array $path);
 
@@ -44,7 +46,7 @@ interface ConfigInterface
     public function has(string $key): bool;
 
     /**
-     * @return array|null
+    * @return array<string, mixed>|null
      */
     public function all(): ?array;
 

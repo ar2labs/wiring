@@ -53,9 +53,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
      */
     protected $logger;
 
-    /**
-     * @var array
-     */
+    /** @var array<string, mixed> */
     protected $loggerContext = [];
 
     /**
@@ -75,14 +73,14 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
      * @param ResponseInterface      $response
      * @param Throwable              $exception
      * @param LoggerInterface|null   $logger
-     * @param array                  $loggerContext
+    * @param array<string, mixed>   $loggerContext
      * @param bool                   $debug
      */
     public function __construct(
         ServerRequestInterface $request,
         ResponseInterface $response,
         Throwable $exception,
-        LoggerInterface $logger = null,
+        ?LoggerInterface $logger = null,
         array $loggerContext = [],
         bool $debug = false
     ) {
@@ -94,8 +92,8 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         $this->debug = $debug;
 
         parent::__construct(
-            $exception->getMessage() ?? self::UNDEFINED_MESSAGE,
-            $exception->getCode() ?? 0,
+            $exception->getMessage(),
+            $exception->getCode(),
             $exception
         );
     }
@@ -105,29 +103,33 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
      *
      * @param string $message
      *
-     * @return array
+    * @return array<string, mixed>
      */
     public function error(?string $message = null): array
     {
         $type = $this->request->getHeader(self::CONTENT_TYPE);
         $mode = $this->request->getHeader(self::DEBUG_MODE);
 
-        // Get debug mode from header
-        if ((is_array($mode)) && (array_key_exists('0', $mode)) &&
-            ($mode[0] == '0' || $mode[0] == '1')) {
-            $this->debug = (bool) $mode[0];
+        $debugMode = (string) ($mode[0] ?? '');
+        if ($debugMode === '0' || $debugMode === '1') {
+            $this->debug = $debugMode === '1';
         }
 
-        if ($message == null) {
+        if ($message === null) {
             $message = $this->debug ? self::DEBUG_MESSAGE : self::DEFAULT_MESSAGE;
         }
 
         // Get message
-        $msg = $this->exception->getMessage() ?? $message;
+        $msg = $this->debug && $this->exception->getMessage() !== '' ?
+            $this->exception->getMessage() :
+            $message;
 
         // Logger
         if ($this->logger instanceof LoggerInterface) {
-            $this->logger->error($this->exception->getMessage(), $this->loggerContext);
+            $this->logger->error(
+                $this->redactSensitiveText($this->exception->getMessage()),
+                $this->redactLoggerContext($this->loggerContext)
+            );
         }
 
         if ($this->response->getStatusCode()) {
@@ -135,7 +137,8 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
             http_response_code($this->response->getStatusCode());
         }
 
-        $this->isJson = isset($type[0]) && $type[0] == self::APP_JSON;
+        $contentType = strtolower((string) ($type[0] ?? ''));
+        $this->isJson = str_starts_with($contentType, self::APP_JSON);
 
         if ($this->isJson) {
             // Return error message to JSON
@@ -171,14 +174,14 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
      *
      * @param string $message
      *
-     * @return array
+    * @return array<string, mixed>
      */
     private function errorHtml(string $message): array
     {
         // Define Content-Type to HTML
         $this->response->withHeader(self::CONTENT_TYPE, self::APP_HTML);
 
-        $message = sprintf('<span>%s</span>', htmlentities($message));
+        $message = sprintf('<span>%s</span>', htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
 
         $error = [
             self::ERROR_TYPE => get_class($this->exception),
@@ -189,7 +192,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         if ($this->debug) {
             // Debug details
             $trace = $this->exception->getTraceAsString();
-            $trace = sprintf('<pre>%s</pre>', htmlentities($trace));
+            $trace = sprintf('<pre>%s</pre>', htmlspecialchars($trace, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
 
             $error[self::ERROR_MESSAGE] = $message;
             $error[self::ERROR_CODE] = $this->exception->getCode();
@@ -209,7 +212,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
      *
      * @param string $message
      *
-     * @return array
+    * @return array<string, mixed>
      */
     private function errorJson(string $message): array
     {
@@ -225,7 +228,7 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         if ($this->debug) {
             // Debug details
             $error[self::ERROR_DATA] = [
-                self::ERROR_CODE => $this->exception->getCode() ?? 0,
+                self::ERROR_CODE => $this->exception->getCode(),
                 self::ERROR_MESSAGE => $this->exception->getTraceAsString(),
                 self::ERROR_FILE => $this->exception->getFile(),
                 self::ERROR_LINE => $this->exception->getLine(),
@@ -233,5 +236,45 @@ class ErrorHandler extends \Exception implements ErrorHandlerInterface
         }
 
         return $error;
+    }
+
+    private function redactSensitiveText(string $value): string
+    {
+        return (string) preg_replace(
+            '/\b(password|passwd|secret|token|authorization|cookie|session|api[_-]?key|private[_-]?key)\b\s*[:=]\s*[^\s,;]+/i',
+            '$1=[redacted]',
+            $value
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @return array<string, mixed>
+     */
+    private function redactLoggerContext(array $context): array
+    {
+        foreach ($context as $key => $value) {
+            if ($this->isSensitiveContextKey((string) $key)) {
+                $context[$key] = '[redacted]';
+
+                continue;
+            }
+
+            if (is_array($value)) {
+                /** @var array<string, mixed> $value */
+                $context[$key] = $this->redactLoggerContext($value);
+            }
+        }
+
+        return $context;
+    }
+
+    private function isSensitiveContextKey(string $key): bool
+    {
+        return preg_match(
+            '/password|passwd|secret|token|authorization|cookie|session|api[_-]?key|private[_-]?key|csrf/i',
+            $key
+        ) === 1;
     }
 }

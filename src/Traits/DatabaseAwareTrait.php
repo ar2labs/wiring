@@ -22,13 +22,16 @@ trait DatabaseAwareTrait
             throw new \BadFunctionCallException('Database interface not implemented.');
         }
 
-        // Check connection method exist
-        if ((!empty($connection)) &&
-            (method_exists($this->get(DatabaseInterface::class), 'connection'))) {
-            return $this->get(DatabaseInterface::class)
-                ->connection($connection);
+        $database = $this->get(DatabaseInterface::class);
+
+        if (!$database instanceof DatabaseInterface) {
+            throw new \UnexpectedValueException('Database interface not implemented.');
         }
 
-        return $this->get(DatabaseInterface::class);
+        if (!empty($connection)) {
+            return $database->connection($connection);
+        }
+
+        return $database;
     }
 }

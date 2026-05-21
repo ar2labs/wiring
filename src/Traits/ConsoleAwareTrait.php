@@ -48,6 +48,12 @@ trait ConsoleAwareTrait
             throw new \BadFunctionCallException('Console interface not implemented.');
         }
 
-        return $this->get(ConsoleInterface::class);
+        $console = $this->get(ConsoleInterface::class);
+
+        if (!$console instanceof ConsoleInterface) {
+            throw new \UnexpectedValueException('Console interface not implemented.');
+        }
+
+        return $console;
     }
 }

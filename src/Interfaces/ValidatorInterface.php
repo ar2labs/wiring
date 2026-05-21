@@ -9,8 +9,8 @@ interface ValidatorInterface
     /**
      * Set validation using input and rules.
      *
-     * @param  array  $input
-     * @param  array  $rules
+    * @param  array<string, mixed>  $input
+    * @param  array<string, mixed>  $rules
      *
      * @return self
      */
@@ -33,7 +33,7 @@ interface ValidatorInterface
     /**
      * Get errors and return.
      *
-     * @return array
+    * @return array<string, mixed>
      */
     public function errors();
 
@@ -50,7 +50,7 @@ interface ValidatorInterface
     /**
      * Adds custom rule messages.
      *
-     * @param array $messages
+    * @param array<string, string> $messages
      *
      * @return void
      */
@@ -70,7 +70,7 @@ interface ValidatorInterface
     /**
      * Adds custom field messages
      *
-     * @param array $messages
+    * @param array<string, array<string, string>> $messages
      *
      * @return void
      */

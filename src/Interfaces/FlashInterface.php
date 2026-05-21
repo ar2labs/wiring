@@ -47,7 +47,7 @@ interface FlashInterface
     /**
      * Get flash messages.
      *
-     * @return array Messages to show for current request
+    * @return array<string, string> Messages to show for current request
      */
     public function getMessages(): array;
 

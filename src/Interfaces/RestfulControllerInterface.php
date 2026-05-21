@@ -31,7 +31,7 @@ interface RestfulControllerInterface
      * Get an existing resource.
      *
      * @param ServerRequestInterface $request
-     * @param array                  $args
+    * @param array<string, mixed>   $args
      *
      * @return ResponseInterface $response
      */
@@ -44,7 +44,7 @@ interface RestfulControllerInterface
      * Update an existing resource.
      *
      * @param ServerRequestInterface $request
-     * @param array                  $args
+    * @param array<string, mixed>   $args
      *
      * @return ResponseInterface $response
      */
@@ -57,7 +57,7 @@ interface RestfulControllerInterface
      * Delete an existing resource.
      *
      * @param ServerRequestInterface $request
-     * @param array                  $args
+    * @param array<string, mixed>   $args
      *
      * @return ResponseInterface $response
      */

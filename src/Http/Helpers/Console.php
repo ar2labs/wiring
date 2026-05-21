@@ -149,14 +149,14 @@ class Console
         // Start buffering
         ob_start();
 
-        // Aux array
+        /** @var list<string> $data */
         $data = [];
 
         // Convert elements array
         foreach ($args as $key => $arg) {
             // Check first argument
-            if (($key == 0) && ($arg)) {
-                array_push($data, $arg);
+            if (($key === 0) && ($arg)) {
+                $data[] = $this->encodeForJavaScript($arg);
             }
         }
 
@@ -169,8 +169,7 @@ class Console
         // Return the contents of the output buffer
         $output = ob_get_contents();
 
-        // Store output in new array with zero index
-        $_SESSION[self::CONSOLE_LOG][] = $output;
+        $this->store(is_string($output) ? $output : '');
 
         // Stop buffering
         ob_end_clean();
@@ -278,15 +277,15 @@ class Console
         ob_start();
 
         if (is_object($obj)) { // Check is an object
-            $js = 'var JSONObject = ' . json_encode($obj) . ";\n"
+            $js = 'var JSONObject = ' . $this->encodeForJavaScript($obj) . ";\n"
                 . 'var JSONString = JSON.stringify(JSONObject);'
                 . 'var JSObject = JSON.parse(JSONString); '
                 . "console.$method(JSObject);";
-        } elseif (is_array($obj) || $method == 'dirxml') { // Check is an array
-            $js = 'var data = ' . json_encode($obj) . '; '
+        } elseif (is_array($obj) || $method === 'dirxml') { // Check is an array
+            $js = 'var data = ' . $this->encodeForJavaScript($obj) . '; '
                 . "console.$method(data);";
-        } elseif ($method == self::LOG) { // Check is set
-            $js = "var data = '" . $obj . "'; "
+        } elseif ($method === self::LOG) { // Check is set
+            $js = 'var data = ' . $this->encodeForJavaScript($obj) . '; '
                 . "console.$method(data);";
         } else {  // Method is empty
             $js = "console.$method();";
@@ -299,11 +298,29 @@ class Console
             // Return the contents of the output buffer
             $output = ob_get_contents();
 
-            // Store output in new array with zero index
-            $_SESSION[self::CONSOLE_LOG][] = $output;
+            $this->store(is_string($output) ? $output : '');
         }
 
         // Stop buffering
         ob_end_clean();
+    }
+
+    private function encodeForJavaScript(mixed $value): string
+    {
+        $encoded = json_encode(
+            $value,
+            JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES
+        );
+
+        return is_string($encoded) ? $encoded : 'null';
+    }
+
+    private function store(string $output): void
+    {
+        if (!isset($_SESSION[self::CONSOLE_LOG]) || !is_array($_SESSION[self::CONSOLE_LOG])) {
+            $_SESSION[self::CONSOLE_LOG] = [];
+        }
+
+        $_SESSION[self::CONSOLE_LOG][] = $output;
     }
 }

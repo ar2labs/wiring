@@ -22,14 +22,14 @@ interface RouteInterface
     /**
      * Return variables to be passed to route callable.
      *
-     * @return array
+    * @return array<string, mixed>
      */
     public function getVars(): array;
 
     /**
      * Set variables to be passed to route callable.
      *
-     * @param array $vars
+    * @param array<string, mixed> $vars
      *
      * @return self
      */

@@ -41,7 +41,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      * Get an existing resource.
      *
      * @param ServerRequestInterface $request
-     * @param array $args
+    * @param array<string, mixed> $args
      *
      * @return ResponseInterface $response
      */
@@ -56,7 +56,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      * Update an existing resource.
      *
      * @param ServerRequestInterface $request
-     * @param array                  $args
+    * @param array<string, mixed>   $args
      *
      * @return ResponseInterface $response
      */
@@ -71,7 +71,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      * Delete an existing resource.
      *
      * @param ServerRequestInterface $request
-     * @param array                  $args
+    * @param array<string, mixed>   $args
      *
      * @return ResponseInterface $response
      */
@@ -89,7 +89,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      * @param int $status
      * @param mixed|array $data
      *
-     * @return mixed|array
+    * @return array{code: int|null, status: string, message: string, data: mixed}
      */
     public function info(
         string $message = 'Continue',
@@ -106,7 +106,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      * @param int $status
      * @param mixed|array $data
      *
-     * @return mixed|array
+    * @return array{code: int|null, status: string, message: string, data: mixed}
      */
     public function success(
         string $message = 'OK',
@@ -123,7 +123,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      * @param int $status
      * @param mixed|array $data
      *
-     * @return mixed|array
+    * @return array{code: int|null, status: string, message: string, data: mixed}
      */
     public function error(
         string $message = 'Bad Request',
@@ -140,7 +140,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      * @param int $status
      * @param mixed|array $data
      *
-     * @return mixed|array
+    * @return array{code: int|null, status: string, message: string, data: mixed}
      */
     public function fail(
         string $message = 'Internal Server Error',
@@ -158,7 +158,7 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
      * @param mixed|array $data
      * @param int|null $code
      *
-     * @return mixed|array
+    * @return array{code: int|null, status: string, message: string, data: mixed}
      */
     public function data(
         string $status,
@@ -177,13 +177,14 @@ abstract class AbstractRestfulController extends AbstractJsonController implemen
     /**
      * Get Method Not Allowed.
      *
-     * @return mixed|array
+    * @return ResponseInterface
      */
-    private function methodNotImplemented()
+    private function methodNotImplemented(): ResponseInterface
     {
-        $data = $this->error('Method Not Implemented', 501);
+        $status = 501;
+        $data = $this->error('Method Not Implemented', $status);
         $response = $this->getResponse();
 
-        return $this->json()->render($data)->to($response, $data['code']);
+        return $this->json()->render($data)->to($response, $status);
     }
 }
