@@ -1,10 +1,12 @@
 .DS_Store
 .env
 .idea
+.php-cs-fixer.cache
 .phpunit.result.cache
+.phpunit.cache/
 .php_cs.cache
 composer.phar
-composer.lock
 clover.xml
+build/logs/
 vendor/
 coverage/
