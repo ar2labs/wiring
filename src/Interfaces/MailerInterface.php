@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Wiring\Interfaces;
 
+/**
+ * @property string $Subject
+ * @property string $Body
+ */
 interface MailerInterface
 {
-    public string $Subject { get; set; }
-
-    public string $Body { get; set; }
-
     /**
      * Add email address.
      */

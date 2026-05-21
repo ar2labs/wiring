@@ -317,10 +317,13 @@ class Console
 
     private function store(string $output): void
     {
-        if (!isset($_SESSION[self::CONSOLE_LOG]) || !is_array($_SESSION[self::CONSOLE_LOG])) {
-            $_SESSION[self::CONSOLE_LOG] = [];
+        $log = $_SESSION[self::CONSOLE_LOG] ?? [];
+
+        if (!is_array($log)) {
+            $log = [];
         }
 
-        $_SESSION[self::CONSOLE_LOG][] = $output;
+        $log[] = $output;
+        $_SESSION[self::CONSOLE_LOG] = $log;
     }
 }

@@ -45,6 +45,7 @@ class Message
      */
     public function subject(string $subject)
     {
+        /** @phpstan-ignore-next-line PHPMailer-style mailers expose Subject as a public property. */
         $this->mailer->Subject = mb_convert_encoding($subject, 'ISO-8859-1', 'UTF-8');
 
         return $this;
@@ -57,6 +58,7 @@ class Message
      */
     public function body(?string $body)
     {
+        /** @phpstan-ignore-next-line PHPMailer-style mailers expose Body as a public property. */
         $this->mailer->Body = !empty($body) ? mb_convert_encoding($body, 'ISO-8859-1', 'UTF-8') : '';
 
         return $this;
