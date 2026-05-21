@@ -9,6 +9,7 @@ use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use UnexpectedValueException;
 use Wiring\Interfaces\JsonStrategyInterface;
 use Wiring\Strategy\JsonStrategy;
 
@@ -105,6 +106,34 @@ final class JsonStrategyTest extends TestCase
                 'Wiring\Strategy\JsonStrategy: Malformed UTF-8 characters, ' .
                 'possibly incorrectly encoded', $e->getMessage());
         }
+    }
+
+    /**
+     * @return void
+     */
+    public function testToClearsStateAfterWriting()
+    {
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->expects($this->once())
+            ->method('write')
+            ->with('test')
+            ->willReturn(4);
+
+        $response = $this->createResponseMock();
+        $response->method('getBody')
+            ->willReturn($stream);
+        $response->method('withStatus')
+            ->willReturnSelf();
+        $response->method('withHeader')
+            ->willReturnSelf();
+
+        $jsonStrategy = new JsonStrategy();
+        $jsonStrategy->write('test')->to($response);
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('JSON strategy has no data to write.');
+
+        $jsonStrategy->to($response);
     }
 
     private function createResponseMock(): ResponseInterface&Stub

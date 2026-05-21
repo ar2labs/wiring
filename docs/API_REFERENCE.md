@@ -355,7 +355,7 @@ Methods:
 
 * `render($data, int $encodingOptions = 0): self` - Stores data to JSON-encode with the given options.
 * `write($data): JsonStrategyInterface` - Stores raw data or pre-encoded JSON for the response body.
-* `to(ResponseInterface $response, int $status = 200): ResponseInterface` - Writes the body, sets JSON content type, and returns the response with the status.
+* `to(ResponseInterface $response, int $status = 200): ResponseInterface` - Writes the body, sets JSON content type, returns the response with the status, and clears pending strategy state.
 * `encode($data, int $encodingOptions): string` - Private helper that rejects resources and throws `InvalidArgumentException` for JSON encoding errors.
 
 ### `Wiring\Strategy\ViewStrategy`
@@ -370,7 +370,7 @@ Methods:
 * `engine()` - Returns the template engine.
 * `render($view, array $params = []): self` - Stores the view name and template parameters.
 * `write(string $data): ViewStrategyInterface` - Stores raw response data.
-* `to(ResponseInterface $response, int $status = 200): ResponseInterface` - Renders the template through `engine()->render()` or writes raw data, then returns the response with the status.
+* `to(ResponseInterface $response, int $status = 200): ResponseInterface` - Renders the template through `engine()->render()` or writes raw data, returns the response with the status, and clears pending strategy state.
 
 ## Traits
 

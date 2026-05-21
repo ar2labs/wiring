@@ -126,6 +126,46 @@ final class ViewStrategyTest extends TestCase
         $viewStrategy->to($this->createResponseMock());
     }
 
+    /**
+     * @return void
+     */
+    public function testWriteDoesNotReusePreviousRenderedView()
+    {
+        $engine = new class () {
+            public int $calls = 0;
+
+            /** @param array<string, mixed> $params */
+            public function render(string $view, array $params): string
+            {
+                $this->calls++;
+
+                return 'view:' . $view;
+            }
+        };
+
+        $written = [];
+        $stream = $this->createStreamMock();
+        $stream->method('write')
+            ->willReturnCallback(static function (string $contents) use (&$written): int {
+                $written[] = $contents;
+
+                return strlen($contents);
+            });
+
+        $response = $this->createResponseMock();
+        $response->method('getBody')
+            ->willReturn($stream);
+        $response->method('withStatus')
+            ->willReturnSelf();
+
+        $viewStrategy = new ViewStrategy($engine);
+        $viewStrategy->render('home')->to($response);
+        $viewStrategy->write('raw')->to($response);
+
+        $this->assertSame(['view:home', 'raw'], $written);
+        $this->assertSame(1, $engine->calls);
+    }
+
     private function createViewStrategyMock(): ViewStrategyInterface&Stub
     {
         return $this->createStub(ViewStrategyInterface::class);

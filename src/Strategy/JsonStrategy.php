@@ -6,6 +6,7 @@ namespace Wiring\Strategy;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
+use UnexpectedValueException;
 use Wiring\Interfaces\JsonStrategyInterface;
 
 class JsonStrategy implements JsonStrategyInterface
@@ -13,17 +14,19 @@ class JsonStrategy implements JsonStrategyInterface
     /**
      * @var mixed
      */
-    protected $data;
+    protected $data = null;
 
     /**
      * @var int
      */
-    protected $encodingOptions = 0;
+    protected int $encodingOptions = 0;
 
     /**
      * @var bool
      */
-    protected $isRender = false;
+    protected bool $isRender = false;
+
+    protected bool $hasData = false;
 
     /**
      * Write data with JSON encode.
@@ -40,6 +43,7 @@ class JsonStrategy implements JsonStrategyInterface
         $this->data = $data;
         $this->encodingOptions = $encodingOptions;
         $this->isRender = true;
+        $this->hasData = true;
 
         return $this;
     }
@@ -54,7 +58,9 @@ class JsonStrategy implements JsonStrategyInterface
     public function write($data): JsonStrategyInterface
     {
         $this->data = $data;
+        $this->encodingOptions = 0;
         $this->isRender = false;
+        $this->hasData = true;
 
         return $this;
     }
@@ -71,24 +77,36 @@ class JsonStrategy implements JsonStrategyInterface
         ResponseInterface $response,
         int $status = 200
     ): ResponseInterface {
-        // Check if it is to use json encode
-        if ($this->isRender) {
-            $response
-                ->getBody()
-                ->write($this->encode($this->data, $this->encodingOptions));
-        } else {
-            if (!is_string($this->data)) {
-                $this->data = $this->encode($this->data, 0);
+        if (!$this->hasData) {
+            throw new UnexpectedValueException('JSON strategy has no data to write.');
+        }
+
+        try {
+            // Check if it is to use json encode
+            if ($this->isRender) {
+                $body = $this->encode($this->data, $this->encodingOptions);
+            } else {
+                $body = is_string($this->data) ? $this->data : $this->encode($this->data, 0);
             }
 
             $response
                 ->getBody()
-                ->write($this->data);
-        }
+                ->write($body);
 
-        return $response
-            ->withStatus($status)
-            ->withHeader('Content-Type', 'application/json;charset=utf-8');
+            return $response
+                ->withStatus($status)
+                ->withHeader('Content-Type', 'application/json;charset=utf-8');
+        } finally {
+            $this->reset();
+        }
+    }
+
+    private function reset(): void
+    {
+        $this->data = null;
+        $this->encodingOptions = 0;
+        $this->isRender = false;
+        $this->hasData = false;
     }
 
     /**

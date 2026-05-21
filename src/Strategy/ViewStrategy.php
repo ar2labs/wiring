@@ -18,20 +18,20 @@ class ViewStrategy implements ViewStrategyInterface
     /**
      * @var string
      */
-    protected $data;
+    protected ?string $data = null;
 
     /**
      * @var string
      */
-    protected $view;
+    protected ?string $view = null;
 
     /** @var array<string, mixed> */
-    protected $params;
+    protected $params = [];
 
     /**
      * @var bool
      */
-    protected $isRender = false;
+    protected bool $isRender = false;
 
     /**
      * Define template engine.
@@ -65,6 +65,7 @@ class ViewStrategy implements ViewStrategyInterface
     {
         $this->view = $view;
         $this->params = $params;
+        $this->data = null;
         $this->isRender = true;
 
         return $this;
@@ -80,6 +81,8 @@ class ViewStrategy implements ViewStrategyInterface
     public function write(string $data): ViewStrategyInterface
     {
         $this->data = $data;
+        $this->view = null;
+        $this->params = [];
         $this->isRender = false;
 
         return $this;
@@ -95,24 +98,36 @@ class ViewStrategy implements ViewStrategyInterface
      */
     public function to(ResponseInterface $response, int $status = 200): ResponseInterface
     {
-        if ($this->view) {
-            $renderer = [$this->engine(), 'render'];
+        try {
+            if ($this->isRender && $this->view !== null) {
+                $renderer = [$this->engine(), 'render'];
 
-            if (!is_callable($renderer)) {
-                throw new UnexpectedValueException('Template engine must provide a render method.');
+                if (!is_callable($renderer)) {
+                    throw new UnexpectedValueException('Template engine must provide a render method.');
+                }
+
+                $content = $renderer($this->view, $this->params);
+
+                if (!is_string($content)) {
+                    throw new UnexpectedValueException('Template render must return a string.');
+                }
+
+                $response->getBody()->write($content);
+            } elseif ($this->data !== null) {
+                $response->getBody()->write($this->data);
             }
 
-            $content = $renderer($this->view, $this->params);
-
-            if (!is_string($content)) {
-                throw new UnexpectedValueException('Template render must return a string.');
-            }
-
-            $response->getBody()->write($content);
-        } elseif ($this->data) {
-            $response->getBody()->write($this->data);
+            return $response->withStatus($status);
+        } finally {
+            $this->reset();
         }
+    }
 
-        return $response->withStatus($status);
+    private function reset(): void
+    {
+        $this->data = null;
+        $this->view = null;
+        $this->params = [];
+        $this->isRender = false;
     }
 }
