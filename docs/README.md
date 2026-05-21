@@ -12,6 +12,7 @@ This documentation is organized for maintainers and application developers who n
 * [API Reference](API_REFERENCE.md) - all framework classes, interfaces, traits, and methods in `src/`.
 * [PHP 8.5 Migration And Security Notes](PHP8_MIGRATION.md) - migration evidence, validation gates, and residual risks.
 * [Security Policy](SECURITY.md) - supported version, reporting guidance, framework security scope, and user responsibilities.
+* [Release Process](RELEASE.md) - SemVer policy, release checklist, upgrade notes, and deprecation guidance.
 
 ## Package Scope
 

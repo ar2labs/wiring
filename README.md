@@ -106,6 +106,7 @@ Project documentation is available in [docs/README.md](docs/README.md).
 * [API Reference](docs/API_REFERENCE.md)
 * [PHP 8.5 Migration And Security Notes](docs/PHP8_MIGRATION.md)
 * [Security Policy](docs/SECURITY.md)
+* [Release Process](docs/RELEASE.md)
 
 ## Copyright and license
 

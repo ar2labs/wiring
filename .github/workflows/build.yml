@@ -10,10 +10,16 @@ jobs:
   run:
     runs-on: ${{ matrix.operating-system }}
     strategy:
+      fail-fast: false
       matrix:
-        operating-system: [ ubuntu-latest ]
-        php-versions: ['8.5']
-    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+        operating-system: [ ubuntu-latest, windows-latest ]
+        php: ['8.5']
+        dependencies: [ locked ]
+        include:
+          - operating-system: ubuntu-latest
+            php: '8.5'
+            dependencies: lowest
+          name: PHP ${{ matrix.php }} ${{ matrix.dependencies }} on ${{ matrix.operating-system }}
 
     steps:
       - name: Checkout
@@ -22,7 +28,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php }}
           extensions: mbstring, intl, zip
           coverage: xdebug
 
@@ -38,27 +44,34 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
-      - name: Install required dependencies
+      - name: Install locked dependencies
+        if: matrix.dependencies == 'locked'
         run: composer install --no-interaction --no-progress --prefer-dist
 
+      - name: Install lowest supported dependencies
+        if: matrix.dependencies == 'lowest'
+        run: composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
+
       - name: Audit locked dependencies
+        if: matrix.dependencies == 'locked'
         run: composer audit --locked --abandoned=fail
 
       - name: Check platform requirements
         run: composer check-platform-reqs
 
       - name: Review dependency changes
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && matrix.operating-system == 'ubuntu-latest' && matrix.dependencies == 'locked'
         uses: actions/dependency-review-action@v4
 
       - name: Run PHP-CS-Fixer dry run
-        run: vendor/bin/php-cs-fixer fix --config=php_cs.dist --dry-run --diff --no-interaction
+        run: php vendor/bin/php-cs-fixer fix --config=php_cs.dist --dry-run --diff --no-interaction
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse --configuration phpstan.neon --no-progress --ansi
+        run: php vendor/bin/phpstan analyse --configuration phpstan.neon --no-progress --ansi
 
       - name: Run PHPUnit
-        run: vendor/bin/phpunit --configuration phpunit.xml.dist --colors=always
+        run: php vendor/bin/phpunit --configuration phpunit.xml.dist --colors=always
 
       - name: Generate Clover coverage
-        run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover build/logs/clover.xml --colors=always
+        if: matrix.operating-system == 'ubuntu-latest' && matrix.dependencies == 'locked'
+        run: php vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover build/logs/clover.xml --colors=always
