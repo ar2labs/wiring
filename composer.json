@@ -50,8 +50,14 @@
         "coverage": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-html var/coverage",
         "coverage:text": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-text",
         "platform-check": "composer check-platform-reqs",
-        "php-cs-fixer": "vendor/bin/php-cs-fixer fix --config=php_cs.dist --no-interaction",
-        "php-cs-fixer-check": "vendor/bin/php-cs-fixer fix --config=php_cs.dist --dry-run --diff --no-interaction",
+        "php-cs-fixer": [
+            "@putenv PHP_CS_FIXER_IGNORE_ENV=1",
+            "vendor/bin/php-cs-fixer fix --config=php_cs.dist --no-interaction"
+        ],
+        "php-cs-fixer-check": [
+            "@putenv PHP_CS_FIXER_IGNORE_ENV=1",
+            "vendor/bin/php-cs-fixer fix --config=php_cs.dist --dry-run --diff --no-interaction"
+        ],
         "phpunit": "php -d xdebug.mode=coverage vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html coverage --colors=always",
         "phpunit-clover": "php -d xdebug.mode=coverage vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover build/logs/clover.xml --log-junit build/logs/junit.xml --colors=always",
         "phpstan": "vendor/bin/phpstan analyse --configuration phpstan.neon --no-progress --ansi"

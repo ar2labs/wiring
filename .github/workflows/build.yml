@@ -67,7 +67,7 @@ jobs:
         uses: actions/dependency-review-action@v4
 
       - name: Run PHP-CS-Fixer dry run
-        run: php vendor/bin/php-cs-fixer fix --config=php_cs.dist --dry-run --diff --no-interaction
+        run: composer php-cs-fixer-check
 
       - name: Run PHPStan
         run: php vendor/bin/phpstan analyse --configuration phpstan.neon --no-progress --ansi
