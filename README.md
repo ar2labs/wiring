@@ -101,6 +101,7 @@ Residual deployment assumptions include HTTPS termination, HSTS policy, trusted 
 Project documentation is available in [docs/README.md](docs/README.md).
 
 * [Getting Started](docs/GETTING_STARTED.md)
+* [Integration Guide](docs/INTEGRATION.md)
 * [Architecture](docs/ARCHITECTURE.md)
 * [API Reference](docs/API_REFERENCE.md)
 * [PHP 8.5 Migration And Security Notes](docs/PHP8_MIGRATION.md)

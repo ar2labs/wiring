@@ -7,6 +7,7 @@ This documentation is organized for maintainers and application developers who n
 ## Contents
 
 * [Getting Started](GETTING_STARTED.md) - installation, package requirements, and the basic framework building blocks.
+* [Integration Guide](INTEGRATION.md) - recommended application bootstrap shape and starter package checklist.
 * [Architecture](ARCHITECTURE.md) - request lifecycle, middleware flow, controllers, strategies, helpers, and security boundaries.
 * [API Reference](API_REFERENCE.md) - all framework classes, interfaces, traits, and methods in `src/`.
 * [PHP 8.5 Migration And Security Notes](PHP8_MIGRATION.md) - migration evidence, validation gates, and residual risks.
