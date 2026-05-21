@@ -67,7 +67,6 @@ jobs:
         uses: actions/dependency-review-action@v4
 
       - name: Run PHP-CS-Fixer dry run
-        if: matrix.dependencies == 'locked'
         run: composer php-cs-fixer-check
 
       - name: Run PHPStan
