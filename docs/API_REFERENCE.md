@@ -442,7 +442,7 @@ Methods:
 
 Methods:
 
-* `input(ServerRequestInterface $request, bool $isArray = false)` - Parses request body content as form data, URL-encoded data, JSON, XML, or raw body content.
+* `input(ServerRequestInterface $request, bool $isArray = false)` - Parses request body content as form data, URL-encoded data, JSON, XML, or raw body content; empty JSON/XML bodies return `null`, while invalid JSON/XML bodies throw `InvalidArgumentException`.
 * `query(ServerRequestInterface $request, bool $isArray = false)` - Returns query parameters as an array or object.
 
 ### `Wiring\Traits\LoggerAwareTrait`

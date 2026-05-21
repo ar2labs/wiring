@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Wiring\Traits;
 
+use InvalidArgumentException;
+use JsonException;
 use Psr\Http\Message\ServerRequestInterface;
+use SimpleXMLElement;
 
 trait InputAwareTrait
 {
@@ -40,17 +43,39 @@ trait InputAwareTrait
 
         if (str_contains($type, 'application/json')) {
             // Convert JSON
-            $content = json_decode($body, $isArray);
+            if (trim($body) === '') {
+                return null;
+            }
+
+            try {
+                $content = json_decode($body, $isArray, 512, JSON_THROW_ON_ERROR);
+            } catch (JsonException $exception) {
+                throw new InvalidArgumentException('Invalid JSON request body: ' . $exception->getMessage(), 0, $exception);
+            }
         }
 
         if (str_contains($type, 'application/xml')) {
             // Convert XML
-            $previousUseInternalErrors = libxml_use_internal_errors(true);
-            $xml = simplexml_load_string($body, 'SimpleXMLElement', LIBXML_NONET);
-            libxml_clear_errors();
-            libxml_use_internal_errors($previousUseInternalErrors);
+            if (trim($body) === '') {
+                return null;
+            }
 
-            $content = json_decode((string) json_encode($xml), $isArray);
+            $previousUseInternalErrors = libxml_use_internal_errors(true);
+            try {
+                $xml = simplexml_load_string($body, SimpleXMLElement::class, LIBXML_NONET);
+
+                if ($xml === false) {
+                    throw new InvalidArgumentException('Invalid XML request body.');
+                }
+
+                $json = json_encode($xml, JSON_THROW_ON_ERROR);
+                $content = json_decode($json, $isArray, 512, JSON_THROW_ON_ERROR);
+            } catch (JsonException $exception) {
+                throw new InvalidArgumentException('Invalid XML request body.', 0, $exception);
+            } finally {
+                libxml_clear_errors();
+                libxml_use_internal_errors($previousUseInternalErrors);
+            }
         }
 
         return $content;

@@ -6,6 +6,7 @@ namespace Wiring\Tests\Traits;
 
 use BadMethodCallException;
 use Exception;
+use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -518,6 +519,52 @@ final class TraitsTest extends TestCase
     /**
      * @return void
      */
+    public function testInputAwareTraitReturnsNullForEmptyJsonBody()
+    {
+        $request = $this->createRequestWithBodyAndContentType('', 'application/json');
+
+        $this->assertNull((new SimpleInputAware())->input($request));
+    }
+
+    /**
+     * @return void
+     */
+    public function testInputAwareTraitRejectsInvalidJsonBody()
+    {
+        $request = $this->createRequestWithBodyAndContentType('{invalid', 'application/json');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid JSON request body:');
+
+        (new SimpleInputAware())->input($request);
+    }
+
+    /**
+     * @return void
+     */
+    public function testInputAwareTraitReturnsNullForEmptyXmlBody()
+    {
+        $request = $this->createRequestWithBodyAndContentType('', 'application/xml');
+
+        $this->assertNull((new SimpleInputAware())->input($request));
+    }
+
+    /**
+     * @return void
+     */
+    public function testInputAwareTraitRejectsInvalidXmlBody()
+    {
+        $request = $this->createRequestWithBodyAndContentType('<body><open></body>', 'application/xml');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid XML request body.');
+
+        (new SimpleInputAware())->input($request);
+    }
+
+    /**
+     * @return void
+     */
     public function testAwareTraitsValidateContainerServiceTypes()
     {
         $authAware = new SimpleAuthAware();
@@ -753,6 +800,23 @@ final class TraitsTest extends TestCase
     private function createStreamMock(): StreamInterface&Stub
     {
         return $this->createStub(StreamInterface::class);
+    }
+
+    private function createRequestWithBodyAndContentType(
+        string $body,
+        string $contentType
+    ): ServerRequestInterface&Stub {
+        $request = $this->createRequestMock();
+        $stream = $this->createStreamMock();
+        $stream->method('getContents')
+            ->willReturn($body);
+
+        $request->method('getBody')
+            ->willReturn($stream);
+        $request->method('getHeader')
+            ->willReturn([$contentType]);
+
+        return $request;
     }
 
     private function createValidatorMock(): ValidatorInterface&Stub
