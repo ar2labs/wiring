@@ -201,12 +201,12 @@ Methods:
 
 File: `src/Http/Middleware/RouterMiddleware.php`
 
-PSR-15 middleware that dispatches the request through a router implementation.
+PSR-15 middleware that dispatches the request through a router implementation. When a response factory is configured, Wiring HTTP exceptions thrown by the router are converted into PSR-7 responses.
 
 Methods:
 
 * `__construct(RouterInterface $router, ?ResponseFactoryInterface $responseFactory = null)` - Stores the router and optional response factory.
-* `process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface` - Dispatches the request through the router and returns the router response.
+* `process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface` - Dispatches the request through the router, returns the router response, or builds a response for a thrown Wiring HTTP exception when a response factory is configured.
 * `responseFactory(ResponseFactoryInterface $responseFactory): self` - Stores a response factory and returns the middleware.
 * `getResponseFactory(): ?ResponseFactoryInterface` - Returns the configured response factory.
 

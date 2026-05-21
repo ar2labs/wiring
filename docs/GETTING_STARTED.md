@@ -58,6 +58,13 @@ $app->addEmitterMiddleware($emitterMiddleware);
 
 Each middleware must implement `Psr\Http\Server\MiddlewareInterface`. Middleware continues the pipeline by calling `$handler->handle($request)` and returns a `Psr\Http\Message\ResponseInterface`.
 
+Router middleware can be configured with a PSR-17 response factory. When the router throws a Wiring HTTP exception, the middleware can convert it into a 404, 405, or other HTTP response:
+
+```php
+$routerMiddleware = new RouterMiddleware($router, $responseFactory);
+$app->addRouterMiddleware($routerMiddleware);
+```
+
 ## Controllers
 
 Controller base classes provide common behavior:

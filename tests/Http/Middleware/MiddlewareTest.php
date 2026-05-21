@@ -13,6 +13,8 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use UnexpectedValueException;
+use Wiring\Http\Exception\MethodNotAllowedException;
+use Wiring\Http\Exception\NotFoundException;
 use Wiring\Http\Middleware\EmitterMiddleware;
 use Wiring\Http\Middleware\RouterMiddleware;
 use Wiring\Interfaces\EmitterInterface;
@@ -190,6 +192,89 @@ final class MiddlewareTest extends TestCase
             $routeMiddleware->responseFactory($responseFactory)
         );
         $this->assertSame($responseFactory, $routeMiddleware->getResponseFactory());
+    }
+
+    /**
+     * @throws \Exception
+     *
+     * @return void
+     */
+    public function testRouterMiddlewareBuildsNotFoundResponseWithFactory()
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router->expects($this->once())
+            ->method('dispatch')
+            ->willThrowException(new NotFoundException());
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects($this->once())
+            ->method('withStatus')
+            ->with(404, 'Not Found')
+            ->willReturnSelf();
+
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects($this->once())
+            ->method('createResponse')
+            ->with(404)
+            ->willReturn($response);
+
+        $routeMiddleware = new RouterMiddleware($router, $responseFactory);
+
+        $this->assertSame(
+            $response,
+            $routeMiddleware->process($this->createRequestMock(), $this->createRequestHandlerMock())
+        );
+    }
+
+    /**
+     * @throws \Exception
+     *
+     * @return void
+     */
+    public function testRouterMiddlewareBuildsMethodNotAllowedResponseWithFactory()
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router->expects($this->once())
+            ->method('dispatch')
+            ->willThrowException(new MethodNotAllowedException(['GET', 'POST']));
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects($this->once())
+            ->method('withAddedHeader')
+            ->with('Allow', 'GET, POST')
+            ->willReturnSelf();
+        $response->expects($this->once())
+            ->method('withStatus')
+            ->with(405, 'Method Not Allowed')
+            ->willReturnSelf();
+
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects($this->once())
+            ->method('createResponse')
+            ->with(405)
+            ->willReturn($response);
+
+        $routeMiddleware = new RouterMiddleware($router, $responseFactory);
+
+        $this->assertSame(
+            $response,
+            $routeMiddleware->process($this->createRequestMock(), $this->createRequestHandlerMock())
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testRouterMiddlewareRethrowsHttpExceptionWithoutFactory()
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router->expects($this->once())
+            ->method('dispatch')
+            ->willThrowException(new NotFoundException());
+
+        $this->expectException(NotFoundException::class);
+
+        (new RouterMiddleware($router))->process($this->createRequestMock(), $this->createRequestHandlerMock());
     }
 
     private function createEmitterMock(): EmitterInterface&Stub

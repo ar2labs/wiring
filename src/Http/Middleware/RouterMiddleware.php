@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Wiring\Http\Exception\HttpException;
 use Wiring\Interfaces\RouterInterface;
 
 class RouterMiddleware implements MiddlewareInterface
@@ -45,7 +46,17 @@ class RouterMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        return $this->router->dispatch($request);
+        try {
+            return $this->router->dispatch($request);
+        } catch (HttpException $exception) {
+            if ($this->responseFactory === null) {
+                throw $exception;
+            }
+
+            return $exception->buildResponse(
+                $this->responseFactory->createResponse($exception->getStatusCode())
+            );
+        }
     }
 
     /**
