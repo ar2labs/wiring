@@ -24,21 +24,18 @@ trait InputAwareTrait
     {
         $type = $this->getContentType($request);
         $body = $request->getBody()->getContents();
+        $content = $body;
 
         if ((str_contains($type, 'multipart/form-data')) ||
             (str_contains($type, 'application/x-www-form-urlencoded'))) {
-            return $isArray ? $request->getParsedBody() : (object) $request->getParsedBody();
+            $content = $isArray ? $request->getParsedBody() : (object) $request->getParsedBody();
+        } elseif (str_contains($type, 'application/json')) {
+            $content = $this->parseJsonBody($body, $isArray);
+        } elseif (str_contains($type, 'application/xml')) {
+            $content = $this->parseXmlBody($body, $isArray);
         }
 
-        if (str_contains($type, 'application/json')) {
-            return $this->parseJsonBody($body, $isArray);
-        }
-
-        if (str_contains($type, 'application/xml')) {
-            return $this->parseXmlBody($body, $isArray);
-        }
-
-        return $body;
+        return $content;
     }
 
     private function getContentType(ServerRequestInterface $request): string
