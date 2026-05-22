@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/ar2labs/wiring/actions/workflows/build.yml/badge.svg)](https://github.com/ar2labs/wiring/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ar2labs_wiring&metric=alert_status)](https://sonarcloud.io/project/overview?id=ar2labs_wiring&branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/ar2labs/wiring/badge.svg?branch=master&service=github)](https://coveralls.io/github/ar2labs/wiring?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/ar2labs/wiring/badge.svg?branch=master)](https://coveralls.io/github/ar2labs/wiring?branch=master)
 <a href="https://packagist.org/packages/ar2labs/wiring"><img src="https://poser.pugx.org/ar2labs/wiring/d/total.svg" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/ar2labs/wiring"><img src="https://poser.pugx.org/ar2labs/wiring/v/stable.svg" alt="Latest Stable Version"></a>
 <a href="https://github.com/ar2labs/wiring/blob/master/LICENSE.md"><img src="https://poser.pugx.org/ar2labs/wiring/license.svg" alt="License"></a>

@@ -8,6 +8,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  statuses: write
 
 jobs:
   run:
@@ -80,6 +81,14 @@ jobs:
       - name: Generate Clover coverage
         if: matrix.operating-system == 'ubuntu-latest' && matrix.dependencies == 'locked'
         run: php vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover build/logs/clover.xml --log-junit build/logs/junit.xml --colors=always
+
+      - name: Upload coverage to Coveralls
+        if: matrix.operating-system == 'ubuntu-latest' && matrix.dependencies == 'locked'
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/logs/clover.xml
+          format: clover
 
       - name: Run SonarQube Cloud analysis
         if: matrix.operating-system == 'ubuntu-latest' && matrix.dependencies == 'locked'
