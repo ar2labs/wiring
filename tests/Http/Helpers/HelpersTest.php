@@ -88,6 +88,21 @@ final class HelpersTest extends TestCase
     }
 
     /**
+     * @return void
+     */
+    public function testConsoleReplacesInvalidSessionLog()
+    {
+        $this->corruptConsoleLogSession();
+
+        (new Console())->log('test');
+
+        $consoleLog = $_SESSION[Console::CONSOLE_LOG] ?? null;
+
+        $this->assertIsArray($consoleLog);
+        $this->assertCount(1, $consoleLog);
+    }
+
+    /**
      * @runInSeparateProcess
      * @throws \Exception
      *
@@ -382,6 +397,13 @@ final class HelpersTest extends TestCase
     private function createContainerMock(): ContainerInterface&Stub
     {
         return $this->createStub(ContainerInterface::class);
+    }
+
+    private function corruptConsoleLogSession(): void
+    {
+        $_SESSION = [
+            Console::CONSOLE_LOG => 'not-a-list',
+        ];
     }
 
     private function createViewStrategyMock(): ViewStrategyInterface&Stub

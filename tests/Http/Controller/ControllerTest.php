@@ -395,6 +395,35 @@ final class ControllerTest extends TestCase
     }
 
     /**
+     * @return void
+     */
+    public function testJsonThrowableHandlerRejectsUnencodableErrorMessages()
+    {
+        $response = $this->createResponseMock();
+        $response->method('withStatus')
+            ->willReturnSelf();
+        $response->method('withHeader')
+            ->willReturnSelf();
+
+        $handler = $this->createRequestHandlerMock();
+        $handler->method('handle')
+            ->willThrowException(new Exception("Invalid byte \xB1"));
+        $request = $this->createRequestMock();
+        $request->method('getHeader')
+            ->willReturnMap([
+                ['Content-Type', ['application/json']],
+                ['Debug-Mode', ['1']],
+            ]);
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unable to encode JSON error response.');
+
+        (new SimpleJsonController($this->createContainerMock(), $response))
+            ->getThrowableHandler()
+            ->process($request, $handler);
+    }
+
+    /**
      * @throws \Exception
      *
      * @return void
