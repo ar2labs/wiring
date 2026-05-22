@@ -113,7 +113,10 @@ final class ViewStrategyTest extends TestCase
              */
             public function render(string $view, array $params): array
             {
-                return $params;
+                return [
+                    'view' => $view,
+                    'params' => $params,
+                ];
             }
         };
 

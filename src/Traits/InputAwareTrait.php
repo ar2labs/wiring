@@ -22,63 +22,79 @@ trait InputAwareTrait
      */
     public function input(ServerRequestInterface $request, bool $isArray = false)
     {
-        $header = $request->getHeader('content-type');
-        $type = '';
+        $type = $this->getContentType($request);
         $body = $request->getBody()->getContents();
-        $content = $body;
-
-        if (isset($header[0])) {
-            $type = (string) $header[0];
-        }
-
-        $type = strtolower($type);
 
         if ((str_contains($type, 'multipart/form-data')) ||
             (str_contains($type, 'application/x-www-form-urlencoded'))) {
-            // Convert Multipart
-            $content = $isArray ?
-                $request->getParsedBody() :
-                (object) $request->getParsedBody();
+            return $isArray ? $request->getParsedBody() : (object) $request->getParsedBody();
         }
 
         if (str_contains($type, 'application/json')) {
-            // Convert JSON
-            if (trim($body) === '') {
-                return null;
-            }
-
-            try {
-                $content = json_decode($body, $isArray, 512, JSON_THROW_ON_ERROR);
-            } catch (JsonException $exception) {
-                throw new InvalidArgumentException('Invalid JSON request body: ' . $exception->getMessage(), 0, $exception);
-            }
+            return $this->parseJsonBody($body, $isArray);
         }
 
         if (str_contains($type, 'application/xml')) {
-            // Convert XML
-            if (trim($body) === '') {
-                return null;
-            }
-
-            $previousUseInternalErrors = libxml_use_internal_errors(true);
-            try {
-                $xml = simplexml_load_string($body, SimpleXMLElement::class, LIBXML_NONET);
-
-                if ($xml === false) {
-                    throw new InvalidArgumentException('Invalid XML request body.');
-                }
-
-                $json = json_encode($xml, JSON_THROW_ON_ERROR);
-                $content = json_decode($json, $isArray, 512, JSON_THROW_ON_ERROR);
-            } catch (JsonException $exception) {
-                throw new InvalidArgumentException('Invalid XML request body.', 0, $exception);
-            } finally {
-                libxml_clear_errors();
-                libxml_use_internal_errors($previousUseInternalErrors);
-            }
+            return $this->parseXmlBody($body, $isArray);
         }
 
-        return $content;
+        return $body;
+    }
+
+    private function getContentType(ServerRequestInterface $request): string
+    {
+        $header = $request->getHeader('content-type');
+
+        if (isset($header[0])) {
+            return strtolower((string) $header[0]);
+        }
+
+        return strtolower($request->getHeaderLine('content-type'));
+    }
+
+    /**
+     * @return mixed
+     */
+    private function parseJsonBody(string $body, bool $isArray)
+    {
+        if (trim($body) === '') {
+            return null;
+        }
+
+        try {
+            return json_decode($body, $isArray, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $exception) {
+            throw new InvalidArgumentException('Invalid JSON request body: ' . $exception->getMessage(), 0, $exception);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    private function parseXmlBody(string $body, bool $isArray)
+    {
+        if (trim($body) === '') {
+            return null;
+        }
+
+        $previousUseInternalErrors = libxml_use_internal_errors(true);
+
+        try {
+            $xml = simplexml_load_string($body, SimpleXMLElement::class, LIBXML_NONET);
+
+            if ($xml === false) {
+                throw new InvalidArgumentException('Invalid XML request body.');
+            }
+
+            $json = json_encode($xml, JSON_THROW_ON_ERROR);
+
+            return json_decode($json, $isArray, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $exception) {
+            throw new InvalidArgumentException('Invalid XML request body.', 0, $exception);
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previousUseInternalErrors);
+        }
     }
 
     /**

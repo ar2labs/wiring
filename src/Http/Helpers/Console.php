@@ -281,10 +281,7 @@ class Console
                 . 'var JSONString = JSON.stringify(JSONObject);'
                 . 'var JSObject = JSON.parse(JSONString); '
                 . "console.$method(JSObject);";
-        } elseif (is_array($obj) || $method === 'dirxml') { // Check is an array
-            $js = 'var data = ' . $this->encodeForJavaScript($obj) . '; '
-                . "console.$method(data);";
-        } elseif ($method === self::LOG) { // Check is set
+        } elseif (is_array($obj) || $method === 'dirxml' || $method === self::LOG) {
             $js = 'var data = ' . $this->encodeForJavaScript($obj) . '; '
                 . "console.$method(data);";
         } else {  // Method is empty

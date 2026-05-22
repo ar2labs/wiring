@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -77,4 +79,10 @@ jobs:
 
       - name: Generate Clover coverage
         if: matrix.operating-system == 'ubuntu-latest' && matrix.dependencies == 'locked'
-        run: php vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover build/logs/clover.xml --colors=always
+        run: php vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover build/logs/clover.xml --log-junit build/logs/junit.xml --colors=always
+
+      - name: Run SonarQube Cloud analysis
+        if: matrix.operating-system == 'ubuntu-latest' && matrix.dependencies == 'locked'
+        uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

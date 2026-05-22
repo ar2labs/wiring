@@ -123,9 +123,12 @@ class EmitterMiddleware implements EmitterInterface, MiddlewareInterface
         }
 
         // Get Protocol Version
+        $serverProtocol = $_SERVER['SERVER_PROTOCOL'] ?? '1.1';
+        $fallbackProtocolVersion = is_string($serverProtocol) ? $serverProtocol : '1.1';
+
         $protocolVersion = $response->getProtocolVersion() !== '' ?
             $response->getProtocolVersion() :
-            (isset($_SERVER['SERVER_PROTOCOL']) && is_string($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : '1.1');
+            $fallbackProtocolVersion;
 
         // Get Status Code
         $statusCode = $response->getStatusCode() !== 200 ?

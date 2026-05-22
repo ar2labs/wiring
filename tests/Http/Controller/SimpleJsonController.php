@@ -16,4 +16,9 @@ class SimpleJsonController extends AbstractJsonController
     {
         return $this->response;
     }
+
+    public function clearContainerForTest(): void
+    {
+        $this->container = null;
+    }
 }

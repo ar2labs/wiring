@@ -14,7 +14,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use ReflectionProperty;
 use stdClass;
 use UnexpectedValueException;
 use Wiring\Http\Controller\AbstractController;
@@ -450,8 +449,7 @@ final class ControllerTest extends TestCase
             $this->assertSame('JSON strategy interface not implemented.', $e->getMessage());
         }
 
-        $containerProperty = new ReflectionProperty($controller, 'container');
-        $containerProperty->setValue($controller, null);
+        $controller->clearContainerForTest();
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Container instance error');

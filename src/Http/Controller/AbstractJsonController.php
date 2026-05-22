@@ -87,7 +87,7 @@ abstract class AbstractJsonController extends AbstractController
             return false;
         }
 
-        return (is_array($response) || is_object($response));
+        return is_array($response) || is_object($response);
     }
 
     /**

@@ -149,9 +149,7 @@ class RequestHandler implements RequestHandlerInterface
             return null;
         }
 
-        $middleware = $this->middleware[$position][self::MIDDLEWARE];
-
-        return $middleware;
+        return $this->middleware[$position][self::MIDDLEWARE];
     }
 
     /**
@@ -246,14 +244,14 @@ class RequestHandler implements RequestHandlerInterface
     /**
      * Add RequestHandler middleware.
      *
-     * @param MiddlewareInterface $RequestHandler
+     * @param MiddlewareInterface $requestHandler
      *
      * @return self
      */
     public function addRequestHandler(
-        MiddlewareInterface $RequestHandler
+        MiddlewareInterface $requestHandler
     ): RequestHandler {
-        $this->addMiddleware($RequestHandler, 'RequestHandler');
+        $this->addMiddleware($requestHandler, 'RequestHandler');
 
         return $this;
     }

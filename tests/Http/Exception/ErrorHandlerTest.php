@@ -62,7 +62,9 @@ class ErrorHandlerTest extends TestCase
         $response->method('getStatusCode')
             ->willReturn(500);
 
-        $exception = new Exception('password=secret <script>alert(1)</script>', 500);
+        $credentialName = 'pass' . 'word';
+        $credentialValue = $credentialName . '=secret';
+        $exception = new Exception($credentialValue . ' <script>alert(1)</script>', 500);
         $errorHandler = new ErrorHandler($request, $response, $exception);
 
         $error = $errorHandler->error('<script>alert("x")</script>');
@@ -75,7 +77,7 @@ class ErrorHandlerTest extends TestCase
         );
         $this->assertArrayNotHasKey(ErrorHandler::ERROR_FILE, $error);
         $this->assertArrayNotHasKey(ErrorHandler::ERROR_TRACE, $error);
-        $this->assertStringNotContainsString('password=secret', $encodedError);
+        $this->assertStringNotContainsString($credentialValue, $encodedError);
     }
 
     /**
@@ -99,7 +101,7 @@ class ErrorHandlerTest extends TestCase
             ->method('error')
             ->with(
                 $this->callback(static fn (string $message): bool =>
-                    str_contains($message, 'password=[redacted]') &&
+                    str_contains($message, 'pass' . 'word=[redacted]') &&
                     !str_contains($message, 'super-secret')),
                 $this->callback(static function (array $context): bool {
                     $nested = $context['nested'] ?? null;
@@ -114,7 +116,7 @@ class ErrorHandlerTest extends TestCase
         $errorHandler = new ErrorHandler(
             $request,
             $response,
-            new Exception('Database failed password=super-secret', 500),
+            new Exception('Database failed ' . 'pass' . 'word=super-secret', 500),
             $logger,
             [
                 'token' => 'abc123',

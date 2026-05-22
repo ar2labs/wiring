@@ -140,16 +140,16 @@ final class HelpersTest extends TestCase
 
         $options = $cookie::options(0, '/', '', false, true);
 
-        $this->assertFalse($options['secure']);
-        $this->assertTrue($options['httponly']);
-        $this->assertSame('Lax', $options['samesite']);
-        $this->assertArrayNotHasKey('domain', $options);
+        self::assertFalse($options['secure']);
+        self::assertTrue($options['httponly']);
+        self::assertSame('Lax', $options['samesite']);
+        self::assertArrayNotHasKey('domain', $options);
 
         $_SERVER['HTTPS'] = 'on';
         $httpsOptions = $cookie::options(0, '/', 'example.com', false, true);
 
-        $this->assertTrue($httpsOptions['secure']);
-        $this->assertSame('example.com', $httpsOptions['domain'] ?? null);
+        self::assertTrue($httpsOptions['secure']);
+        self::assertSame('example.com', $httpsOptions['domain'] ?? null);
     }
 
     /**
@@ -197,10 +197,35 @@ final class HelpersTest extends TestCase
     public function testMailer()
     {
         $mailerMock = new class () implements MailerInterface {
-            public string $Subject = '';
-            public string $Body = '';
+            private string $subject = '';
+            private string $body = '';
+
             /** @var array<int, string> */
             public array $addresses = [];
+
+            public function __set(string $name, string $value): void
+            {
+                if ($name === 'Subject') {
+                    $this->subject = $value;
+                }
+
+                if ($name === 'Body') {
+                    $this->body = $value;
+                }
+            }
+
+            public function __get(string $name): string
+            {
+                if ($name === 'Subject') {
+                    return $this->subject;
+                }
+
+                if ($name === 'Body') {
+                    return $this->body;
+                }
+
+                throw new UnexpectedValueException('Unknown mailer property.');
+            }
 
             public function addAddress(string $email): void
             {
@@ -247,7 +272,9 @@ final class HelpersTest extends TestCase
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Mailer interface not implemented.');
 
-        new Mailer(new stdClass(), $this->createContainerMock());
+        $mailer = new Mailer(new stdClass(), $this->createContainerMock());
+
+        $this->assertInstanceOf(Mailer::class, $mailer);
     }
 
     /**
@@ -258,7 +285,9 @@ final class HelpersTest extends TestCase
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Mailer interface not implemented.');
 
-        new Message(new stdClass());
+        $message = new Message(new stdClass());
+
+        $this->assertInstanceOf(Message::class, $message);
     }
 
     /**
@@ -274,6 +303,7 @@ final class HelpersTest extends TestCase
         $this->expectExceptionMessage('View strategy interface not implemented.');
 
         (new Mailer($this->createMailer(), $container))->send('template', [], static function (): void {
+            self::fail('The callback should not run when the view service is invalid.');
         });
     }
 
@@ -294,6 +324,7 @@ final class HelpersTest extends TestCase
         $this->expectExceptionMessage('Template engine must provide a render method.');
 
         (new Mailer($this->createMailer(), $container))->send('template', [], static function (): void {
+            self::fail('The callback should not run when the renderer is invalid.');
         });
     }
 
@@ -310,7 +341,10 @@ final class HelpersTest extends TestCase
              */
             public function render(string $template, array $data): array
             {
-                return $data;
+                return [
+                    'template' => $template,
+                    'data' => $data,
+                ];
             }
         };
 
@@ -326,6 +360,7 @@ final class HelpersTest extends TestCase
         $this->expectExceptionMessage('Template render must return a string.');
 
         (new Mailer($this->createMailer(), $container))->send('template', [], static function (): void {
+            self::fail('The callback should not run when template rendering fails.');
         });
     }
 
@@ -357,11 +392,25 @@ final class HelpersTest extends TestCase
     private function createMailer(): MailerInterface
     {
         return new class () implements MailerInterface {
-            public string $Subject = '';
-            public string $Body = '';
+            /** @var array<string, string> */
+            private array $fields = [
+                'Subject' => '',
+                'Body' => '',
+            ];
+
+            public function __set(string $name, string $value): void
+            {
+                $this->fields[$name] = $value;
+            }
+
+            public function __get(string $name): string
+            {
+                return $this->fields[$name] ?? '';
+            }
 
             public function addAddress(string $email): void
             {
+                unset($email);
             }
 
             public function send(): bool
