@@ -86,8 +86,10 @@ trait InputAwareTrait
             $json = json_encode($xml, JSON_THROW_ON_ERROR);
 
             return json_decode($json, $isArray, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $exception) { // @codeCoverageIgnore
+        } catch (JsonException $exception) {
+            // @codeCoverageIgnoreStart
             throw new InvalidArgumentException('Invalid XML request body.', 0, $exception);
+            // @codeCoverageIgnoreEnd
         } finally {
             libxml_clear_errors();
             libxml_use_internal_errors($previousUseInternalErrors);
