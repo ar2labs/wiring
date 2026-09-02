@@ -91,7 +91,7 @@ jobs:
           format: clover
 
       - name: Run SonarQube Cloud analysis
-        if: matrix.operating-system == 'ubuntu-latest' && matrix.dependencies == 'locked' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        if: matrix.operating-system == 'ubuntu-latest' && matrix.dependencies == 'locked'
         uses: SonarSource/sonarqube-scan-action@v8
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
