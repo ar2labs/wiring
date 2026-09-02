@@ -73,7 +73,7 @@ jobs:
         run: composer php-cs-fixer-check
 
       - name: Run PHPStan
-        run: php vendor/bin/phpstan analyse --configuration phpstan.neon --no-progress --ansi
+        run: php -d memory_limit=512M vendor/bin/phpstan analyse --configuration phpstan.neon --no-progress --ansi
 
       - name: Run PHPUnit
         run: php vendor/bin/phpunit --configuration phpunit.xml.dist --colors=always
